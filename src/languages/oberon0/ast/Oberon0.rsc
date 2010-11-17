@@ -35,8 +35,7 @@ data Statement = assign(Variable var, Expression exp)
 
 data Type = user(str name)
           | array(Expression exp, Type \type)
-          | record(list[Field] fields)
-          | integer();
+          | record(list[Field] fields);
 
 data Field = field(list[str] names, Type \type);
 
@@ -55,3 +54,16 @@ data VarDecl = varDecl(list[str] names, Type \type);
 
 data Module = mod(str name, Declarations decls, list[Statement] body, str endName);
 
+anno loc Module@location;
+anno loc VarDecl@location;
+anno loc TypeDecl@location;
+anno loc ConstDecl@location;
+anno loc Declarations@location;
+anno loc Procedure@location;
+anno loc Formal@location;
+anno loc Field@location;
+anno loc Type@location;
+anno loc Statement@location;
+anno loc Variable@location;
+anno loc Expression@location;
+anno loc Selector@location;
