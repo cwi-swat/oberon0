@@ -1,5 +1,8 @@
 MODULE Sample;
 
+(* abc *)
+
+
 PROCEDURE Multiply; 
   VAR x, y, z: INTEGER;
 BEGIN 

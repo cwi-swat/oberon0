@@ -2,7 +2,7 @@ module languages::oberon0::syntax::Oberon0
 
 import ParseTree;
 
-syntax Ident = lex [a-zA-Z][a-zA-Z0-9]* - Keywords # [A-Za-z0-9] ;
+syntax Ident = lex id: [a-zA-Z][a-zA-Z0-9]* - Keywords # [A-Za-z0-9] ;
 
 
 syntax LAYOUT = lex whitespace: [\t-\n\r\ ] 
@@ -12,7 +12,7 @@ layout LAYOUTLIST = LAYOUT*
 	# [\t-\n \r \ ] 
 	# "(*" ;
 
-syntax Comment = lex "(*" CommentChar* "*)" ;
+syntax Comment = lex @category="Comment"  "(*" CommentChar* "*)" ;
 
 syntax CommentChar = lex ![*] | lex Asterisk ;
 
@@ -81,8 +81,6 @@ syntax Expression = nat: Natural value
 syntax Type = user: Ident name
 	    | array: "ARRAY" Expression exp "OF" Type type
 	    | record: "RECORD" {Field ";"}* fields "END";
-
-//	    | integer: "INTEGER";
 
 syntax Formal = formal: "VAR"? hasVar {Ident ","}+ params ":" Type type;
 
