@@ -48,7 +48,7 @@ data Procedure = proc(Ident name, list[Formal] formals, Declarations decls,
 
 data Declarations = decls(list[ConstDecl] consts, list[TypeDecl] types, 
                               list[VarDecl] vars, 
-                                  list[Procedure]);
+                                  list[Procedure] procs);
 
 data ConstDecl = constDecl(Ident name, Expression \value);
 data TypeDecl = typeDecl(Ident name, Type \type);
