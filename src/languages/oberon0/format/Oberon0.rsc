@@ -50,29 +50,29 @@ public Box stat2box(Statement stat) {
     case assign(Variable var, Expression exp): 
             return H([var2box(var), L(":="), exp2box(exp)])[@hs=1];
     case call(Variable var, list[Expression] args):
-            return H([var2box(var), L("("),  H(sepList(H, args, ",", exp2box))[@hs=1],  L(")")])[@hs=0];
+            return H([var2box(var), L("("),  H(hsepList(args, ",", exp2box))[@hs=1],  L(")")])[@hs=0];
     case ifThen(Expression condition, list[Statement] body, 
              list[tuple[Expression condition, list[Statement] body]] elseIfs,
              list[Statement] elsePart): {
         ift = V([
             H([L("IF"), exp2box(condition), L("THEN")])[@hs=1],
-              I(sepList(H, body, ";", stat2box))]);
+              I(hsepList(body, ";", stat2box))]);
         elifs = for (<cond, ebody> <- elseIfs) {
           append V([
             H([L("ELSIF"), exp2box(cond), L("THEN")])[@hs=1],
-            I(sepList(H, ebody, ";", stat2box))
+            I(hsepList(ebody, ";", stat2box))
           ]);
         }
         els = V([
             L("ELSE"),
-            I(sepList(H, elsePart, ";", stat2box))
+            I(hsepList(elsePart, ";", stat2box))
         ]);
-        return V([ift] + elifs + [els]);
+        return V([ift] + elifs + [els] + [KW(L("END"))]);
     }
     case whileDo(Expression condition, list[Statement] body): 
        return V([
             H([L("WHILE"), exp2box(condition), L("DO")])[@hs=1],
-             I(sepList(H, body, ";", stat2box)),
+             I([V(hsepList(body, ";", stat2box))]),
             KW(L("END"))
         ]);   
 
@@ -88,7 +88,7 @@ public Box type2box(Type typ) {
               return H([KW(L("RECORD")), KW(L("END"))])[@hs=1];
            return V([
              KW(L("RECORD")),
-             I(sepList(V, fields, ";", field2box)),
+             I(hsepList(fields, ";", field2box)),
              Kw(L("END"))
            ]);
      }
@@ -96,13 +96,13 @@ public Box type2box(Type typ) {
 }
 
 
-public list[Box] sepList(Box(list[Box]) op, list[&T] elts, str sep, Box(&T) tobox) {
+public list[Box] hsepList(list[&T] elts, str sep, Box(&T) tobox) {
   if (elts == []) 
      return [];
   result = [];
   Box lst = tobox(head(elts));
   for (e <- tail(elts)) {
-   result += [op([lst, L(sep)])];
+   result += [H([lst, L(sep)])[@hs=0]];
    lst = tobox(e);
   }
   return result + [lst];
@@ -110,7 +110,7 @@ public list[Box] sepList(Box(list[Box]) op, list[&T] elts, str sep, Box(&T) tobo
 
 
 public Box field2box(Field field) {
-   return H([H([H(sepList(H, field.names, ",", id2box))[@hs=1], L(":")])[@hs=0], type2box(field.\type)])[@hs=1];
+   return H([H([H(hsepList(field.names, ",", id2box))[@hs=1], L(":")])[@hs=0], type2box(field.\type)])[@hs=1];
 }
 
 
@@ -119,7 +119,7 @@ public Box formal2box(Formal form) {
   if (form.hasVar) {
     result.h += [KW(L("VAR"))];
   }
-  result.h += [H([H(sepList(H, names, ",", id2box))[@hs=1], L(":")])[@hs=0]];
+  result.h += [H([H(hsepList(names, ",", id2box))[@hs=1], L(":")])[@hs=0]];
   result.h += [type2box(form.\type)];
   return result;
 }
@@ -127,51 +127,54 @@ public Box formal2box(Formal form) {
 
 public Box proc2box(Procedure pr) {
   return V([
-    H([KW(L("PROCEDURE")), id2box(pr.name), sepList(H, pr.formals, ";", formal2box), L(";")])[@hs=0],
+    H([KW(L("PROCEDURE")), H([id2box(pr.name), hsepList(pr.formals, ";", formal2box), L(";")])[@hs=0]])[@hs=1],
     I([
       decls2box(pr.decls)
     ]),
     KW(L("BEGIN")),
     I([
-      V(sepList(H, pr.body, ";", stat2box))
+      V(hsepList(pr.body, ";", stat2box))
     ]),
     H([H([KW(L("END")), id2box(pr.endName)])[@hs=1], L(";")])[@hs=0]
   ]);
 }
 
 public Box decls2box(Declarations ds) {
-   return V([
-     KW(L("CONST")),
-       I([A([constDecl2box(x) | x <- ds.consts])]),
-     KW(L("TYPE")),
-       I([A([typeDecl2box(x) | x <- ds.types])]),
-     KW(L("VAR")),
-       I([A([varDecl2box(x) | x <- ds.vars])])] +
-     [proc2box(x) | x <- ds.procs]);
+   Box v = V([]);
+   if (ds.consts != []) {
+     v.v += [KW(L("CONST")), I([A([constDecl2box(x) | x <- ds.consts])])];
+   }
+   if (ds.types != []) {
+     v.v += [KW(L("TYPE")), I([A([typeDecl2box(x) | x <- ds.types])])];
+   }
+   if (ds.vars != []) {     
+     v.v += [KW(L("VAR")), I([A([varDecl2box(x) | x <- ds.vars])])];
+   }
+   v.v += [proc2box(x) | x <- ds.procs];
+   return v;
 }
 
 
 public Box constDecl2box(ConstDecl cd) {
-  return R([L(cd.name), L("="), exp2box(cd.\value)]);
+  return R([L(cd.name), L("="), H([exp2box(cd.\value), L(";")])[@hs=0]]);
 }
 
 public Box typeDecl2box(TypeDecl td) {
-  return R([L(td.name), L(":"), type2box(td.\type)]);
+  return R([L(td.name), L(":"), H([type2box(td.\type), L(";")])[@hs=0] ]);
 }
 
 public Box varDecl2box(VarDecl vd) {
-  return R([H(sepList(H, vd.names, ",", id2box))[@hs=1], L(":"), type2box(vd.\type)]);
+  return R([H(hsepList(vd.names, ",", id2box))[@hs=1], L(":"), H([type2box(vd.\type), L(";")])[@hs=0]]);
 }
 
 public Box mod2box(Module m) {
   return V([
     H([KW(L("MODULE")), H([id2box(m.name), L(";")])[@hs=0]])[@hs=1],
     decls2box(m.decls),
-    KW(L("BEGIN")),
     I([
-      V(sepList(H, m.body, ";", stat2box))
+      V(hsepList(m.body, ";", stat2box))
     ]),
     H([H([KW(L("END")), id2box(m.endName)])[@hs=1], L(".")])[@hs=0]
-  ]);
+  ])[@vs=2];
 }
 
