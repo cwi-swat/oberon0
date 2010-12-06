@@ -56,7 +56,7 @@ public Box stat2box(Statement stat) {
              list[Statement] elsePart): {
         ift = V([
             H([L("IF"), exp2box(condition), L("THEN")])[@hs=1],
-              I(hsepList(body, ";", stat2box))]);
+              I([V(hsepList(body, ";", stat2box))])]);
         elifs = for (<cond, ebody> <- elseIfs) {
           append V([
             H([L("ELSIF"), exp2box(cond), L("THEN")])[@hs=1],
@@ -133,10 +133,10 @@ public Box proc2box(Procedure pr) {
     ]),
     KW(L("BEGIN")),
     I([
-      V(hsepList(pr.body, ";", stat2box))
+      V(hsepList(pr.body, ";", stat2box))[@vs=0]
     ]),
     H([H([KW(L("END")), id2box(pr.endName)])[@hs=1], L(";")])[@hs=0]
-  ]);
+  ])[@vs=0];
 }
 
 public Box decls2box(Declarations ds) {
@@ -151,7 +151,7 @@ public Box decls2box(Declarations ds) {
      v.v += [KW(L("VAR")), I([A([varDecl2box(x) | x <- ds.vars])])];
    }
    v.v += [proc2box(x) | x <- ds.procs];
-   return v;
+   return v[@vs=0];
 }
 
 
@@ -172,9 +172,9 @@ public Box mod2box(Module m) {
     H([KW(L("MODULE")), H([id2box(m.name), L(";")])[@hs=0]])[@hs=1],
     decls2box(m.decls),
     I([
-      V(hsepList(m.body, ";", stat2box))
+      V(hsepList(m.body, ";", stat2box))[@vs=0]
     ]),
     H([H([KW(L("END")), id2box(m.endName)])[@hs=1], L(".")])[@hs=0]
-  ])[@vs=2];
+  ])[@vs=1];
 }
 
