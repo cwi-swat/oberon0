@@ -15,6 +15,12 @@ Box makeBody(Tree body) {
    return b;
    }
    
+list[Box] getDeclarations(Tree decls) {
+   list[Box] bs = getArgs(decls);
+   bs = [b | Box b<-bs, COMM(_)!:=b];
+   return bs;
+   }
+   
 Tree getOpt(Tree t) {
     if (/opt(_):= t) 
        return getFirst(t);
@@ -56,32 +62,53 @@ public Box getUserDefined(Tree q) {
                     return makeBody(body);
                     }
                }
+/* syntax Declarations = decls:ConstSect? cons TypeSect? type VarSect? vars
+		                                               ProcedureDecl* procs; */
          if (Declarations a:= q) {
-               // rawPrintln("Declaration:");
-               // rawPrintln(a);
-               Tree consts = amb({});
-               Tree typs = amb({});
-               Tree vars = amb({});
-               Tree procs = amb({});
-               if (`<ConstSect? consts> <TypeSect? typs> <VarSect? vars> <{ProcedureDecl* procs}>`:=a) { 
-                        VarSect vars = getOpt(vars);
-                        return V(1,[evPt(vars)]+ evPt(procs));   
+               Tree consts, typs, vars, procs;
+               if (`<ConstSect? consts> <TypeSect? typs> <VarSect? vars> <ProcedureDecl* procs>`:=a) { 
+                        return V(1, [evPt(getOpt(consts)), evPt(getOpt(typs)), evPt(getOpt(vars))]+getDeclarations(procs));   
                    }
                }
+          /* syntax VarSect = "VAR" VarDecl* vars ; */
           if (VarSect a:=q) {
-                if (`VAR <VarDecl* vars>`:=a) return evPt(vars);
+                if (`VAR <VarDecl* vars>`:=a) {          
+                   return I([V(0,[KW(L("VAR")), I([A(getDeclarations(vars))])])]);
+                   }
                 }
+          /* syntax ConstSect = "CONST" ConstDecl* consts ; */
+          if (ConstSect a:=q) {
+                if (`CONST <ConstDecl* consts>`:=a) {          
+                   return I([V(0,[KW(L("CONST")), I([A(getDeclarations(consts))])])]);
+                   }
+                }
+         /* syntax TypeSect = "TYPE" TypeDecl* types ; */
+         if (TypeSect a:=q) {
+                if (`TYPE <TypeDecl* typs>`:=a) {          
+                   return I([V(0,[KW(L("TYPE")), I([A(getDeclarations(typs))])])]);
+                   }
+                }
+          /* syntax VarDecl = varDecl: {Ident","}* names ":" Type type ";" */
           if (VarDecl a:=q) {
-             // rawPrintln(a);
-             return NULL();
-             // if ((VarDecl) `<{Ident ","}*> names : <Type typ> ;`:=a) {return R([evPt(names), L(";"), evPt(\type)]);}
+             if ((VarDecl) `<{Ident ","}* names> : <Type typ> ;`:=a) {
+                         return R([evPt(names), L(":"), evPt(typ),L(";")]);
+                         }
              }
-        /* 
-               syntax Declarations = decls: 
-       		    ConstSect? consts
-		        TypeSect? types
-		        VarSect? vars
-		         ProcedureDecl* procs; 
-		         */
+          /* syntax ConstDecl = constDecl: Ident name "=" Expression value ";" 
+             syntax TypeDecl = typeDecl: Ident name "=" Type type ";" 
+          */
+          /* Problem
+          if (ConstDecl a:=q) {
+             if ((ConstDecl) `<Ident name> = <Expresion val> ;`:=a) {
+                         return R([evPt(name), L("="), evPt(val),L(";")]);
+                         }
+             }
+           
+         if (TypeDecl a:=q) {
+              if ((TypeDecl) `<Ident name> = <Type typ> ;`:=a) {
+                   return R([evPt(name), L("="), evPt(typ),L(";")]);
+                   }
+             }
+          */
       return NULL();
 }
