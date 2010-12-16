@@ -10,15 +10,13 @@ import List;
 Box makeBody(Tree body) {
    list[Box] bs = getArgs(body);
    bs = [b | Box b<-bs, COMM(_)!:=b];
-   Box b = ((size(bs)%2==0)?V(0, [I([H(0, [bs[i], bs[i+1]])])|int i <-[0,2..(size(bs)-1)]]):
-   V(0, [I([H(0, [bs[i], bs[i+1]])])|int i <-[0,2..(size(bs)-2)]]+[I([bs[size(bs)-1]])]));
+   /* Size(bs) is uneven */
+   Box b = V(0, [I([H(0, [bs[i], C(body, i), bs[i+1]])])|int i <-[0,2..(size(bs)-2)]]+I([H(0, [C(body,(size(bs)-2))]+[bs[size(bs)-1]])]));
    return b;
    }
    
 list[Box] getDeclarations(Tree decls) {
-   list[Box] bs = getArgs(decls);
-   bs = [b | Box b<-bs, COMM(_)!:=b];
-   return bs;
+   return getArgs(decls); 
    }
    
 Tree getOpt(Tree t) {
@@ -29,23 +27,18 @@ Tree getOpt(Tree t) {
 
 public Box getUserDefined(Tree q) {
      // println("User Defined");
-     /* Module = mod: "MODULE" Ident name ";" Declarations decls Body? body "END" Ident "."; */
+     /* syntax Module = mod: "MODULE" Ident name ";" Declarations decls Body? body "END" Ident "."; */
       if (Module a:=q) {
           if (`MODULE <Ident id1> ; <Declarations decls> <Body? body> END <Ident id2> .`:=a) {
-          return V(1, [H(1, [KW(L("Module")), evPt(id1), L(";")]), evPt(decls), evPt(getOpt(body)), H(1, 
+          return V(1, [H(1, [KW(L("Module")), evPt(id1), L(";")]), C(q, 2), evPt(decls), evPt(getOpt(body)), H(1, 
              [KW(L("END")), H(0, [evPt(id2), L(";")])])]);       
          }
          }
-      if (ProcedureDecl a := q) {
-      	 if (`PROCEDURE <Ident id1>  <Formals? formals> ; <Declarations decls> <Body? body> END <Ident id2> ;`:=a) {
-      	    return V(0, [H(1, [KW(L("PROCEDURE")), H(0, [evPt(id1), evPt(formals), L(";")])]), evPt(decls), evPt(getOpt(body)),  
-      	                      H(1, [KW(L("END")), H(0, [evPt(id2), L(";")])])]);
-      	    }
-      }
+      
       if (Statement a:= q) {
          switch (a) {
                case `<Variable var> := <Expression exp>`: return H(1, [evPt(var), L(":="), evPt(exp)]);
-               // case `<Variable var> <Actuals? actuals>`: return H(0, evPt(var), evPt(actuals));
+               case `<Variable var> <Actuals? actuals>`: return H(0, [evPt(var), evPt(getOpt(actuals))]);
                case `IF <Expression cond> THEN <{Statement ";"}+ body> <ElsIfPart* ei> <ElsePart? ep> END`: {
                      return V(0,  [H(1, [KW(L("IF")), evPt(cond), KW(L("THEN"))]), makeBody(body), evPt(getOpt(ep)), KW(L("END"))]);
                      }
@@ -54,8 +47,14 @@ public Box getUserDefined(Tree q) {
                     }
                }
              }
+        /* syntax ElsePart = "ELSE" {Statement";"}+ body ; */
         if (ElsePart a:=q) {
              if (`ELSE <{Statement ";"}+ body>`:= a) return V([KW(L("ELSE")), makeBody(body)]);
+             }
+        /* syntax ElsIfPart = "ELSIF" Expression condition "THEN" {Statement";"}+ body ; */
+        if (ElsIfPart a:=q) {
+             if (`ELSIF <Expression condition> THEN <{Statement ";"}+ body>`:= a) 
+                    return V(0, [H(1, [KW(L("ELSIF")), evPt(cond), KW(L("THEN"))]), makeBody(body)]);
              }
         if (Body a:= q) {
                if (`BEGIN <{Statement ";"}+ body>`:=a) {
@@ -94,9 +93,6 @@ public Box getUserDefined(Tree q) {
                          return R([evPt(names), L(":"), evPt(typ),L(";")]);
                          }
              }
-          /* syntax ConstDecl = constDecl: Ident name "=" Expression value ";" 
-             syntax TypeDecl = typeDecl: Ident name "=" Type type ";" 
-          */
           /* Problem
           if (ConstDecl a:=q) {
              if ((ConstDecl) `<Ident name> = <Expresion val> ;`:=a) {
@@ -110,5 +106,11 @@ public Box getUserDefined(Tree q) {
                    }
              }
           */
+         if (ProcedureDecl a := q) {
+      	 if (`PROCEDURE <Ident id1>  <Formals? formals> ; <Declarations decls> <Body? body> END <Ident id2> ;`:=a) {
+      	    return V(0, [H(1, [KW(L("PROCEDURE")), H(0, [evPt(id1), evPt(formals), L(";")])]), evPt(decls), evPt(getOpt(body)),  
+      	                      H(1, [KW(L("END")), H(0, [evPt(id2), L(";")])])]);
+      	    }
+       }
       return NULL();
 }
