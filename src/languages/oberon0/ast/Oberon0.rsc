@@ -7,7 +7,7 @@ data Selector = field(Ident field)
               | subscript(Expression exp);
 
 data Expression = nat(int val)
-                | lookup(Variable var)
+                | lookup(Ident var, list[Selector] selectors)
                 | neg(Expression exp)
                 | pos(Expression exp)
                 | not(Expression exp)
@@ -25,10 +25,8 @@ data Expression = nat(int val)
                 | leq(Expression lhs, Expression rhs)
                 | geq(Expression lhs, Expression rhs);
 
-data Variable = var(Ident name, list[Selector] selectors);
-
-data Statement = assign(Variable var, Expression exp)
-               | call(Variable var, list[Expression] args)
+data Statement = assign(Ident var, list[Selector] selectors, Expression exp)
+               | call(Ident proc, list[Expression] args)
                | ifThen(Expression condition, list[Statement] body, 
                    list[tuple[Expression condition, list[Statement] body]] elseIfs,
                    list[Statement] elsePart)
@@ -67,6 +65,6 @@ anno loc Formal@location;
 anno loc Field@location;
 anno loc Type@location;
 anno loc Statement@location;
-anno loc Variable@location;
 anno loc Expression@location;
 anno loc Selector@location;
+

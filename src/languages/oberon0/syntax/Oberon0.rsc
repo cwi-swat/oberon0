@@ -33,8 +33,8 @@ syntax Variable = var: Ident name Selector* selectors;
 syntax Actuals = "(" {Expression ","}* expressions ")";
 
 syntax Statement =
-       		 assign: Variable var ":=" Expression exp
-		 | call: Variable var Actuals? actuals
+       		 assign: Ident var Selector* selectors ":=" Expression exp
+		 | call: Ident name Actuals? actuals
 		 | ifThen: "IF" Expression condition "THEN"
 		   		{Statement ";"}+ body
 				ElsIfPart* ElsePart? "END"
@@ -49,7 +49,7 @@ syntax Field = field: {Ident ","}+ names ":" Type type;
 
 // Check this again for correctness.
 syntax Expression = nat: Natural value
-                | lookup: Variable var
+                | lookup: Ident var Selector* selectors
                 | bracket Bracket: "(" Expression exp ")"
 		| not: "~" Expression exp
 		>
