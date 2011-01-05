@@ -7,6 +7,8 @@ import List;
 import IO;
 
 
+data Value = array(Address a, Type \t);
+
 public bool evalCond(Expression e, Env env, Memory mem) {
   switch (e) {
     case not(exp): return !evalCond(exp, env);

@@ -84,23 +84,33 @@ public Bindable addressOf(Expression e, Env env, Memory mem) {
   throw "Cannot get address of non-variable: <id.name>";
 }
 
+public tuple[Env, Memory] push(Ident n, Expression arg, Type t, Env env, Env outer, Memory mem) {
+    et = evalType(t, env, mem);
+    <a, mem> = new(et, mem);
+    if (array(_, _) := et || record(_) := et) {
+      lv = addressOf(arg, old, mem);
+      mem = copy(lv.addr, a, mem);
+    }
+    else {
+      mem = update(a, eval(arg, outer, mem), mem);
+    }
+    env[n] = lvalue(a, et);
+    return <env, mem>;
+}
 
 
-public tuple[Env, Memory] bind(list[Expression] args, list[Formal] formals, Env env, Memory mem, Env old) {
+
+public tuple[Env, Memory] bind(list[Expression] args, list[Formal] formals, Env env, Memory mem, Env outer) {
   i = 0;
   for (f <- formals, n <- f.names) {
       if (i >= size(args)) {
         throw "Insufficient arguments";
       }
-      arg = args[i];
       if (f.hasVar) {
-        env[n] = addressOf(args[i], old, mem);
+        env[n] = addressOf(args[i], outer, mem);
       }
       else {
-        et = evalType(f.\type, env, mem);
-        <a, mem> = new(et, mem);
-        mem = update(a, eval(arg, old, mem), mem);
-        env[n] = lvalue(a, et);
+        <env, mem> = push(n, args[i], f.\type, env, outer, mem);
       }
       i += 1;
   }

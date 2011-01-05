@@ -3,16 +3,15 @@ module languages::oberon0::eval::Memory
 import languages::oberon0::ast::Oberon0;
 
 import List;
+import String;
 
 data Value = integer(int n)
            | boolean(bool b);
            
-public int asInt(Value v) {
-  if (integer(int i) := v) {
-    return i;
-  }
-  throw "Expected integer(int x): <v>"; 
-}
+           
+alias Stream = list[str];
+
+alias IO = tuple[Stream input, Stream output];
 
 data Bindable = lvalue(Address addr, Type \type);
 alias Address = int;
@@ -101,6 +100,15 @@ public Memory allocate(Type t) {
   }
 }
 
+
+public Memory copy(Address from, Address to, Type t, Memory mem) {
+  // we assume there's enough space allocated
+  for (i <- [0..sizeOf(t)-1]) {
+    mem[to + i] = mem[from + i];
+  }
+  return mem; 
+}
+
 public Memory pop(Memory mem, Address scope) {
    return slice(mem, 0, scope);
 }
@@ -114,3 +122,23 @@ public Memory update(Address addr, Value v, Memory mem) {
   mem[addr] = v;
   return mem;
 }
+
+
+public IO write(value v, IO io) {
+  io.output += ["<v>"];
+  return io;
+}
+
+public tuple[Value, IO] readInt(IO io) {
+  x = head(io.input);
+  io.input = tail(io.input);
+  return <integer(toInt(x)), io> ;  
+}
+           
+public int asInt(Value v) {
+  if (integer(int i) := v) {
+    return i;
+  }
+  throw "Expected integer(int x): <v>"; 
+}
+

@@ -4,7 +4,6 @@ import languages::oberon0::ast::Oberon0;
 import languages::oberon0::eval::Declarations;
 import languages::oberon0::eval::Expressions;
 import languages::oberon0::eval::Env;
-import languages::oberon0::eval::IO;
 import languages::oberon0::eval::Memory;
 
 import IO;
@@ -13,20 +12,19 @@ data Bindable = builtin(list[Formal] formals, Result(Env, Memory, IO) func);
 
 
 
-public Address lookupAddress(Ident id, Env env, Memory mem) {
-  if (lvalue(a, t) := env[id]) {
-    return a;
-  }
-  throw "Not a variable: <id.name>";
-}
-
 public Env toplevel  = (
-  id("WriteLn"): builtin([formal(false, [id("x")], user(id("INTEGER")))],
+  id("Write"): builtin([formal(false, [id("x")], user(id("INTEGER")))],
     Result(Env env, Memory mem, IO io) {
       val = lookupValue(id("x"), env, mem);
       s = "<asInt(val)>";
       println(s);
-      io = write(s + "\n", io);
+      io = write(s, io);
+      return <mem, io>;
+    }
+  ),
+  id("WriteLn"): builtin([],
+    Result(Env env, Memory mem, IO io) {
+      io = write("\n", io);
       return <mem, io>;
     }
   ),
@@ -61,37 +59,48 @@ public Result evalStats(list[Statement] stats, Env env, Memory mem, IO io) {
 }
 
 
+public Address lookupAddress(Ident id, Env env, Memory mem) {
+  return lookupAddress(id, [], env, mem);
+}
+
+public Address lookupAddress(Ident id, list[Selector] sels, Env env, Memory mem) {
+  if (lvalue(a, t) := env[id]) {
+    return addressOf(a, sels, t, mem);
+  }
+  throw "Not a variable: <id.name>";
+}
+
+
+public Result evalProc(Procedure pr, list[Expression] args, Env env, Env outer, Memory mem, IO io) {
+  scope = push(mem);
+  <env, mem> = declare(pr.decls, env, mem);
+  <env, mem> = bind(args, pr.formals, env, mem, outer);
+  env[pr.name] = func(env, pr); // for recursion
+  <mem, io> = evalStats(pr.body, env, mem, io);
+  mem = pop(mem, scope);
+  return <mem, io>;
+}
+
+public Result evalBuiltin(list[Formal] fs, Result(Env, Memory, IO) f, list[Expression] args, Env env, Memory mem, IO io) 
+{
+  <env, mem> = bind(args, fs, toplevel, mem, env);
+  return f(env, mem, io);
+}
+
+
 public Result evalStat(Statement stat, Env env, Memory mem, IO io) {
   switch (stat) {
     case assign(v, sels, exp): {
-      switch (env[v]) {
-        case lvalue(a, t): {
-           mem = update(addressOf(a, sels, t, mem), eval(exp, env, mem), mem); 
-           return <mem, io>;
-        }
-        default: throw "Can only assign variables.";
-      }
+      mem = update(lookupAddress(v, sels, env, mem), eval(exp, env, mem), mem);
+      return <mem, io>;
     }
         
-    case call(Ident id, args): {
-      //printEnv(env);
+    case call(Ident id, args): 
       switch (env[id]) {
-        case f:func(env2, pr): {
-          scope = push(mem);
-          <env2, mem> = declare(pr.decls, env2, mem);
-          <env2, mem> = bind(args, pr.formals, env2, mem, env);
-          env2[id] = f; // for recursion
-          <mem, io> = evalStats(pr.body, env2, mem, io);
-          mem = pop(mem, scope);
-          return <mem, io>;
-        }
-        case builtin(fs, f): {
-          <env2, mem2> = bind(args, fs, toplevel, mem, env);
-          return f(env2, mem2, io);
-        }
+        case func(env2, pr): return evalProc(pr, args, env2, env, mem, io);
+        case builtin(fs, f): return evalBuiltin(fs, f, args, env, mem, io);
         default: throw "Can only call procedures not <id.name>";
       }
-    }
     
     case ifThen(c, b, eis, ep): {
       if (evalCond(c, env, mem)) {
