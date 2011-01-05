@@ -2,75 +2,111 @@ module languages::oberon0::eval::Declarations
 
 import languages::oberon0::ast::Oberon0;
 import languages::oberon0::eval::Env;
-import languages::oberon0::eval::Store;
+import languages::oberon0::eval::Memory;
+import languages::oberon0::eval::Expressions;
+import IO;
+import List;
+
+
+// all declares work like let*
 
 public Env declareProcs(list[Procedure] ps, Env env) {
   for (p <- ps) {
-    env[p.name] = closure(env, p);
+    env[p.name] = func(env, p);
   }
   return env;
 }
 
 public Env declareConsts(list[ConstDecl] cs, Env env) {
   for (c <- cs) {
-    // Constants may use previously defined constants
-    env[c.name] = const(evalExp(c.\value, env));
+    env[c.name] = const(eval(c.\value, env, empty()));
   }
   return env;
 }
 
 public Env declareTypes(list[TypeDecl] ts, Env env) {
   for (t <- ts) {
-    // Typedefs see previous types at the same level (let*)
     env[t.name] = typeDef(env, t);
   }
   return env;
 }
 
-public tuple[Env,Store] declareVars(VarDecl vd, Env env, Store store) {
-  old = env;
-  for (v <- vd.names) {
-    <c, io> = new(vd.\type, old, store);
-    env[v] = c;
+public Type evalType(Type t, Env env, Memory mem) {
+  switch (t) {
+    case user(id("INTEGER")):
+      return t;
+    case user(id("BOOLEAN")):
+      return t;
+    case user(Ident id):
+      if (typeDef(Type ut) := env[id]) {
+         return evalType(ut, env, mem);
+      }
+      else {
+         throw "Undefined type: <id.name>";
+      }
+      
+    case array(Expression b, Type et): {
+      v = eval(b, env, mem);
+      if (integer(int n) := v) {
+        return array(nat(n), evalType(et, env, mem));
+      }
+      throw "Array bounds must be integers not <v>";
+    } 
+    case record(fs): 
+      return record([field(n, evalType(f.\type, env, mem)) | f <- fs, n <- f.names ]);  
   }
-  return <env, store>;
 }
 
-public tuple[Env, Store] declare(Declarations d, Env env, Store store) {
+public tuple[Env,Memory] declareVars(VarDecl vd, Env env, Memory mem) {
+  Env old = env;
+  for (v <- vd.names) {
+    et = evalType(vd.\type, env, mem);
+    <a, mem> = new(et, mem);
+    env[v] = lvalue(a, et);
+  }
+  return <env, mem>;
+}
+
+public tuple[Env, Memory] declare(Declarations d, Env env, Memory mem) {
   env = declareConsts(d.consts, env);
   env = declareTypes(d.types, env);
   for (vd <- d.vars) {
-    <env, io> = declareVars(vd, env, store);
+    <env, mem> = declareVars(vd, env, mem);
   }
   env = declareProcs(d.procs, env);
-  return <env, store>;
+  return <env, mem>;
 }
 
-public tuple[Env, Store] bind(list[Expression] args, list[Formal] formals, Env env, Store store) {
+public Bindable addressOf(Expression e, Env env, Memory mem) {
+  if (lookup(Ident id, list[Selector] sels) := e, lvalue(Address a, Type t) := env[id]) {
+      return lvalueOf(a, evalSubscripts(sels, env, mem), t, mem);
+  }
+  throw "Cannot get address of non-variable: <id.name>";
+}
+
+
+
+public tuple[Env, Memory] bind(list[Expression] args, list[Formal] formals, Env env, Memory mem, Env old) {
   i = 0;
-  old = env;
-  for (f <- formals) {
-    for (n <- f.names) {
+  for (f <- formals, n <- f.names) {
       if (i >= size(args)) {
         throw "Insufficient arguments";
       }
       arg = args[i];
-      if (f.isVar) {
-        env[n] = var(addressOf(args[i], old, store));
+      if (f.hasVar) {
+        env[n] = addressOf(args[i], old, mem);
       }
       else {
-        // NB: evaluate args in old environment!
-        // otherwise, previously bound formals become
-        // available in the evaluation of actuals
-        <c, io> = new(eval(arg, old, io), f.\type, old, store);
-        env[n] = c;
+        et = evalType(f.\type, env, mem);
+        <a, mem> = new(et, mem);
+        mem = update(a, eval(arg, old, mem), mem);
+        env[n] = lvalue(a, et);
       }
-      i++;
-    }
+      i += 1;
   }
-  if (size(args) - 1 > i) {
+  if (size(args) > i) {
     throw "Too many arguments";
   }
-  return <env, store>;
+  return <env, mem>;
 }
 

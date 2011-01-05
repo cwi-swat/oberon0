@@ -1,15 +1,21 @@
 module languages::oberon0::eval::Env
 
 import languages::oberon0::ast::Oberon0;
+import languages::oberon0::eval::Memory;
+import IO;
 
 alias Env = map[Ident, Bindable];
 
-data Bindable = var(Cell cell)
-              | typeDef(Env env, Type typ)
+data Bindable = typeDef(Env env, Type \type)
               | const(Value val)
-              | closure(Env env, Procedure proc);
+              | func(Env env, Procedure proc);              
               
-
+public void printEnv(Env env) {
+  println("env = ");
+  for (k <- env) {
+    println("\t<k.name>\t\t\t:<env[k]>");
+  }
+}
 
 
     
