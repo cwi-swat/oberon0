@@ -1,29 +1,29 @@
 MODULE QuickSort;
 
 CONST
-  INPUTLENGTH = 32;
+  INPUTLENGTH = 5;
 
 VAR
   input: ARRAY INPUTLENGTH OF INTEGER;
   i: INTEGER;
 
-PROCEDURE Swap(VAR x, y: INTEGER);
-VAR
-  temp: INTEGER;
-BEGIN
-  temp := x;
-  x := y;
-  y := temp
-END Swap;
 
 PROCEDURE QuickSort(VAR array: ARRAY INPUTLENGTH OF INTEGER; left, right: INTEGER);
-VAR
-  pivot, leftIdx, rightIdx: INTEGER;
+  VAR
+    pivot, leftIdx, rightIdx: INTEGER;
+
+  PROCEDURE Swap(VAR x, y: INTEGER);
+  VAR
+    temp: INTEGER;
+  BEGIN
+    temp := x;
+    x := y;
+    y := temp
+  END Swap;
+
 BEGIN
   leftIdx := left;
   rightIdx := right;
-  WriteLn(left);
-  WriteLn(right);
   IF right - left > 0 THEN
     pivot := (left + right) DIV 2;
     WHILE (leftIdx <= pivot) & (rightIdx >= pivot) DO
@@ -58,7 +58,8 @@ BEGIN
  QuickSort(input, 0, INPUTLENGTH - 1);
  i := 0;
  WHILE i < INPUTLENGTH DO
-   WriteLn(input[i]);
+   Write(input[i]);
+   WriteLn;
    i := i + 1
  END
 END QuickSort.

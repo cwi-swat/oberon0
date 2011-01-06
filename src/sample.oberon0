@@ -2,6 +2,32 @@ MODULE Sample;
 
 (* abc *)
 
+PROCEDURE Nesting;
+  VAR x, y: INTEGER;
+  PROCEDURE f(x: INTEGER; VAR z: INTEGER);
+    PROCEDURE g(abc: INTEGER);
+       PROCEDURE h(); 
+       BEGIN
+         Write(x);
+         Write(z);
+         abc := x + z + y
+       END h;
+    BEGIN
+       y := 12;
+       x := 42
+    END g;
+  BEGIN
+     y := 3;
+     Write(x);
+     z := z + 1
+  END f;
+BEGIN
+ y := 1;
+ x := 3;
+ f(x, y)
+END Nesting;
+  
+
 
 PROCEDURE Multiply; 
   VAR x, y, z: INTEGER;
