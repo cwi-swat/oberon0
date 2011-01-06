@@ -2,7 +2,7 @@ module languages::oberon0::compile::Test
 
 import languages::oberon0::syntax::Oberon0;
 import languages::oberon0::ast::Oberon0;
-import languages::oberon0::compile::Oberon0;
+import languages::oberon0::compile::Resolve;
 import languages::oberon0::compile::Oberon0ToC;
 
 import ParseTree;

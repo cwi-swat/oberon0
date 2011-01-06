@@ -1,4 +1,4 @@
-module languages::oberon0::compile::Oberon0
+module languages::oberon0::compile::Resolve
 
 import languages::oberon0::ast::Oberon0;
 import languages::oberon0::compile::Table;

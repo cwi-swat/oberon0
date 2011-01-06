@@ -1,7 +1,7 @@
 module languages::oberon0::compile::Oberon0ToC
 
 import languages::oberon0::ast::Oberon0;
-import languages::oberon0::compile::Oberon0;
+import languages::oberon0::compile::Resolve;
 import String;
 import List;
 import IO;
@@ -176,13 +176,11 @@ else if (<cond2c(ei[0])>) {
 else {
   <stats2c(ep)>
 }
-<}>    
-    ";
+<}>";
     
     case whileDo(c, b): return "
- while (<cond2c(c)>) {
+while (<cond2c(c)>) {
    <stats2c(b)>
- }   
-";
+ }";
   }
 }
