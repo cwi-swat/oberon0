@@ -72,8 +72,13 @@ public str type2c(Type t) {
     case user(id("INTEGER")): return "int";
     case user(id("BOOLEAN")): return "int";
     case array(b, et): return "<type2c(et)>[<exp2c(b)>]";
-    case record(fields): return "struct <t@structName>";
+    case record(fs): return "struct {
+<fields2c(fs)>}";
   }
+}
+
+public str fields2c(list[Field] fs) {
+ return ("" | it + "<varType2c(n.name, f.\type)>;\n" | f <- fs, n <- f.names );
 }
 
 

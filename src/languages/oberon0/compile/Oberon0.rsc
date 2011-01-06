@@ -80,24 +80,10 @@ public Module resolve(Module m) {
      case assign(i, s, e) => assign(i[@isByReference=false], s, e)
      case lookup(i, s) => lookup(i[@isByReference=false], s)
    }
-   
-  return nameRecords(m);
+  
+   return m;   
 }
 
-
-public Module nameRecords(Module m) {
-  structs = ();
-  int i = 0;
-  return visit (m) {
-    case r:record(fs): {
-      if (!structs[r]?) {
-        i += 1;
-        structs[r] = i;
-      }
-      insert record(fs)[@structName="record<structs[r]>"];
-    }
-  } 
-}
 
 public list[Formal] formalsOf(Ident id, SymbolTable tbl) {
   tbl = scope(id, tbl);
