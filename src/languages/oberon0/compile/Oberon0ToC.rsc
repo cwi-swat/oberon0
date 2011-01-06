@@ -71,7 +71,6 @@ public str type2c(Type t) {
   switch (t) {
     case user(id("INTEGER")): return "int";
     case user(id("BOOLEAN")): return "int";
-    case array(b, et): return "<type2c(et)>[<exp2c(b)>]";
     case record(fs): return "struct {
 <fields2c(fs)>}";
   }

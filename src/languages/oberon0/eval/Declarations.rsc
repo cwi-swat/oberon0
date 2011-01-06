@@ -85,10 +85,12 @@ public Bindable addressOf(Expression e, Env env, Memory mem) {
 }
 
 public tuple[Env, Memory] push(Ident n, Expression arg, Type t, Env env, Env outer, Memory mem) {
+    println("Allocating <n.name> for <arg> of type <t>");
+    println(mem); 
     et = evalType(t, env, mem);
     <a, mem> = new(et, mem);
     if (array(_, _) := et || record(_) := et) {
-      lv = addressOf(arg, old, mem);
+      lv = addressOf(arg, outer, mem);
       mem = copy(lv.addr, a, mem);
     }
     else {
@@ -100,13 +102,14 @@ public tuple[Env, Memory] push(Ident n, Expression arg, Type t, Env env, Env out
 
 
 
-public tuple[Env, Memory] bind(list[Expression] args, list[Formal] formals, Env env, Memory mem, Env outer) {
+public tuple[Env, Memory] bind(list[Expression] args, list[Formal] formals, Env env, Env outer, Memory mem) {
   i = 0;
   for (f <- formals, n <- f.names) {
       if (i >= size(args)) {
         throw "Insufficient arguments";
       }
       if (f.hasVar) {
+        println("Hasvar: <f>.<n>");
         env[n] = addressOf(args[i], outer, mem);
       }
       else {

@@ -48,6 +48,8 @@ public Result eval(Module m, Stream input) {
   env = toplevel;
   mem = empty();
   <env, mem> = declare(m.decls, env, mem);
+  println(mem);
+  printEnv(env);
   return evalStats(m.body, env, mem, <input, []>);
 }
 
@@ -74,7 +76,7 @@ public Address lookupAddress(Ident id, list[Selector] sels, Env env, Memory mem)
 public Result evalProc(Procedure pr, list[Expression] args, Env env, Env outer, Memory mem, IO io) {
   scope = push(mem);
   <env, mem> = declare(pr.decls, env, mem);
-  <env, mem> = bind(args, pr.formals, env, mem, outer);
+  <env, mem> = bind(args, pr.formals, env, outer, mem);
   env[pr.name] = func(env, pr); // for recursion
   <mem, io> = evalStats(pr.body, env, mem, io);
   mem = pop(mem, scope);
@@ -83,7 +85,7 @@ public Result evalProc(Procedure pr, list[Expression] args, Env env, Env outer, 
 
 public Result evalBuiltin(list[Formal] fs, Result(Env, Memory, IO) f, list[Expression] args, Env env, Memory mem, IO io) 
 {
-  <env, mem> = bind(args, fs, toplevel, mem, env);
+  <env, mem> = bind(args, fs, toplevel, env, mem);
   return f(env, mem, io);
 }
 

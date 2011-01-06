@@ -28,8 +28,6 @@ syntax Natural = lex [0-9]+
 syntax Selector = field: "." Ident field
 		| subscript: "[" Expression exp "]" ;
 
-syntax Variable = var: Ident name Selector* selectors;
-
 syntax Actuals = "(" {Expression ","}* expressions ")";
 
 syntax Statement =

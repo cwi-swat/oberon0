@@ -1,0 +1,21 @@
+MODULE Test;
+
+VAR
+  x: ARRAY 4 OF INTEGER;
+  i: INTEGER;
+
+PROCEDURE f(i: INTEGER; VAR z: ARRAY 4 OF INTEGER);
+BEGIN
+  z[i] := 0
+END f;
+  
+BEGIN
+  i := 0;
+  WHILE i < 4 DO
+    x[i] := i;
+    WriteLn(x[i]);
+    f(i, x);
+    WriteLn(x[i]);
+    i := i + 1
+  END
+END Test.
