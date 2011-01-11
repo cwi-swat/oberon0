@@ -22,11 +22,6 @@ list[int] isIndented(list[Symbol] q) {
      return [];
      }
 
-list[segment] isCompact(list[Symbol] q) {
-     if (isScheme(q , ["if", "N", "then", "N", "else",  "N", "fi"])) return [<1,1>];
-     if (isScheme(q , ["while", "N", "do", "N", "od"])) return [<1,1>];
-     return [];
-     }
      
 bool isSeparated(list[Symbol] q) {
      if (isScheme(q , ["VAR","N"])) return true;  
@@ -34,19 +29,10 @@ bool isSeparated(list[Symbol] q) {
      return false;
      }
      
-bool isKeyword(Symbol a) {
-     if (\lit(str s):=a) {
-         if (s=="begin" || s == "end" || s == "declare" || s == "while" || s == "if"
-            || s == "then" || s == "do" || s == "od" || s == "fi" || s=="else") return true;
-         }
-     return false;
-     }
      
 void setUserRules() {
     setUserDefined(extraRules);
     setIndent(isIndented);
-    // setCompact(isCompact);
-    // setKeyword(isKeyword);
     setSeparated(isSeparated);
     }  
      

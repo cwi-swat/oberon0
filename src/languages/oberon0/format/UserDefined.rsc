@@ -15,10 +15,6 @@ Box makeBody(Tree body) {
    return b;
    }
    
-list[Box] getDeclarations(Tree decls) {
-   return getArgs(decls); 
-   }
-   
 Tree getOpt(Tree t) {
     if (/opt(_):= t) 
        return getFirst(t);
@@ -34,11 +30,14 @@ public Box getUserDefined(Tree q) {
              [KW(L("END")), H(0, [evPt(id2), L(";")])])]);       
          }
          }
-      
       if (Statement a:= q) {
          switch (a) {
-               case `<Variable var> := <Expression exp>`: return H(1, [evPt(var), L(":="), evPt(exp)]);
-               case `<Variable var> <Actuals? actuals>`: return H(0, [evPt(var), evPt(getOpt(actuals))]);
+               case `<Ident var> <Selector* sels>:= <Expression exp>`: {
+                    list[Box] bs = getArgs(sels);
+                    if (isEmpty(bs)) return H(1, [evPt(var), L(":="), evPt(exp)]);
+                    else H(1, [H(0,evPt(var)+bs), L(":="), evPt(exp)]);
+                    }
+               case `<Ident name> <Actuals? actuals>`: return H(0, [evPt(name), evPt(getOpt(actuals))]);
                case `IF <Expression cond> THEN <{Statement ";"}+ body> <ElsIfPart* ei> <ElsePart? ep> END`: {
                      return V(0,  [H(1, [KW(L("IF")), evPt(cond), KW(L("THEN"))]), makeBody(body), evPt(getOpt(ep)), KW(L("END"))]);
                      }
@@ -58,7 +57,7 @@ public Box getUserDefined(Tree q) {
              }
         if (Body a:= q) {
                if (`BEGIN <{Statement ";"}+ body>`:=a) {
-                    return makeBody(body);
+                    return V(0, [KW(L("BEGIN")), makeBody(body)]);
                     }
                }
 /* syntax Declarations = decls:ConstSect? cons TypeSect? type VarSect? vars
@@ -66,25 +65,25 @@ public Box getUserDefined(Tree q) {
          if (Declarations a:= q) {
                Tree consts, typs, vars, procs;
                if (`<ConstSect? consts> <TypeSect? typs> <VarSect? vars> <ProcedureDecl* procs>`:=a) { 
-                        return V(1, [evPt(getOpt(consts)), evPt(getOpt(typs)), evPt(getOpt(vars))]+getDeclarations(procs));   
+                        return V(1, [evPt(getOpt(consts)), evPt(getOpt(typs)), evPt(getOpt(vars))]+getArgs(procs));   
                    }
                }
           /* syntax VarSect = "VAR" VarDecl* vars ; */
           if (VarSect a:=q) {
                 if (`VAR <VarDecl* vars>`:=a) {          
-                   return I([V(0,[KW(L("VAR")), I([A(getDeclarations(vars))])])]);
+                   return I([V(0,[KW(L("VAR")), I([A(getArgs(vars))])])]);
                    }
                 }
           /* syntax ConstSect = "CONST" ConstDecl* consts ; */
           if (ConstSect a:=q) {
                 if (`CONST <ConstDecl* consts>`:=a) {          
-                   return I([V(0,[KW(L("CONST")), I([A(getDeclarations(consts))])])]);
+                   return I([V(0,[KW(L("CONST")), I([A(getArgs(consts))])])]);
                    }
                 }
          /* syntax TypeSect = "TYPE" TypeDecl* types ; */
          if (TypeSect a:=q) {
                 if (`TYPE <TypeDecl* typs>`:=a) {          
-                   return I([V(0,[KW(L("TYPE")), I([A(getDeclarations(typs))])])]);
+                   return I([V(0,[KW(L("TYPE")), I([A(getArgs(typs))])])]);
                    }
                 }
           /* syntax VarDecl = varDecl: {Ident","}* names ":" Type type ";" */
@@ -93,9 +92,8 @@ public Box getUserDefined(Tree q) {
                          return R([evPt(names), L(":"), evPt(typ),L(";")]);
                          }
              }
-          /* Problem
           if (ConstDecl a:=q) {
-             if ((ConstDecl) `<Ident name> = <Expresion val> ;`:=a) {
+             if ((ConstDecl) `<Ident name> = <Expression val> ;`:=a) {
                          return R([evPt(name), L("="), evPt(val),L(";")]);
                          }
              }
@@ -105,12 +103,15 @@ public Box getUserDefined(Tree q) {
                    return R([evPt(name), L("="), evPt(typ),L(";")]);
                    }
              }
-          */
          if (ProcedureDecl a := q) {
       	 if (`PROCEDURE <Ident id1>  <Formals? formals> ; <Declarations decls> <Body? body> END <Ident id2> ;`:=a) {
       	    return V(0, [H(1, [KW(L("PROCEDURE")), H(0, [evPt(id1), evPt(formals), L(";")])]), evPt(decls), evPt(getOpt(body)),  
       	                      H(1, [KW(L("END")), H(0, [evPt(id2), L(";")])])]);
       	    }
-       }
+      	   }
+      	 if (Selector a := q) {
+      	    if (`[ <Expression exp> ] `:= a) return H(0, [L("["), evPt(exp), L("]")]);
+      	    if (`. <Ident id>` := a) return H(0,[L("."), evPt(id)]);
+      	    }
       return NULL();
 }
