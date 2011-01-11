@@ -21,21 +21,23 @@ public tuple[SymbolTable st, bool res, int val] evaluateConstantExp(SymbolTable 
 		case nat(nval) : 
 			return <symbolTable, true, nval>;
 		
-		case lookup(v) : {
-			if (var(cid,[]) := v) {
-				set[STItemId] items = getItemsForName(symbolTable, cid);
-				if (size(items) == 1) {
-					if (ConstantItem(_,cval,_) := getOneFrom(items)) {
-						return < symbolTable, true, cval >;					
-					} else {
-						if (registerErrors) symbolTable = addScopeError(symbolTable,exp@location,"Name <cid.name> must be a defined constant.");
-					}
+		case lookup(cid,[]) : {
+			set[STItemId] items = getItemsForName(symbolTable, cid);
+			if (size(items) == 1) {
+				if (ConstantItem(_,cval,_) := symbolTable.scopeItemMap[getOneFrom(items)]) {
+					symbolTable = addItemUses(symbolTable, items, cid@location);
+					return < symbolTable, true, cval >;					
 				} else {
-					if (registerErrors) symbolTable = addScopeError(symbolTable,exp@location,"Multiple definitions were found for name <cid.name>");				
-				} 
+					if (registerErrors) symbolTable = addScopeError(symbolTable,exp@location,"Name <cid.name> must be a defined constant.");
+				}
 			} else {
-				if (registerErrors) symbolTable = addScopeError(symbolTable,exp@location,"Names used in constant expressions must represent integer constants");
-			}
+				if (registerErrors) symbolTable = addScopeError(symbolTable,exp@location,"Multiple definitions were found for name <cid.name>");				
+			} 
+			return <symbolTable, false, 0>;
+		}
+
+		case lookup(cid,sels) : {
+			if (registerErrors) symbolTable = addScopeError(symbolTable,exp@location,"Names used in constant expressions must represent integer constants");
 			return <symbolTable, false, 0>;
 		}
 		

@@ -13,9 +13,8 @@ import languages::oberon0::check::Types;
 // TODO: Do we have more than one?
 //
 data Namespace =
-	  Variables()
+	  UserNames()
 	| Modules()
-	| Types()
 	;
 	
 //
@@ -35,6 +34,7 @@ data STItem =
 	| ModuleItem(Ident moduleName, STItemId parentId)
 	| TypeItem(Ident typeName, OType namedType, STItemId parentId)
 	| BuiltInItem(Ident procedureName, STItemId parentId)
+	| BuiltInType(Ident typeName, STItemId parentId)
 	
 	| TopLayer()
 	| ModuleLayer(STItemId itemId, STItemId parentId)
@@ -58,6 +58,7 @@ public Ident getItemName(STItem item) {
 		case ModuleItem(n,_) : return n;
 		case TypeItem(n,_,_) : return n;
 		case BuiltInItem(n,_) : return n;
+		case BuiltInType(n,_) : return n;
 	}
 	
 	throw "getItemName, unhandled case <item>";
@@ -76,6 +77,7 @@ public bool itemHasName(STItem item) {
 		case ModuleItem(_,_) : return true;
 		case TypeItem(_,_,_) : return true;
 		case BuiltInItem(_,_) : return true;
+		case BuiltInType(_,_) : return true;
 		
 		default : return false;
 	}
@@ -108,16 +110,14 @@ alias SymbolTable = tuple[
     map[loc useLoc, set[STItemId] usedItems] itemUses, 
     rel[loc, STItemId] itemLocations, 
     map[loc, set[str]] scopeErrorMap, 
-    map[loc, OType] returnTypeMap,
-    list[STItemId] scopeStack,
-    bool caseSensitive
+    list[STItemId] scopeStack
 	];
 
 //	
 // Create an empty symbol table
 //                        
 public SymbolTable createNewSymbolTable() {
-	return < -1, -1, -1, 0, ( ), { }, { }, ( ), { }, ( ), ( ), [ ], false >;
+	return < -1, -1, -1, 0, ( ), { }, { }, ( ), { }, ( ), [ ] >;
 }                    
 	
 alias AddedItemPair = tuple[SymbolTable symbolTable, STItemId addedId];
@@ -182,8 +182,6 @@ public ResultTuple pushNewTopScope(SymbolTable symbolTable, loc l) {
 // Push a new module scope, which is always under the top scope
 //
 public ResultTuple pushNewModuleScope(SymbolTable symbolTable, Ident moduleName, loc l) {
-	if (! symbolTable.caseSensitive) moduleName = id(toUpperCase(moduleName.name));
-	
 	AddedItemPair aip = addScopeLayerWithParent(symbolTable, ModuleLayer(-1, symbolTable.currentScope)[@at=l], symbolTable.currentScope, l);
 	aip.symbolTable.scopeStack = [ aip.addedId ] + aip.symbolTable.scopeStack;
 	aip.symbolTable.currentScope = aip.addedId;
@@ -217,15 +215,6 @@ public SymbolTable pushScope(SymbolTable symbolTable, STItemId newScope) {
 // Push a new procedure scope located inside an arbitrary scope
 //
 public ResultTuple pushNewProcedureScopeAt(SymbolTable symbolTable, Ident name, list[tuple[Ident pname, OType ptype, loc ploc, loc nloc, bool isvar]] params, loc l, STItemId scopeToUse) {
-	if (! symbolTable.caseSensitive) {
-		name = id(toUpperCase(name.name));
-		if (size(params) > 0) {
-			for (idx <- [0..size(params)-1]) {
-				params[idx].pname = id(toUpperCase(params[idx].pname.name));
-			}
-		}
-	}
-	
 	// Create the procedure layer, adding it to the scope stack and making it the current scope
 	AddedItemPair aipLayer = addScopeLayerWithParent(symbolTable, ProcedureLayer(-1, scopeToUse)[@at=l], scopeToUse, l);
 	aipLayer.symbolTable.scopeStack = [ aipLayer.addedId ] + aipLayer.symbolTable.scopeStack;
@@ -262,8 +251,6 @@ public ResultTuple pushNewProcedureScope(SymbolTable symbolTable, Ident name, li
 // Add a new variable item into an arbitrary scope
 //
 public ResultTuple addVariableToScopeAt(SymbolTable symbolTable, Ident varName, OType varType, loc l, STItemId scopeToUse) {
-	if (! symbolTable.caseSensitive) varName = id(toUpperCase(varName.name));
-
 	AddedItemPair aip = addSTItemWithParent(symbolTable, VariableItem(varName, varType, scopeToUse)[@at=l], scopeToUse, l);
 	return <aip.symbolTable,[aip.addedId]>;
 }
@@ -279,8 +266,6 @@ public ResultTuple addVariableToScope(SymbolTable symbolTable, Ident varName, OT
 // Add a new constant item into an arbitrary scope
 //
 public ResultTuple addConstantToScopeAt(SymbolTable symbolTable, Ident constName, int constVal, loc l, STItemId scopeToUse) {
-	if (! symbolTable.caseSensitive) constName = id(toUpperCase(constName.name));
-
 	AddedItemPair aip = addSTItemWithParent(symbolTable, ConstantItem(constName, constVal, scopeToUse)[@at=l], scopeToUse, l);
 	return <aip.symbolTable,[aip.addedId]>;
 }
@@ -296,8 +281,6 @@ public ResultTuple addConstantToScope(SymbolTable symbolTable, Ident constName, 
 // Add a new type item into an arbitrary scope
 //
 public ResultTuple addTypeToScopeAt(SymbolTable symbolTable, Ident typeName, OType namedType, loc l, STItemId scopeToUse) {
-	if (! symbolTable.caseSensitive) typeName = id(toUpperCase(typeName.name));
-
 	AddedItemPair aip = addSTItemWithParent(symbolTable, TypeItem(typeName, namedType, scopeToUse)[@at=l], scopeToUse, l);
 	return <aip.symbolTable,[aip.addedId]>;
 }
@@ -312,9 +295,7 @@ public ResultTuple addTypeToScope(SymbolTable symbolTable, Ident typeName, OType
 //
 // Add a new built-in item into an arbitrary scope
 //
-public ResultTuple addBuiltInToScopeAt(SymbolTable symbolTable, Ident builtInName, STItemId scopeToUse) {
-	if (! symbolTable.caseSensitive) builtInName = id(toUpperCase(builtInName.name));
-	
+public ResultTuple addBuiltInItemToScopeAt(SymbolTable symbolTable, Ident builtInName, STItemId scopeToUse) {
 	loc l = |file://dev/null|;
 	
 	AddedItemPair aip = addSTItemWithParent(symbolTable, BuiltInItem(builtInName, scopeToUse)[@at=l], scopeToUse, l);
@@ -324,8 +305,25 @@ public ResultTuple addBuiltInToScopeAt(SymbolTable symbolTable, Ident builtInNam
 //
 // Add a new built-in item into the current scope
 //
-public ResultTuple addBuiltInToScope(SymbolTable symbolTable, Ident builtInName) {
-	return addBuiltInToScopeAt(symbolTable, builtInName, symbolTable.currentScope);
+public ResultTuple addBuiltInItemToScope(SymbolTable symbolTable, Ident builtInName) {
+	return addBuiltInItemToScopeAt(symbolTable, builtInName, symbolTable.currentScope);
+}
+
+//
+// Add a new built-in type into an arbitrary scope
+//
+public ResultTuple addBuiltInTypeToScopeAt(SymbolTable symbolTable, Ident builtInName, STItemId scopeToUse) {
+	loc l = |file://dev/null|;
+	
+	AddedItemPair aip = addSTItemWithParent(symbolTable, BuiltInType(builtInName, scopeToUse)[@at=l], scopeToUse, l);
+	return <aip.symbolTable,[aip.addedId]>;
+}
+
+//
+// Add a new built-in type into the current scope
+//
+public ResultTuple addBuiltInTypeToScope(SymbolTable symbolTable, Ident builtInName) {
+	return addBuiltInTypeToScopeAt(symbolTable, builtInName, symbolTable.currentScope);
 }
 
 //
@@ -376,15 +374,13 @@ public SymbolTable addScopeError(SymbolTable symbolTable, loc l, str msg) {
 
 public set[STItemId] filterNamesForNamespace(SymbolTable symbolTable, set[STItemId] scopeItems, Namespace namespace) {
 	switch(namespace) {
-		case Variables() : 
+		case UserNames() : 
 			return { i | i <- scopeItems, si := symbolTable.scopeItemMap[i], VariableItem(_,_,_) := si ||
-				ProcedureItem(_,_,_) := si || FormalParameterItem(_,_,_,_) := si || BuiltInItem(_,_) := si };
+				ProcedureItem(_,_,_) := si || FormalParameterItem(_,_,_,_) := si || BuiltInItem(_,_) := si ||
+				TypeItem(_,_,_) := si || ConstantItem(_,_,_) := si || BuiltInType(_,_) := si };
 					
 		case Modules() : 
 			return { i | i <- scopeItems, si := symbolTable.scopeItemMap[i], ModuleItem(_,_) := si };
-
-		case Types() : 
-			return { i | i <- scopeItems, si := symbolTable.scopeItemMap[i], TypeItem(_,_,_) := si };
 	}
 
 	throw "Unmatched namespace in filterNamesForNamespace: <namespace>";
@@ -397,8 +393,6 @@ public set[STItemId] filterNamesForNamespace(SymbolTable symbolTable, set[STItem
 // table scope tree is reached.
 //
 public set[STItemId] getItemsForName(SymbolTable symbolTable, STItemId currentScopeId, Ident x, set[Namespace] containingNamespaces) {
-	if (! symbolTable.caseSensitive) x = id(toUpperCase(x.name));
-
 	set[STItemId] foundItems = { };
 
 	// Get back the items at this level with the given name
@@ -427,17 +421,9 @@ public set[STItemId] getItemsForName(SymbolTable symbolTable, STItemId currentSc
 // right names.
 //
 public set[STItemId] getItemsForName(SymbolTable symbolTable, STItemId currentScopeId, Ident x) {
-	return getItemsForName(symbolTable, currentScopeId, x, { Variables() });
+	return getItemsForName(symbolTable, currentScopeId, x, { UserNames() });
 }
 
 public set[STItemId] getItemsForName(SymbolTable symbolTable, Ident x) {
-	return getItemsForName(symbolTable, symbolTable.currentScope, x, { Variables() });
-}
-
-public set[STItemId] getItemsForTypeName(SymbolTable symbolTable, STItemId currentScopeId, Ident x) {
-	return getItemsForName(symbolTable, currentScopeId, x, { Types() });
-}
-
-public set[STItemId] getItemsForTypeName(SymbolTable symbolTable, Ident x) {
-	return getItemsForName(symbolTable, symbolTable.currentScope, x, { Types() });
+	return getItemsForName(symbolTable, symbolTable.currentScope, x, { UserNames() });
 }

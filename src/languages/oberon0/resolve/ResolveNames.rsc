@@ -14,7 +14,8 @@ import languages::oberon0::resolve::TypeEvaluator;
 // Selectors are either fields (for records) or subscripts (for arrays).
 // For fields, we don't check the name here, since we don't necessarily
 // know the type of the value being accessed, or which (if any) fields
-// it has. For subscripts, these can be arbitrary expressions, so we
+// it has. This checking thus needs to be delayed until the type checking
+// phase. For subscripts, these can be arbitrary expressions, so we
 // resolve the names present in the expression.
 //
 // TODO: Do we need a check here to ensure that reserved words are not
@@ -22,7 +23,8 @@ import languages::oberon0::resolve::TypeEvaluator;
 //
 public SymbolTable resolveSelectorNames(SymbolTable symbolTable, Selector sel) {
 	switch(sel) {
-		case field(_) : return symbolTable;
+		case field(fid) : return symbolTable;
+	
 		case subscript(e) : return resolveExpressionNames(symbolTable,e);
 	}
 	throw "resolveNames: Unhandled selector <sel> at <sel@location>";
@@ -36,18 +38,14 @@ public SymbolTable resolveSelectorNames(SymbolTable symbolTable, Selector sel) {
 // TODO: Do we need a check here to ensure that reserved words are not
 // used as variable names? Or, does the parser currently handle this for us?
 //
-public SymbolTable resolveVariableNames(SymbolTable symbolTable, Variable v) {
-	if (var(Ident name, list[Selector] selectors) := v) {
-		if (size(getItemsForName(symbolTable, name)) > 0) {
-			symbolTable = addItemUses(symbolTable, getItemsForName(symbolTable, name), name@location);
-		} else {
-			symbolTable = addScopeError(symbolTable, name@location, "<name.name> not defined before use");
-		}
-		for (sel <- selectors) symbolTable = resolveSelectorNames(symbolTable,sel);
-		return symbolTable;
+public SymbolTable resolveVariableNames(SymbolTable symbolTable, Ident name, list[Selector] selectors) {
+	if (size(getItemsForName(symbolTable, name)) > 0) {
+		symbolTable = addItemUses(symbolTable, getItemsForName(symbolTable, name), name@location);
+	} else {
+		symbolTable = addScopeError(symbolTable, name@location, "<name.name> not defined before use");
 	}
-		
-	throw "resolveNames: Unhandled variable <v> at location <v@location>";
+	for (sel <- selectors) symbolTable = resolveSelectorNames(symbolTable,sel);
+	return symbolTable;
 }
 
 //
@@ -60,7 +58,7 @@ public SymbolTable resolveVariableNames(SymbolTable symbolTable, Variable v) {
 public SymbolTable resolveExpressionNames(SymbolTable symbolTable, Expression exp) {
 	switch(exp) {
 		case nat(_) : return symbolTable;
-		case lookup(v) : return resolveVariableNames(symbolTable,v);
+		case lookup(v,sl) : return resolveVariableNames(symbolTable,v,sl);
 		case neg(e) : return resolveExpressionNames(symbolTable,e);
 		case pos(e) : return resolveExpressionNames(symbolTable,e);
 		case not(e) : return resolveExpressionNames(symbolTable,e);
@@ -99,8 +97,8 @@ public SymbolTable resolveExpressionNames(SymbolTable symbolTable, list[Expressi
 //
 public SymbolTable resolveStatementNames(SymbolTable symbolTable, Statement stmt) {
 	switch(stmt) {
-		case assign(v,e) : return resolveVariableNames(resolveExpressionNames(symbolTable,e),v);
-		case call(v,es) : return resolveVariableNames(resolveExpressionNames(symbolTable,es),v);
+		case assign(v,sl,e) : return resolveVariableNames(resolveExpressionNames(symbolTable,e),v,sl);
+		case call(v,es) : return resolveVariableNames(resolveExpressionNames(symbolTable,es),v,[]);
 		case ifThen(e,bs,eifs,ep) : {
 			symbolTable = resolveStatementNames(resolveExpressionNames(symbolTable,e),bs);
 			for (<e2,bs2> <- eifs) symbolTable = resolveStatementNames(resolveExpressionNames(symbolTable,e2),bs2);
@@ -124,22 +122,17 @@ public SymbolTable resolveStatementNames(SymbolTable symbolTable, list[Statement
 //
 // Resolve names in types. Note that the type declaration is a separate
 // syntactic strucure, so we expect type names used here to be already
-// defined. Note also that there is no separate INTEGER type in the
-// abstract syntax, so we need to check for that explicitly as one
-// variant of a user-defined type name. Types appear in fields,
-// formal parameters, variable declarations, and type declarations.
+// defined. Types appear in fields, formal parameters, variable declarations, 
+// and type declarations.
 //
 // TODO: Do we need a check here to ensure that reserved words are not
 // used as type names? Or, does the parser currently handle this for us?
 //
 public SymbolTable resolveTypeNames(SymbolTable symbolTable, Type t) {
-	// INTEGER type
-	if (user(name) := t, /^integer$/i := name.name) return symbolTable;
-
-	// Other named types: the name should already be defined
+	// Named types, including built-in types.	
 	if (user(name) := t) {
-		if (size(getItemsForTypeName(symbolTable, symbolTable.currentScope, name)) > 0) {
-			return addItemUses(symbolTable, getItemsForTypeName(symbolTable, symbolTable.currentScope, name), name@location);
+		if (size(getItemsForName(symbolTable, symbolTable.currentScope, name)) > 0) {
+			return addItemUses(symbolTable, getItemsForName(symbolTable, symbolTable.currentScope, name), name@location);
 		} else {
 			return addScopeError(symbolTable, name@location, "<name.name> not defined before use");
 		}
@@ -172,7 +165,10 @@ public SymbolTable resolveTypeNames(SymbolTable symbolTable, Type t) {
 //
 // For fields, we resolve the names in the field type, which should only
 // use already-declared names. We do NOT resolve the names in the IDs,
-// since they can be arbitrary.
+// since they can be arbitrary, and they aren't visible in scope unless
+// we access them through a field dereference of a record variable (in
+// other words, if we have field f, we never want to return a field item
+// when we see f, we only check it when we see r.f, r[0].f, etc).
 //
 // TODO: Do we need a check here to ensure that reserved words are not
 // used as field names? Or, does the parser currently handle this for us?
@@ -220,8 +216,8 @@ public SymbolTable resolveProcedureNames(SymbolTable symbolTable, Procedure pr) 
 			if (formal(hasv,ids,ty) := f) {
 				symbolTable = resolveTypeNames(symbolTable, ty);
 				<symbolTable, cres, ot> = otype(symbolTable, ty);
-				for (id <- ids) {
-						params += < id, ot, id@location, f@location, hasv >;
+				for (fpid <- ids) {
+						params += < fpid, ot, fpid@location, f@location, hasv >;
 				}
 			} else {
 				throw "resolveNames: Unhandled formal <f> at location <f@location>";
@@ -230,7 +226,7 @@ public SymbolTable resolveProcedureNames(SymbolTable symbolTable, Procedure pr) 
 		
 		// Then, add the new procedure into the scope
 		ResultTuple rt = pushNewProcedureScope(symbolTable,pid,params,pr@location);
-		symbolTable = justSymbolTable(addSTItemUses(rt,([<false,pr@location>, <true,pid@location>] + [<true,nloc> | <_,_,_,nloc,_> <- params])));
+		symbolTable = justSymbolTable(addSTItemUses(rt,([<false,pr@location>, <true,pid@location>] + [<true,nloc> | <_,_,nloc,_,_> <- params])));
 		
 		// Next, process all declarations before the procedure body
 		symbolTable = resolveDeclarationNames(symbolTable, ds);
@@ -241,6 +237,8 @@ public SymbolTable resolveProcedureNames(SymbolTable symbolTable, Procedure pr) 
 		// Sanity check, ensure the final name is the same as the procedure name
 		if (pid.name != eid.name) {
 			symbolTable = addScopeError(symbolTable,pr@location,"The procedure name <pid.name> and the procedure end name <eid.name> do not match");
+		} else {
+			symbolTable = addItemUse(symbolTable, rt.addedItems[1], eid@location);
 		}
 		
 		// Finally, pop the scope and return
@@ -342,7 +340,7 @@ public SymbolTable resolveTypeDeclNames(SymbolTable symbolTable, TypeDecl td) {
 		// Note that we need to check for conflicts here, since we cannot define
 		// the same type more than once in the same scope. If we do have conflicts,
 		// we do NOT add a new item for this type.
-		set[STItemId] conflicts = { c | c <- getItemsForTypeName(symbolTable, tid), symbolTable.scopeItemMap[c].parentId == symbolTable.currentScope };
+		set[STItemId] conflicts = { c | c <- getItemsForName(symbolTable, tid), symbolTable.scopeItemMap[c].parentId == symbolTable.currentScope };
 		
 		if (size(conflicts) > 0)
 			symbolTable = addScopeError(symbolTable, tid@location, "Type <tid.name> is already defined in the current scope");
@@ -368,7 +366,8 @@ public SymbolTable resolveTypeDeclNames(SymbolTable symbolTable, list[TypeDecl] 
 //
 // Process variable names.
 //
-// TODO: Add check to ensure we aren't defining an existing keyword
+// TODO: Add check to ensure we aren't defining an existing keyword (if needed, the
+// parser may be taking care of this for us, although it won't for readln, etc)
 //
 public SymbolTable resolveVarDeclNames(SymbolTable symbolTable, VarDecl vd) {
 	if (varDecl(ids,ty) := vd) {
@@ -379,6 +378,7 @@ public SymbolTable resolveVarDeclNames(SymbolTable symbolTable, VarDecl vd) {
 		// Now actually get the computed type back. ot could be Invalid() in cases where
 		// the type cannot be computed.
 		<symbolTable, cres, ot> = otype(symbolTable, ty);
+		
 		// For each id in the var decl, we add a new variable item into the symbol table.
 		// Note that we need to check for conflicts here as well, since we cannot define
 		// the same name more than once in the same scope. If we do have conflicts,
@@ -415,6 +415,8 @@ public SymbolTable resolveModuleNames(SymbolTable symbolTable, Module m) {
 		symbolTable = resolveStatementNames(symbolTable, bs);
 		if (mn.name != en.name) {
 			symbolTable = addScopeError(symbolTable,m@location,"The module name <mn.name> and the module end name <en.name> do not match");
+		} else {
+			symbolTable = addItemUse(symbolTable, symbolTable.scopeItemMap[symbolTable.currentModule].itemId, en@location);
 		}
 		return popScope(symbolTable);
 	}
@@ -428,10 +430,13 @@ public SymbolTable resolveNames(Module m) {
 	symbolTable = justSymbolTable(pushNewTopScope(symbolTable, m@location));
 	
 	// Add built-in names
-	symbolTable = justSymbolTable(addBuiltInToScope(symbolTable,id("writeln")));
-	symbolTable = justSymbolTable(addBuiltInToScope(symbolTable,id("write")));
-	symbolTable = justSymbolTable(addBuiltInToScope(symbolTable,id("readln")));
-	symbolTable = justSymbolTable(addBuiltInToScope(symbolTable,id("read")));
+	symbolTable = justSymbolTable(addBuiltInItemToScope(symbolTable,id("WriteLn")));
+	symbolTable = justSymbolTable(addBuiltInItemToScope(symbolTable,id("Write")));
+	symbolTable = justSymbolTable(addBuiltInItemToScope(symbolTable,id("ReadLn")));
+	symbolTable = justSymbolTable(addBuiltInItemToScope(symbolTable,id("Read")));
+	
+	// Add built-in types
+	symbolTable = justSymbolTable(addBuiltInTypeToScope(symbolTable,id("INTEGER")));
 	
 	symbolTable = resolveModuleNames(symbolTable, m);
 	return symbolTable;
