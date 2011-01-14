@@ -40,6 +40,7 @@ BEGIN
       z := z + y 
     END ;
     y := 2*y; 
+    (* Dag *)
     x := x DIV 2 END;
    Write(x); 
    Write(y); 
@@ -47,9 +48,10 @@ BEGIN
    WriteLn 
 END Multiply;
 
+(* def *)
 
 PROCEDURE Divide; 
-  VAR x, y, r, q, w: INTEGER;
+  VAR x, (* Q *) y, r, q, w: INTEGER;
 BEGIN 
   Read(x); 
   Read(y); 

@@ -1,4 +1,4 @@
-module languages::oberon0::format::Main
+module box::oberon0::Default
 import ParseTree;
 import box::Concrete;
 import box::Box;
@@ -36,39 +36,47 @@ void setUserRules() {
     setSeparated(isSeparated);
     }  
      
-public text toText(loc asf){
-     Module a = parse(#PROGRAM, asf);
+
+// Don't change this part 
+
+public text toText(loc src, loc dest){
+     Module a = parse(#Module, src);
      setUserRules();
      text r = toText(a);
-     writeData(asf, r, ".txt");
+     toExport(src, dest, r, ".txt");
      return r;
      }
- 
- public text toHtml(loc asf){
-     Module a = parse(#Module, asf);
+     
+ public text toHtml(loc src, loc dest){
+     Module a = parse(#Module, src);
      setUserRules();
      text r = toHtml(a);
-     writeData(asf, r, ".html");
+     toExport(src, dest, r, ".html");
      return r;
      }  
      
-public text toLatex(loc asf){
-     Module a = parse(#Module, asf);
+public text toLatex(loc src, loc dest){
+     Module a = parse(#Module, src);
      // rawPrintln(a);
      setUserRules();
      text r = toLatex(a);
-     writeData(asf, r, ".tex");
+     toExport(src, dest, r, ".tex");
      return r;
      } 
-     
+
+public text toRichText(loc asf){
+     Module a = parse(#Module, asf);
+     setUserRules();
+     text r = toRichText(a);
+     return r;
+     } 
+          
 public Box toBox(loc asf) {
      Tree a = parse(#Module, asf);
-     // rawPrintln(a);
      setUserRules();
      return toBox(a);
      }  
 
-// Don't change this part 
 
 public Box extraRules(Tree q) {  
     return getUserDefined(q);

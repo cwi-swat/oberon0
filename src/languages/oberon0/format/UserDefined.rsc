@@ -65,7 +65,7 @@ public Box getUserDefined(Tree q) {
          if (Declarations a:= q) {
                Tree consts, typs, vars, procs;
                if (`<ConstSect? consts> <TypeSect? typs> <VarSect? vars> <ProcedureDecl* procs>`:=a) { 
-                        return V(1, [evPt(getOpt(consts)), evPt(getOpt(typs)), evPt(getOpt(vars))]+getArgs(procs));   
+                        return V(0, [evPt(getOpt(consts)), evPt(getOpt(typs)), evPt(getOpt(vars)), I([V(1, getArgs(procs))])]);   
                    }
                }
           /* syntax VarSect = "VAR" VarDecl* vars ; */
