@@ -53,8 +53,13 @@ public Module resolve(Module m) {
   // TODO factor out this stuff in a function
   // and reuse for procs.
   m.decls.types = visit (m.decls.types) {
-     case user(i) => i[@longName=longName(i, tbl)]
+     case user(i) => user(i[@longName=longName(i, tbl)])
    }
+   
+   m.decls.consts = visit (m.decls.consts) {
+     case constDecl(i,val) => constDecl(i[@longName=longName(i, tbl)],val)
+   }
+  
    
    m.body = visit (m.body) {
      case call(i, a) => call(i[@longName=longName(i, tbl)][@formals=formalsOf(i, tbl)][@captured=[]], a)
@@ -93,7 +98,8 @@ public list[Formal] captured(Procedure p, SymbolTable tbl) {
     return for (fv <- freeVars(p)) {
       println("FV = <fv>");
       sc = scope(fv, tbl);
-      append formal(true, [fv], sc.entries[fv].\type);
+      if(! (const(_) := sc.entries[fv])) 
+      	append formal(true, [fv], sc.entries[fv].\type);
     } 
 }
 
@@ -110,13 +116,18 @@ public Procedure resolve(Procedure p, SymbolTable tbl) {
    p.decls.procs = [ resolve(lp, tbl) | lp <- p.decls.procs ];
    
    p.decls.types = visit (p.decls.types) {
-     case user(i) => i[@longName=longName(i, tbl)]
+     case user(i) => user(i[@longName=longName(i, tbl)])
    }
+   
+   p.decls.consts = visit (p.decls.consts) {
+     case constDecl(i,val) => constDecl(i[@longName=longName(i, tbl)],val)
+   }
+
    
    p.body = visit (p.body) {
      case call(i, a) => call(i[@longName=longName(i, tbl)][@formals=formalsOf(i, tbl)][@captured=capturedVars(i, tbl)], a)
      case assign(i, s, e) => assign(i[@longName=longName(i, tbl)], s, e)
-     case lookup(i, s) => lookup(i[@longName=longName(i, tbl)], s)
+     case lookup(i, s) : { println(i); insert lookup(i[@longName=longName(i, tbl)], s); }
    }
 
    vars = ( n: f.hasVar | f <- p.formals + p.name@captured, n <- f.names );

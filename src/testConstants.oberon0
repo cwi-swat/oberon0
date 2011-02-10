@@ -1,0 +1,27 @@
+MODULE TestConstants;
+
+CONST
+  BLA = 10;
+  JADA = 5 DIV 2;
+  INPUTLENGTH = 5 * 5 + (BLA MOD JADA);
+  GEDOE = BLA DIV JADA;
+
+VAR
+  i : INTEGER;
+
+PROCEDURE TestFunc(VAR array: ARRAY INPUTLENGTH OF INTEGER; left, right: INTEGER);
+VAR 
+  x : INTEGER;
+BEGIN
+  i := ((i DIV 4) DIV 3) DIV 5;
+  right := left + (1 * 2) + 0;
+  left := (right * (1+1)) + right + ((2*BLA) + 2) + (4+4) + left;
+  i := (((0 + 5) DIV 2) MOD (4+ 5));
+  IF left = right THEN
+    i := 30 * 30
+  END
+END TestFunc;
+
+BEGIN
+  i:= (42 + ( 6 * 7)) DIV 4
+END TestConstants.

@@ -74,6 +74,7 @@ public str type2c(Type t) {
     case record(fs): return "struct {
 <fields2c(fs)>}";
   }
+  throw "Cannot happen";
 }
 
 public str fields2c(list[Field] fs) {
@@ -83,7 +84,6 @@ public str fields2c(list[Field] fs) {
 
 public str formals2c(Procedure p) {
   cfs = for (f <- p.formals + p.name@captured, n <- f.names) {
-    t = type2c(f.\type);
     append f.hasVar ? varType2c("(*<n.name>)", f.\type) : varType2c(n.name, f.\type);
   }
   return intercalate(", ", cfs);
@@ -101,6 +101,7 @@ public str cond2c(Expression e) {
     case gt(lhs, rhs): return  "(<exp2c(lhs)> \> <exp2c(rhs)>)";
     case leq(lhs, rhs): return  "(<exp2c(lhs)> \<= <exp2c(rhs)>)";
     case geq(lhs, rhs): return  "(<exp2c(lhs)> \>= <exp2c(rhs)>)";
+    case nat(val)     : return  "<val>";
     default: throw "Not a condition: <e>";
   }
 }

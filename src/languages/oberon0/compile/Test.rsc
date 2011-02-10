@@ -35,6 +35,12 @@ public languages::oberon0::ast::Oberon0::Module parseSample() {
     parse(#languages::oberon0::syntax::Oberon0::Module, |project://oberon0/src/sample.oberon0|)));
 }
 
+public languages::oberon0::ast::Oberon0::Module parseSomething(loc location) {
+  return delAnnotationsRec(
+    implode(#languages::oberon0::ast::Oberon0::Module,
+    parse(#languages::oberon0::syntax::Oberon0::Module, location)));
+}
+
 public void main() {
   writeFile(|project://oberon0/src/sample.c|, mod2c(resolve(sample)));
 }
