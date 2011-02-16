@@ -74,7 +74,7 @@ str statements2Java(list[Statement] statements, Environment env){
 str statement2Java(Statement statement, Environment env){
     switch(statement){
         case assign(var,selectors,exp): return "<varUse(var.name,selectors,env)> = <exp2Java(exp,env)>;";
-        case call(p,args): return call2Java(p,args);
+        case call(p,args): return call2Java(p,args,env);
         case ifThen(condition,body,elseIfs,\else) : {
             return 
 "if(<exp2Java(condition,env)> != 0){
@@ -95,7 +95,7 @@ str statement2Java(Statement statement, Environment env){
     throw "Cannot happen!";
 }
 
-str call2java(Ident p,list[Expression] args){
+str call2Java(Ident p,list[Expression] args, Environment env){
 	calleeLev = procLevel(p,env);
     offset = 0;
     argsAssigns ="";
