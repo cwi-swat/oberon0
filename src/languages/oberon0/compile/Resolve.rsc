@@ -93,12 +93,9 @@ public list[Formal] capturedVars(Ident id, SymbolTable tbl) {
 }
 
 public list[Formal] captured(Procedure p, SymbolTable tbl) {
-    println(p.name);
-    printSymbolTable(tbl);
-    return for (fv <- freeVars(p)) {
-      println("FV = <fv>");
+	return for (fv <- freeVars(p)) {
       sc = scope(fv, tbl);
-      if(! (const(_) := sc.entries[fv])) 
+      if((const(_) !:= sc.entries[fv])) 
       	append formal(true, [fv], sc.entries[fv].\type);
     } 
 }
@@ -106,7 +103,6 @@ public list[Formal] captured(Procedure p, SymbolTable tbl) {
 
 public Procedure resolve(Procedure p, SymbolTable tbl) {
    p.name = p.name[@longName=longName(p.name, tbl)];
-
    tbl = local(p.name.name, declared(p.decls), tbl);
    
    p.name = p.name[@captured=capturedVars(p.name, tbl)];

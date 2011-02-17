@@ -22,14 +22,7 @@ public str mod2Java(Module m) {
     <frameSize,stackLocationMap> = getStackFrame(m.decls.vars,[],0);
     env = environment(stackLocationMap,getProcLevels(m.decls.procs,1),0,frameSize);
     return 
-"import java.util.Scanner;
-    
-class <m.name.name> {
-    static final int MAX_MEM = 1000000;
-    static int[] mem = new int[MAX_MEM];
-    static int sp = 0;
-<builtins2Java()>
-
+"class <m.name.name> extends BaseProgram{
 <indent(vars2Java(env.level,frameSize,stackLocationMap))>
     
 <indent(procs2Java(m.decls.procs,env))>
@@ -143,7 +136,7 @@ public str exp2Java(Expression e,Environment env) {
     case amp(lhs, rhs): return "(<exp2Java(lhs,env)> & <exp2Java(rhs,env)>)";
     case or(lhs, rhs): return  "(<exp2Java(lhs,env)> | <exp2Java(rhs,env)>)";
     case eq(lhs, rhs): return "$eq(<exp2Java(lhs,env)> , <exp2Java(rhs,env)>)";
-    case neq(lhs, rhs): return "$neq((<exp2Java(lhs,env)> ,<exp2Java(rhs,env)>)";
+    case neq(lhs, rhs): return "$neq(<exp2Java(lhs,env)> ,<exp2Java(rhs,env)>)";
     case lt(lhs, rhs): return  "$lt(<exp2Java(lhs,env)> ,<exp2Java(rhs,env)>)";
     case gt(lhs, rhs): return  "$gt(<exp2Java(lhs,env)> , <exp2Java(rhs,env)>)";
     case leq(lhs, rhs): return "$leq(<exp2Java(lhs,env)>, <exp2Java(rhs,env)>)";
@@ -235,42 +228,6 @@ int sizeOf(Type \type){
         case record(fields) : return (0 | it + sizeOf(field.\type) | field <- fields);
     }
 }    
-
-public str builtins2Java(){
-    return   
-"    static int $eq (int a,int b) { return a == b ? 1 : 0; }
-    static int $neq(int a,int b) { return a != b ? 1 : 0; }
-    static int $lt (int a,int b) { return a \< b  ? 1 : 0; }
-    static int $gt (int a,int b) { return a \> b  ? 1 : 0; }
-    static int $leq(int a,int b) { return a \<= b ? 1 : 0; }
-    static int $geq(int a,int b) { return a \>= b ? 1 : 0; }    
-    
-    static void Read() {
-      while(true){
-          try{
-            mem[mem[sp]] = new Scanner(System.in).nextInt();
-            System.out.printf(\"Read: %d\\n\",mem[mem[sp]]);
-            return;
-          } catch(Exception e){ System.out.printf(\"Didn\'t catch that, come again?\\n\");}
-      }
-    }
-    
-    static void Write(){
-      System.out.printf(\"%d\",mem[sp]);
-    }
-    
-    static void WriteLn(){
-      System.out.printf(\"\\n\");
-    }
-    
-    static void printMem(int offset,int size){
-        for(int i = 0 ; i \< size ; i++){
-            System.out.printf(\"|%2d : %2d|\\n\",offset+i,mem[offset+i]);
-    
-        }
-    }";
-}
-
 
 Type resolveUserType(str name,map[str,Type] aliasMap) {
     if(name == "INTEGER" || name == "BOOLEAN") return user(id(name));
