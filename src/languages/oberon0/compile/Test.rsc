@@ -24,15 +24,11 @@ public languages::oberon0::ast::Oberon0::Module parseQuickSort() {
 }
 
 public languages::oberon0::ast::Oberon0::Module parseTest() {
-  return delAnnotationsRec(
-    implode(#languages::oberon0::ast::Oberon0::Module,
-    parse(#languages::oberon0::syntax::Oberon0::Module, |project://oberon0/src/test.oberon0|)));
+  return parseSomething( |project://oberon0/src/test.oberon0| );
 }
 
 public languages::oberon0::ast::Oberon0::Module parseSample() {
-  return delAnnotationsRec(
-    implode(#languages::oberon0::ast::Oberon0::Module,
-    parse(#languages::oberon0::syntax::Oberon0::Module, |project://oberon0/src/sample.oberon0|)));
+  return parseSomething( |project://oberon0/src/sample.oberon0| );
 }
 
 public languages::oberon0::ast::Oberon0::Module parseSomething(loc location) {

@@ -59,7 +59,7 @@ syntax Expression = nat: Natural value
 		)
 		>
 		left (
-		| pos: "+" Expression exp
+		  pos: "+" Expression exp
 		| neg: "-" Expression exp
 		| add: Expression lhs "+" Expression rhs
 		| sub: Expression lhs "-" Expression rhs
@@ -68,7 +68,7 @@ syntax Expression = nat: Natural value
 		>
 		non-assoc (
 		eq: Expression lhs "=" Expression rhs
-		| noneq: Expression lhs "#" Expression rhs
+		| neq: Expression lhs "#" Expression rhs
 		| lt: Expression lhs "\<" Expression rhs
 		| leq: Expression lhs "\<=" Expression rhs
 		| gt: Expression lhs "\>" Expression rhs
