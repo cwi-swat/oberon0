@@ -26,8 +26,8 @@ public Box getUserDefined(Tree q) {
      /* syntax Module = mod: "MODULE" Ident name ";" Declarations decls Body? body "END" Ident "."; */
       if (Module a:=q) {
           if (`MODULE <Ident id1> ; <Declarations decls> <Body? body> END <Ident id2> .`:=a) {
-          return V(1, [H(1, [KW(L("Module")), evPt(id1), L(";")]), C(q, 2), evPt(decls), evPt(getOpt(body)), H(1, 
-             [KW(L("END")), H(0, [evPt(id2), L(";")])])]);       
+          return V(1, [H(1, [KW(L("MODULE")), evPt(id1), L(";")]), C(q, 2), evPt(decls), evPt(getOpt(body)), H(1, 
+             [KW(L("END")), H(0, [evPt(id2), L(".")])])]);       
          }
          }
       if (Statement a:= q) {
