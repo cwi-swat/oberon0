@@ -19,7 +19,7 @@ syntax CommentChar = lex ![*] | lex Asterisk ;
 syntax Asterisk = lex [*] # [)] ;
 
 syntax Keywords = "DIV" | "MOD" | "OR" | "IF" | "THEN" | "ELSE" | "ELSIF" | "OF" 
-       		| "DO" | "WHILE" | "END" | "VAR" | "TYPE" | "CONST" | "MODULE" |
+       		| "DO" | "WHILE" | "END" | "VAR" | "TYPE" | "CONST" | "MODULE"
                 | "ARRAY" | "RECORD" | "PROCEDURE" | "BEGIN";
 
 syntax Natural = lex [0-9]+ 
@@ -51,7 +51,7 @@ syntax Expression = nat: Natural value
                 | bracket Bracket: "(" Expression exp ")"
 		| not: "~" Expression exp
 		>
-		non-assoc (
+		left (
 		mul: Expression lhs "*" Expression rhs
 		| div: Expression lhs "DIV" Expression rhs
 		| mod: Expression lhs "MOD" Expression rhs
