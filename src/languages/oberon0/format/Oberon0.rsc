@@ -22,7 +22,7 @@ public Box sel2box(Selector sel) {
 public Box exp2box(Expression exp) {
   switch (exp) {
     case nat(int val): return L("<val>");
-    case lookup(Variable var): return var2box(var);
+    case lookup(Ident var, list[Selector] selectors): return var2box(var, selectors);
     case neg(Expression arg): return H([L("-"), exp2box(arg)])[@hs=0];
     case pos(Expression arg): return H([L("+"), exp2box(arg)])[@hs=0];
     case not(Expression arg): return H([L("~"), exp2box()])[@hs=0];
@@ -42,16 +42,16 @@ public Box exp2box(Expression exp) {
   }
 }
 
-public Box var2box(Variable var) {
-  return H([id2box(var.name)] + [ sel2box(s) | s <- var.selectors ])[@hs=0];
+public Box var2box(Ident var, list[Selector] selectors) {
+  return H([id2box(var)] + [ sel2box(s) | s <- selectors ])[@hs=0];
 }
 
 public Box stat2box(Statement stat) {
   switch (stat) {
-    case assign(Variable var, Expression exp): 
-            return H([var2box(var), L(":="), exp2box(exp)])[@hs=1];
-    case call(Variable var, list[Expression] args):
-            return H([var2box(var), L("("),  H(hsepList(args, ",", exp2box))[@hs=1],  L(")")])[@hs=0];
+    case assign(Ident var, list[Selector] selectors, Expression exp): 
+            return H([var2box(var, selectors), L(":="), exp2box(exp)])[@hs=1];
+    case call(Ident proc, list[Expression] args):
+            return H([id2box(proc), L("("),  H(hsepList(args, ",", exp2box))[@hs=1],  L(")")])[@hs=0];
     case ifThen(Expression condition, list[Statement] body, 
              list[tuple[Expression condition, list[Statement] body]] elseIfs,
              list[Statement] elsePart): {
