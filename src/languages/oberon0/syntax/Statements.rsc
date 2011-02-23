@@ -1,8 +1,8 @@
 module languages::oberon0::syntax::Statements
 
-import languages::oberon9::syntax::Layout;
-import languages::oberon9::syntax::Lexical;
-import languages::oberon9::syntax::Expressions;
+import languages::oberon0::syntax::Layout;
+import languages::oberon0::syntax::Lexical;
+import languages::oberon0::syntax::Expressions;
 
 
 syntax Statement 
