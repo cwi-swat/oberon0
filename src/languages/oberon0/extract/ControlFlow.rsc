@@ -42,10 +42,14 @@ public ControlFlowGraph getControlFlow(Procedure p) {
 	}
 	
 	// fill IN, OUT and SUC
-	IN = {<endNode, endNode>};
-	OUT = {<startNode, startNode>};
-	SUC = {};
+	startLoc = |file://dummyLocation1|;
+	endLoc = |file://dummyLocation2|;
+	nodes = (startLoc : startNode, endLoc : endNode);
 	
+	IN = {<endLoc, endLoc>};
+	OUT = {<startLoc, startLoc>};
+	SUC = {};
+
 	for (/Statement s <- p.body) {
 		nodes[s@location] = statement(s@location, s);
 		print(s);
