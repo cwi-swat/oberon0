@@ -90,7 +90,7 @@ public Box type2box(Type typ) {
            return V([
              KW(L("RECORD")),
              I(hsepList(fields, ";", field2box)),
-             Kw(L("END"))
+             KW(L("END"))
            ]);
      }
   }
@@ -120,7 +120,7 @@ public Box formal2box(Formal form) {
   if (form.hasVar) {
     result.h += [KW(L("VAR"))];
   }
-  result.h += [H([H(hsepList(names, ",", id2box))[@hs=1], L(":")])[@hs=0]];
+  result.h += [H([H(hsepList(form.names, ",", id2box))[@hs=1], L(":")])[@hs=0]];
   result.h += [type2box(form.\type)];
   return result;
 }
@@ -161,7 +161,7 @@ public Box constDecl2box(ConstDecl cd) {
 }
 
 public Box typeDecl2box(TypeDecl td) {
-  return R([L(td.name), L(":"), H([type2box(td.\type), L(";")])[@hs=0] ]);
+  return R([L(td.name.name), L(":"), H([type2box(td.\type), L(";")])[@hs=0] ]);
 }
 
 public Box varDecl2box(VarDecl vd) {
