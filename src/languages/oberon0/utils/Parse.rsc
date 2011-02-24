@@ -21,3 +21,4 @@ public Module parseOberon0Module(loc src) {
 public Module parseSample() {
   return parseOberon0Module(|project://oberon0/src/sample.oberon0|);
 }
+
