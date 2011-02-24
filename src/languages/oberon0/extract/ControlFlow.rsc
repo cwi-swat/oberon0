@@ -171,7 +171,7 @@ public void visControlFlow(ControlFlowGraph cfg) {
 
 	_nodes = [ box(text(formatNode(n)), vis::Figure::id(getId(n)), fillColor(getColor(n)), size(0))
      			| n <- carrier(cfg.graph) ];
-    _edges = [ edge(getId(n1), getId(n2), box(size(2), fillColor("black"))) | <n1, n2> <- cfg.graph ];
+    _edges = [ edge(getId(n1), getId(n2), shape([vertex(0,0), vertex(4,8), vertex(8, 0)], shapeClosed(), fillColor("black"))) | <n1, n2> <- cfg.graph ];
 
     render(graph(_nodes, _edges, hint("layered"), size(800)));
 }
