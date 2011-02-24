@@ -3,6 +3,7 @@ module languages::oberon0::extract::ControlFlow
 import languages::oberon0::ast::Oberon0;
 
 import Relation;
+import String;
 import Graph;
 import List;
 import IO;
@@ -14,76 +15,58 @@ import languages::oberon0::format::Oberon0;
 import vis::Figure;
 import vis::Render;
 
-data CFNode
+public data CFNode
 	= start(loc location, Module mod)
 	| start(loc location, Procedure prod)
 	| end()
 	| choice(loc location, Expression exp)
 	| statement(loc location, Statement stat);
 
-data ControlFlowGraph = cfg(Graph[CFNode], CFNode start);
+public data ControlFlowGraph = cfg(Graph[CFNode] graph, CFNode start);
 
 public ControlFlowGraph getControlFlow(Module m) {
+	return getControlFlow(m.body, start(m@location, m));
+}
 
+public ControlFlowGraph getControlFlow(Procedure p) {
+	return getControlFlow(p.body, start(p@location, p));	
 }
 
 private Graph[loc] IN = {}, OUT = {}, SUC = {};
 private map[loc, CFNode] nodes = ();
 
-public ControlFlowGraph getControlFlow(Procedure p) {
-
-	fprint(proc2box(p));
-	
-	startNode = start(p@location, p);
-	endNode = end();
-	
-	if (p.body == []) {
+private ControlFlowGraph getControlFlow(list[Statement] body, CFNode startNode) {
+	if (body == []) {
 		return cfg({}, startNode);
 	}
 	
 	// fill IN, OUT and SUC
-	startLoc = |file://dummyLocation1|;
-	endLoc = |file://dummyLocation2|;
-	nodes = (startLoc : startNode, endLoc : endNode);
+	IN = OUT = SUC = {};
+	nodes = ();
 	
-	IN = {<endLoc, endLoc>};
-	OUT = {<startLoc, startLoc>};
-	SUC = {};
-
-	for (/Statement s <- p.body) {
+	for (/Statement s <- body) {
 		nodes[s@location] = statement(s@location, s);
-		print(s);
 		visitStatement(s);
 	}
 	
-	SUCC += {<p@location, head(p.body)@location>};
-	SUCC += {<p@location, last(p.body)@location>};
-	visitStatementList(p.body);
-	
-	printGraph(IN, "IN");
-	printGraph(IN, "OUT");
-	printGraph(IN, "SUC");
+	visitStatementList(body);
 	
 	// merge IN OUT SUC into one relation
-	Graph[loc] locCfg = { <l1, l4> | <l2, l3> <- SUC, l1 <- reachBottom(OUT, l2), l4 <- reachBottom(IN, l3) };
+	Graph[loc] locCfg = { <l1, l4> | <l2, l3> <- SUC, l1 <- reachBottom(OUT, l2), l4 <- reachBottom(IN, l3) }; 
+	
+	// create start and end edges 
+	endNode = end();
+	entries = reachBottom(IN, head(body)@location);
+	exits = reachBottom(OUT, last(body)@location);
+	startAndEnd = ({startNode} * {nodes[l] | l <- entries}) + ({nodes[l] | l <- exits} * {endNode});
+	
+	// convert locations to CFNodes
+	nodeCfg = { <nodes[l1], nodes[l2]> | <l1, l2> <- locCfg } + startAndEnd;
 
-	// TODO remove empty statement lists
-	
-	// create CFNodes for locs	
-	nodeCfg = { <nodes[l1], nodes[l2]> | <l1, l2> <- locCfg };
-
-	/*print("nodeCfg");
-	for (<n1, n2> <- nodeCfg) {
-		print(formatNode(n1));
-		print("---\>");
-		print(formatNode(n2));
-	}*/
-	
-	visGraph(nodeCfg);
-	
 	return cfg(nodeCfg, startNode);
 }
-	
+
+// add IN, OUT, and SUC entries for each Statement type
 private void visitStatement(i : ifThen(cond, body, elseIfs, elsePart)) {
 	nodes[cond@location] = choice(cond@location, cond);
 
@@ -129,12 +112,6 @@ private void visitStatement(w : whileDo(cond, body)) {
 	}	
 }
 
-private void visitStatementList(list[Statement] body) {
-	for ([_*, s1, s2, _*] := body) {
-		SUC += {<s1@location, s2@location>};
-	}
-}
-
 private void visitStatement(a : assign(_,_,_)) {
 	// do nothing
 }
@@ -144,14 +121,60 @@ private void visitStatement(c : call(_,_)) {
 }
 
 private void default visitStatement(Statement s) {
-	print("unmatched: <s>");
+	throw "visitStatement did not match : <s>";
 }
 
-// returns all leaf nodes in r that are reachable from n
+// add SUC entries for statement list
+private void visitStatementList(list[Statement] body) {
+	for ([_*, s1, s2, _*] := body) {
+		SUC += {<s1@location, s2@location>};
+	}
+}
+
+// returns all leaf nodes in r that are reachable from n, or {n} if none exist
 private set[&T] reachBottom(Graph[&T] r, &T n) {
-	return reach(r, {n}) & bottom(r);
+	rb = reach(r, {n}) & bottom(r);
+	return (rb != {}) ? rb : {n};
 }
 
+
+// visualization functions ------------------------------------
+
+private str formatNode(CFNode n) {
+	switch(n) {
+		case choice(_, Expression e) : return replaceLast(format(exp2box(e)), "\n", "");
+		case statement(_, Statement s) : return replaceLast(format(stat2box(s)), "\n", "");
+		case start(_, Module p) : return "start <m.name.name>";
+		case start(_, Procedure p) : return "start <p.name.name>";
+		case end() : return "end";
+	}
+}
+
+private str getColor(CFNode n) {
+	switch(n) {
+		case choice(_,_) : return "yellow";
+		case start(_,_) : return "orange";
+		case end() : return "grey";
+		default: return "white";
+	}
+}
+
+private str getId(CFNode n) {
+	if (end() := n) {
+		return "end";
+	} else {
+		return "<n.location>";
+	}
+}
+
+public void visControlFlow(ControlFlowGraph cfg) {
+
+	_nodes = [ box(text(formatNode(n)), vis::Figure::id(getId(n)), fillColor(getColor(n)), size(0))
+     			| n <- carrier(cfg.graph) ];
+    _edges = [ edge(getId(n1), getId(n2), box(size(2), fillColor("black"))) | <n1, n2> <- cfg.graph ];
+
+    render(graph(_nodes, _edges, hint("layered"), size(800)));
+}
 
 // debugging functions ----------------------------------------------
 
@@ -164,23 +187,3 @@ private void printGraph(Graph[loc] g, str header) {
 		print(formatNode(nodes[l2]));
 	}
 }
-
-private str formatNode(CFNode n) {
-	if (choice(_, Expression e) := n) {
-		return format(exp2box(e));
-	} else if (statement(_, Statement s) := n) {
-		return format(stat2box(s));
-	} else if (start(_,_) := n) {
-		return "start";
-	}
-}
-
-private void visGraph(Graph[CFNode] g) {
-
-	_nodes = [ box(text(formatNode(n)), vis::Figure::id("<n.location>"), fillColor("green"), size(0))
-     			| n <- carrier(g) ];
-    _edges = [ edge("<n1.location>", "<n2.location>") | <n1, n2> <- g ];
-    	    
-    render(graph(_nodes, _edges, hint("layered"), size(800)));
-}
-
