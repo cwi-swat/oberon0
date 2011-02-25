@@ -19,10 +19,7 @@ public Module liftProcs(Module mod) {
 }
 
 public list[Procedure] liftProc(Procedure proc) {
-	newProcs = [];
-	for (p <- proc.decls.procs) {
-		newProcs += liftProc(p);
-	}
+	newProcs = ( [] | it + liftProc(p) | p <- proc.decls.procs );
 	proc.decls.procs = [];
 	return [proc] + newProcs;
 }
