@@ -1,39 +1,137 @@
 module languages::oberon0::compile::Oberon0ToC
 
 import languages::oberon0::ast::Oberon0;
-import languages::oberon0::compile::Resolve;
 import String;
 import List;
 import IO;
 
+alias Env = map[Ident, list[Formal]];
+alias ByRef = set[Ident];
+
 public str mod2c(Module m) {
+	// assume procs, types and consts have been resolved and lifted
+	env = (id("Write"): [formal(false, [id("x")], user(id("INTEGER")))],
+			id("WriteLn"): [],
+			id("Read"): [formal(true, [id("x")], user(id("INTEGER")))]);
+	env += ( p.name: p.formals | p <- m.decls.procs );
 return "
 #include \<builtins.h\>
 <consts2c(m.decls.consts)>
 <types2c(m.decls.types)>
 <vars2c(m.decls.vars)>
-<procs2c(m.decls.procs)>
+<procs2c(m.decls.procs, env)>
 int main(int argc, char **argv) {
-  <stats2c(m.body)>
+  <stats2c(m.body, env, {})>
 }
 ";
 }
 
-public str proc2c(Procedure p) {
- return "
-<consts2c(p.decls.consts)>
-<types2c(p.decls.types)>
-<procs2c(p.decls.procs)>
-static void <p.name@longName>(<formals2c(p)>) {
+public str procs2c(list[Procedure] procs, Env env) {
+	return ( "" | it + proc2c(p, env) | p <- procs );
+}
+
+public str proc2c(Procedure p, Env env) {
+	byRef = { n | f <- p.formals, f.hasVar, n <- f.names };
+ 	return "
+static void <p.name.name>(<formals2c(p)>) {
   <vars2c(p.decls.vars)>
-  <stats2c(p.body)>
+  <stats2c(p.body, env, byRef)>
 }
 ";
 }
 
-public str procs2c(list[Procedure] procs) {
-  return ("" | it + proc2c(p) | p <- procs);
+public str formals2c(Procedure p) {
+  cfs = for (f <- p.formals, n <- f.names) {
+    append f.hasVar ? varType2c("(*<n.name>)", f.\type) : varType2c(n.name, f.\type);
+  }
+  return intercalate(", ", cfs);
 }
+
+
+public str stats2c(list[Statement] stats, Env env, ByRef byRef) {
+  return ("" | it + stat2c(s, env, byRef) + "\n" | s <- stats);
+}
+
+public str stat2c(Statement stat, Env env, ByRef byRef) {
+  switch (stat) {
+    case assign(v, sels, exp): return "<var2c(v, sels, byRef)> = <exp2c(exp, byRef)>;";
+    case call(Ident id, args): return "<call2c(id, args, env, byRef)>;"; 
+    case ifThen(c, b, eis, ep):
+      return "
+if (<exp2c(c, byRef)>) {
+  <stats2c(b, env, byRef)>
+}
+<for (ei <- eis) {>
+else if (<exp2c(ei[0], byRef)>) {
+  <stats2c(ei[1], env, byRef)>
+}
+<}>
+<if (ep != []) {>
+else {
+  <stats2c(ep, env, byRef)>
+}
+<}>";
+    
+    case whileDo(c, b): return "
+while (<exp2c(c, byRef)>) {
+   <stats2c(b, env, byRef)>
+ }";
+  }
+}
+
+public str call2c(Ident id, list[Expression] args, Env env, ByRef byRef) {
+  int i = 0;
+  cargs = for (f <- env[id], _ <- f.names) {
+    a = exp2c(args[i], byRef);
+    append f.hasVar ? "&(<a>)" : a; 
+    i += 1;
+  }
+  return "<id.name>(<intercalate(", ", cargs)>)";
+}
+
+
+public str exp2c(Expression e, ByRef byRef) {
+  switch (e) {
+    case nat(int val): 		return "<val>";
+    case lookup(v, sels): 	return var2c(v, sels, byRef);
+    case neg(exp): 			return "(-<exp2c(exp, byRef)>)";
+    case pos(exp): 			return exp2c(exp, byRef);
+    case mul(lhs, rhs): 	return "(<exp2c(lhs, byRef)>*<exp2c(rhs, byRef)>)";
+    case div(lhs, rhs): 	return "(<exp2c(lhs, byRef)>/<exp2c(rhs, byRef)>)";
+    case mod(lhs, rhs): 	return "(<exp2c(lhs, byRef)>%<exp2c(rhs, byRef)>)";
+    case add(lhs, rhs): 	return "(<exp2c(lhs, byRef)>+<exp2c(rhs, byRef)>)";
+    case sub(lhs, rhs): 	return "(<exp2c(lhs, byRef)>-<exp2c(rhs, byRef)>)";
+    case not(exp): 			return "(!<exp2c(exp, env)>)";
+    case amp(lhs, rhs): 	return "(<exp2c(lhs, byRef)> && <exp2c(rhs, byRef)>)";
+    case or(lhs, rhs): 		return "(<exp2c(lhs, byRef)> || <exp2c(rhs, byRef)>)";
+    case eq(lhs, rhs): 		return "(<exp2c(lhs, byRef)> == <exp2c(rhs, byRef)>)";
+    case neq(lhs, rhs): 	return "(<exp2c(lhs, byRef)> != <exp2c(rhs, byRef)>)";
+    case lt(lhs, rhs): 		return "(<exp2c(lhs, byRef)> \< <exp2c(rhs, byRef)>)";
+    case gt(lhs, rhs): 		return "(<exp2c(lhs, byRef)> \> <exp2c(rhs, byRef)>)";
+    case leq(lhs, rhs): 	return "(<exp2c(lhs, byRef)> \<= <exp2c(rhs, byRef)>)";
+    case geq(lhs, rhs): 	return "(<exp2c(lhs, byRef)> \>= <exp2c(rhs, byRef)>)";
+    default: throw "Not a exp: <e>";
+  }
+}
+
+public str var2c(Ident id, list[Selector] sels, ByRef byRef) {
+  if (id in byRef) {
+    return "(*<id.name>)<sels2c(sels, byRef)>";
+  }
+  return "<id.name><sels2c(sels, byRef)>";
+}
+
+public str sels2c(list[Selector] sels, ByRef byRef) {
+  csels = for (s <- sels) {
+    switch (s) {
+      case field(Ident id): append ".<id.name>";
+      case subscript(e): append "[<exp2c(e, byRef)>]";
+    }
+  }
+  return ("" | it + cs | cs <- csels);
+}
+
+
 
 public str types2c(list[TypeDecl] tds) {
   return ("" | it + "typedef <type2c(td.\type)> <td.name.name>;\n" | td <- tds );
@@ -44,7 +142,7 @@ public str vars2c(list[VarDecl] vds) {
 }
 
 public str consts2c(list[ConstDecl] cds) {
- return ("" | it + "#define <cd.name.name> <exp2c(cd.\value)>\n" | cd <- cds );
+ return ("" | it + "#define <cd.name.name> <exp2c(cd.\value, {})>\n" | cd <- cds );
 }
 
 public str varType2c(str v, Type t) {
@@ -63,7 +161,7 @@ public tuple[str, str] baseBounds(Type t, Expression bound) {
       <t2, bound2> = baseBounds(et, b2);
       return <t2, bound1 + bound2>;
     }
-    default: return <"<type2c(t)>", "[<exp2c(bound)>]">;
+    default: return <"<type2c(t)>", "[<exp2c(bound, {})>]">;
   }
 }
 
@@ -82,106 +180,8 @@ public str fields2c(list[Field] fs) {
 }
 
 
-public str formals2c(Procedure p) {
-  cfs = for (f <- p.formals + p.name@captured, n <- f.names) {
-    append f.hasVar ? varType2c("(*<n.name>)", f.\type) : varType2c(n.name, f.\type);
-  }
-  return intercalate(", ", cfs);
-}
 
 
-public str cond2c(Expression e) {
-  switch (e) {
-    case not(exp): return "(!<cond2c(exp, env)>)";
-    case amp(lhs, rhs): return "(<cond2c(lhs)> && <cond2c(rhs)>)";
-    case or(lhs, rhs): return  "(<cond2c(lhs)> || <cond2c(rhs)>)";
-    case eq(lhs, rhs): return "(<exp2c(lhs)> == <exp2c(rhs)>)";
-    case neq(lhs, rhs): return  "(<exp2c(lhs)> != <exp2c(rhs)>)";
-    case lt(lhs, rhs): return  "(<exp2c(lhs)> \< <exp2c(rhs)>)";
-    case gt(lhs, rhs): return  "(<exp2c(lhs)> \> <exp2c(rhs)>)";
-    case leq(lhs, rhs): return  "(<exp2c(lhs)> \<= <exp2c(rhs)>)";
-    case geq(lhs, rhs): return  "(<exp2c(lhs)> \>= <exp2c(rhs)>)";
-    case nat(val)     : return  "<val>";
-    default: throw "Not a condition: <e>";
-  }
-}
-
-public str var2c(Ident id, list[Selector] sels) {
-  println("var = <id.name>");
-  // consts in types and var decls are not annotated
-  if ((id@isByReference)? && id@isByReference) {
-    return "(*<id.name>)<sels2c(sels)>";
-  }
-  return "<id.name><sels2c(sels)>";
-}
-
-public str sels2c(list[Selector] sels) {
-  csels = for (s <- sels) {
-    switch (s) {
-      case field(Ident id): append ".<id.name>";
-      case subscript(e): append "[<exp2c(e)>]";
-    }
-  }
-  return intercalate("", csels);
-}
-
-public str exp2c(Expression e) {
-  switch (e) {
-    case nat(int val): return "<val>";
-    case lookup(v, sels): return var2c(v, sels);
-    case neg(exp): return "(-<exp2c(exp)>)";
-    case pos(exp): return exp2c(exp);
-    case mul(lhs, rhs): return "(<exp2c(lhs)>*<exp2c(rhs)>)";
-    case div(lhs, rhs): return "(<exp2c(lhs)>/<exp2c(rhs)>)";
-    case mod(lhs, rhs): return "(<exp2c(lhs)>%<exp2c(rhs)>)";
-    case add(lhs, rhs): return "(<exp2c(lhs)>+<exp2c(rhs)>)";
-    case sub(lhs, rhs): return "(<exp2c(lhs)>-<exp2c(rhs)>)";
-    default: throw "Not a exp: <e>";
-  }
-}
 
 
-public str call2c(Ident id, list[Expression] args) {
-  int i = 0;
-  println("Calling: <id.name>");
-  cargs = for (f <- id@formals, _ <- f.names) {
-    a = exp2c(args[i]);
-    append f.hasVar ? "&(<a>)" : a; 
-    i += 1;
-  }
-  cargs += for (f <- id@captured, n <- f.names) {
-    append "&<n.name>";
-  }
-  return "<id@longName>(<intercalate(", ", cargs)>)";
-}
 
-public str stats2c(list[Statement] stats) {
-  return ("" | it + stat2c(s) + "\n" | s <- stats);
-}
-
-public str stat2c(Statement stat) {
-  switch (stat) {
-    case assign(v, sels, exp): return "<var2c(v, sels)> = <exp2c(exp)>;";
-    case call(Ident id, args): return "<call2c(id, args)>;"; 
-    case ifThen(c, b, eis, ep):
-      return "
-if (<cond2c(c)>) {
-  <stats2c(b)>
-}
-<for (ei <- eis) {>
-else if (<cond2c(ei[0])>) {
-  <stats2c(ei[1])>
-}
-<}>
-<if (ep != []) {>
-else {
-  <stats2c(ep)>
-}
-<}>";
-    
-    case whileDo(c, b): return "
-while (<cond2c(c)>) {
-   <stats2c(b)>
- }";
-  }
-}
