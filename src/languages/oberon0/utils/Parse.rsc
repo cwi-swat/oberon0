@@ -22,3 +22,11 @@ public Module parseSample() {
   return parseOberon0Module(|project://oberon0/src/sample.oberon0|);
 }
 
+public Module parseQuickSort() {
+  return parseOberon0Module(|project://oberon0/src/quicksort.oberon0|);
+}
+
+public Module parseCollatz() {
+  return parseOberon0Module(|project://oberon0/src/collatz.oberon0|);
+}
+
