@@ -16,10 +16,10 @@ public str mod2c(Module m) {
 	env += ( p.name: p.formals | p <- m.decls.procs );
 return "
 #include \<builtins.h\>
-<procs2cdecls(m.decls.procs)>
 <consts2c(m.decls.consts)>
 <types2c(m.decls.types)>
 <vars2c(m.decls.vars)>
+<procs2cdecls(m.decls.procs)>
 <procs2c(m.decls.procs, env)>
 int main(int argc, char **argv) {
   <stats2c(m.body, env, {})>
