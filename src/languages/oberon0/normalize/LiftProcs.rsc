@@ -21,7 +21,7 @@ public Module liftProcs(Module mod) {
 public list[Procedure] liftProc(Procedure proc) {
 	newProcs = ( [] | it + liftProc(p) | p <- proc.decls.procs );
 	proc.decls.procs = [];
-	return [proc] + newProcs;
+	return newProcs + [proc];
 }
 
 
@@ -60,7 +60,7 @@ public FreeVarsMap builtins() {
 }
 
 public FreeVarsMap freeVarsMap(Module mod) {
-	// assume: constants have been eliminated
+	// assume: constants have been eliminated/resolved
 	// and procs have been resolved
 	globals = declaredVars(mod.decls);
 		
@@ -86,8 +86,8 @@ public FreeVarsMap freeVarsMap(Module mod) {
 
 
 public Variables usedVars(Procedure p, Variables env) {
-	return ( i: env[i] | /assign(i, _, _) <- p.body ) 
-			+ ( i: env[i] | /lookup(i, _) <- p.body );
+	return ( i: env[i] | /assign(i, _, _) <- p.body, env[i]? ) 
+			+ ( i: env[i] | /lookup(i, _) <- p.body, env[i]? );
 }
 
 public Variables localVars(Procedure p) {

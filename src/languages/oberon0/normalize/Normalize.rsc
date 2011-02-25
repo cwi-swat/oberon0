@@ -9,6 +9,6 @@ import languages::oberon0::normalize::ResolveProcs;
 import languages::oberon0::ast::Oberon0;
 
 public Module normalize(Module mod) {
-	return (resolveConsts o resolveTypes o resolveProcs o liftConsts o liftTypes o liftProcs)(mod);
+	return (resolveConsts o resolveTypes o resolveProcs o extendSignatures o liftConsts o liftTypes o liftProcs)(mod);
 }
 
