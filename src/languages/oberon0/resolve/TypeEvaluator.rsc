@@ -13,43 +13,44 @@ import languages::oberon0::resolve::ConstantEvaluator;
 // table here, but assume this has been done in the resolveTypeNames function in
 // module ResolveNames.
 //
-public tuple[SymbolTable st, bool cres, OType ot] otype(SymbolTable symbolTable, Type t) {
+public tuple[SymbolTableBuilder st, bool cres, OType ot] otype(SymbolTableBuilder stBuilder, Type t) {
 	// Special check for INTEGER
-	if (user(name) := t, /^integer$/i := name.name) return < symbolTable, true, Integer() >;
+	if (user(name) := t, "INTEGER" := name.name) return < stBuilder, true, Integer() >;
 	
 	// Check for user type: make sure it is a defined type name. If not, return the
 	// Invalid() type instead.
 	if (user(name) := t) {
-		if (size(getItemsForTypeName(symbolTable, symbolTable.currentScope, name)) > 0) {
-			return < symbolTable, true, User(name) >;
+		if (size(getTypes(stBuilder, name)) > 0) {
+			return < stBuilder, true, User(name) >;
 		} else {
-			return < symbolTable, false, Invalid() >;
+			return < stBuilder, false, Invalid() >;
 		}
 	}
 	
-	// Check for array: make sure we can evaluate the sizing constant, plus make sure the
-	// check the type to make sure it is valid.
+	// Check for array: make sure we can evaluate the sizing constant, plus make sure to
+	// check the type to ensure it is valid.
 	if (array(e,ty) := t) {
-		< symbolTable, evalResult, evalValue > = evaluateConstantExpNoFlags(symbolTable, e);
-		< symbolTable, typeResult, typeValue > = otype(symbolTable, ty);
+		< stBuilder, evalResult, evalValue > = evaluateConstantExpNoFlags(stBuilder, e);
+		< stBuilder, typeResult, typeValue > = otype(stBuilder, ty);
 		if (evalResult && typeResult && evalValue > 0)
-			return < symbolTable, true, Array(typeValue, evalValue) >;
+			return < stBuilder, true, Array(typeValue, evalValue) >;
 		else
-			return < symbolTable, false, Invalid() >;
+			return < stBuilder, false, Invalid() >;
 	}
 	
 	// Record: check the fields to make sure they have valid types.
+	// TODO: Verify that field names are not duplicated
 	if (record(fs) := t) {
 		list[tuple[OType fieldType, Ident fieldName]] fldTypes = [ ];
 		bool badFieldFound = false;
 		for (field(ids,ty) <- fs) {
-			< symbolTable, typeResult, typeValue > = otype(symbolTable, ty);
+			< stBuilder, typeResult, typeValue > = otype(stBuilder, ty);
 			if (!typeResult) badFieldFound = true;
 			for (fid <- ids) fldTypes += < typeValue, fid >;
 		}
 		if (badFieldFound)
-			return < symbolTable, false, Invalid() >;
+			return < stBuilder, false, Invalid() >;
 		else
-			return < symbolTable, true, Record(fldTypes) >;
+			return < stBuilder, true, Record(fldTypes) >;
 	} 
 }

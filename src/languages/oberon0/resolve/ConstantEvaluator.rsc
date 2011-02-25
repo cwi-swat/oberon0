@@ -16,120 +16,75 @@ import languages::oberon0::check::Types;
 //
 // CITE: Wirth book, p. 30, paragraph 4.
 //
-public tuple[SymbolTable st, bool res, int val] evaluateConstantExp(SymbolTable symbolTable, Expression exp, bool registerErrors) {
+public tuple[SymbolTableBuilder st, bool res, int val] evaluateConstantExp(SymbolTableBuilder stBuilder, Expression exp, bool registerErrors) {
+	int evaluateUnaryOp(SymbolTableBuilder stBuilder, Expression e, int(int) op) {
+		int result = 0;
+		< stBuilder, res, val > = evaluateConstantExp(stBuilder, e);
+		if (res) {
+			result = op(val);
+		}
+		return < stBuilder, res, result >;
+	}
+
+	int evaluateBinaryOp(SymbolTableBuilder stBuilder, Expression l, Expression r, int(int,int) op) {
+		int result = 0;
+		< stBuilder, res, lval > = evaluateConstantExp(stBuilder, l);
+		if (res) {
+			< stBuilder, res, rval > = evaluateConstantExp(stBuilder, r);
+			if (res) {
+				result = op(lval,rval);
+			}
+		}
+		return < stBuilder, res, result >;
+	}
+	
 	switch(exp) {
-		case nat(nval) : 
-			return <symbolTable, true, nval>;
+		case nat(nval) : return <stBuilder, true, nval>;
 		
 		case lookup(cid,[]) : {
-			set[STItemId] items = getItemsForName(symbolTable, cid);
+			set[Item] items = getConstants(stBuilder, cid);
 			if (size(items) == 1) {
-				if (ConstantItem(_,cval,_) := symbolTable.scopeItemMap[getOneFrom(items)]) {
-					symbolTable = addItemUses(symbolTable, items, cid@location);
-					return < symbolTable, true, cval >;					
-				} else {
-					if (registerErrors) symbolTable = addScopeError(symbolTable,exp@location,"Name <cid.name> must be a defined constant.");
-				}
+				Item item = getOneFrom(items);
+				stBuilder.itemUses = stBuilder.itemUses + < item, cid@location >;
+				return < stBuilder, true, item.val >;					
+			} else if (size(items) == 0) {
+				if (registerErrors) stBuilder = addScopeError(stBuilder,exp@location,"Name <cid.name> must be a defined constant.");
 			} else {
-				if (registerErrors) symbolTable = addScopeError(symbolTable,exp@location,"Multiple definitions were found for name <cid.name>");				
+				if (registerErrors) stBuilder = addScopeError(stBuilder,exp@location,"Unexpected error, multiple constant definitions were found for name <cid.name>");				
 			} 
-			return <symbolTable, false, 0>;
+			return <stBuilder, false, 0>;
 		}
 
 		case lookup(cid,sels) : {
-			if (registerErrors) symbolTable = addScopeError(symbolTable,exp@location,"Names used in constant expressions must represent integer constants");
-			return <symbolTable, false, 0>;
+			if (registerErrors) stBuilder = addScopeError(stBuilder,exp@location,"Names used in constant expressions must represent integer constants");
+			return <stBuilder, false, 0>;
 		}
 		
-		case neg(e) : {
-			int result = 0;
-			< symbolTable, res, lval > = evaluateConstantExp(symbolTable, l);
-			if (res) {
-				result = (-1) * lval;
-			}
-			return < symbolTable, res, result >;
-		}
+		case neg(e) : return evaluateUnaryOp(stBuilder,e,int(int n) { return (-1) * n; });
 		
-		case pos(e) : {
-			int result = 0;
-			< symbolTable, res, lval > = evaluateConstantExp(symbolTable, l);
-			if (res) {
-				result = lval;
-			}
-			return < symbolTable, res, result >;
-		}
+		case pos(e) : return evaluateUnaryOp(stBuilder,e,int(int n) { return n; });
+
+		case mul(l,r) : return evaluateBinaryOp(stBuilder,l,r,int(int x, int y) { return x * y; });
 		
-		case mul(l,r) : {
-			int result = 0;
-			< symbolTable, res, lval > = evaluateConstantExp(symbolTable, l);
-			if (res) {
-				< symbolTable, res, rval > = evaluateConstantExp(symbolTable, r);
-				if (res) {
-					result = lval * rval;
-				}
-			}
-			return < symbolTable, res, result >;
-		}
+		case div(l,r) : return evaluateBinaryOp(stBuilder,l,r,int(int x, int y) { return x / y; });
+
+		case mod(l,r) : return evaluateBinaryOp(stBuilder,l,r,int(int x, int y) { return x % y; });
+
+		case add(l,r) : return evaluateBinaryOp(stBuilder,l,r,int(int x, int y) { return x + y; });
 		
-		case div(l,r) : {
-			int result = 0;
-			< symbolTable, res, lval > = evaluateConstantExp(symbolTable, l);
-			if (res) {
-				< symbolTable, res, rval > = evaluateConstantExp(symbolTable, r);
-				if (res) {
-					result = lval / rval;
-				}
-			}
-			return < symbolTable, res, result >;
-		}
-		
-		case mod(l,r) : {
-			int result = 0;
-			< symbolTable, res, lval > = evaluateConstantExp(symbolTable, l);
-			if (res) {
-				< symbolTable, res, rval > = evaluateConstantExp(symbolTable, r);
-				if (res) {
-					result = lval % rval;
-				}
-			}
-			return < symbolTable, res, result >;
-		}
-		
-		case add(l,r) : {
-			int result = 0;
-			< symbolTable, res, lval > = evaluateConstantExp(symbolTable, l);
-			if (res) {
-				< symbolTable, res, rval > = evaluateConstantExp(symbolTable, r);
-				if (res) {
-					result = lval + rval;
-				}
-			}
-			return < symbolTable, res, result >;
-		}
-		
-		case sub(l,r) : {
-			int result = 0;
-			< symbolTable, res, lval > = evaluateConstantExp(symbolTable, l);
-			if (res) {
-				< symbolTable, res, rval > = evaluateConstantExp(symbolTable, r);
-				if (res) {
-					result = lval - rval;
-				}
-			}
-			return < symbolTable, res, result >;
-		}
+		case sub(l,r) : return evaluateBinaryOp(stBuilder,l,r,int(int x, int y) { return x - y; });
 		
 		default : {
-			if (registerErrors) symbolTable = addScopeError(symbolTable, exp@location, "Invalid expression in constant definition.");
-			return < symbolTable, false, 0 >;
+			if (registerErrors) stBuilder = addScopeError(stBuilder, exp@location, "Invalid expression in constant definition.");
+			return < stBuilder, false, 0 >;
 		}		
 	}
 }
 
-public tuple[SymbolTable st, bool res, int val] evaluateConstantExp(SymbolTable symbolTable, Expression exp) {
-	return evaluateConstantExp(symbolTable, exp, true);
+public tuple[SymbolTableBuilder st, bool res, int val] evaluateConstantExp(SymbolTableBuilder stBuilder, Expression exp) {
+	return evaluateConstantExp(stBuilder, exp, true);
 }
 
-public tuple[SymbolTable st, bool res, int val] evaluateConstantExpNoFlags(SymbolTable symbolTable, Expression exp) {
-	return evaluateConstantExp(symbolTable, exp, false);
+public tuple[SymbolTableBuilder st, bool res, int val] evaluateConstantExpNoFlags(SymbolTableBuilder stBuilder, Expression exp) {
+	return evaluateConstantExp(stBuilder, exp, false);
 }

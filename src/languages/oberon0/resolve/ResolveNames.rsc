@@ -3,6 +3,7 @@ module languages::oberon0::resolve::ResolveNames
 import IO;
 import List;
 import Set;
+import Node;
 
 import languages::oberon0::ast::Oberon0;
 import languages::oberon0::check::Types;
@@ -11,21 +12,20 @@ import languages::oberon0::resolve::ConstantEvaluator;
 import languages::oberon0::resolve::TypeEvaluator;
 
 //
+// TODO: Check in which cases we should verify that a given name is not a duplicate of
+// an existing predefined name (INTEGER, etc)
+//
+
+//
 // Selectors are either fields (for records) or subscripts (for arrays).
-// For fields, we don't check the name here, since we don't necessarily
-// know the type of the value being accessed, or which (if any) fields
-// it has. This checking thus needs to be delayed until the type checking
-// phase. For subscripts, these can be arbitrary expressions, so we
-// resolve the names present in the expression.
+// Array selectors are expressions, so we recurse. We do nothing with
+// the fields, since we need to know the type of the var being selected
+// against to know whether the name is in scope or not.
 //
-// TODO: Do we need a check here to ensure that reserved words are not
-// used as field names? Or, does the parser currently handle this for us?
-//
-public SymbolTable resolveSelectorNames(SymbolTable symbolTable, Selector sel) {
+public SymbolTableBuilder resolveSelectorNames(SymbolTableBuilder stBuilder, Selector sel) {
 	switch(sel) {
-		case field(fid) : return symbolTable;
-	
-		case subscript(e) : return resolveExpressionNames(symbolTable,e);
+		case field(fid) : return stBuilder;
+		case subscript(e) : return resolveExpressionNames(stBuilder,e);
 	}
 	throw "resolveNames: Unhandled selector <sel> at <sel@location>";
 }
@@ -35,17 +35,15 @@ public SymbolTable resolveSelectorNames(SymbolTable symbolTable, Selector sel) {
 // (assignments and calls). We need to check that the name is in scope as
 // well as process any selectors.
 //
-// TODO: Do we need a check here to ensure that reserved words are not
-// used as variable names? Or, does the parser currently handle this for us?
-//
-public SymbolTable resolveVariableNames(SymbolTable symbolTable, Ident name, list[Selector] selectors) {
-	if (size(getItemsForName(symbolTable, name)) > 0) {
-		symbolTable = addItemUses(symbolTable, getItemsForName(symbolTable, name), name@location);
+public SymbolTableBuilder resolveVariableNames(SymbolTableBuilder stBuilder, Ident name, list[Selector] selectors) {
+	set[Item] vars = lookupItems(stBuilder, name);
+	if (size(vars) > 0) {
+		for (v <- vars) stBuilder.itemUses = stBuilder.itemUses + <v, name@location>;
 	} else {
-		symbolTable = addScopeError(symbolTable, name@location, "<name.name> not defined before use");
+		stBuilder = addScopeError(stBuilder, name@location, "<name.name> not defined before use");
 	}
-	for (sel <- selectors) symbolTable = resolveSelectorNames(symbolTable,sel);
-	return symbolTable;
+	for (sel <- selectors) stBuilder = resolveSelectorNames(stBuilder,sel);
+	return stBuilder;
 }
 
 //
@@ -55,26 +53,26 @@ public SymbolTable resolveVariableNames(SymbolTable symbolTable, Ident name, lis
 // (which may or may not have selectors). This logic is contained in
 // resolveVariableNames, not here.
 //
-public SymbolTable resolveExpressionNames(SymbolTable symbolTable, Expression exp) {
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, Expression exp) {
 	switch(exp) {
-		case nat(_) : return symbolTable;
-		case lookup(v,sl) : return resolveVariableNames(symbolTable,v,sl);
-		case neg(e) : return resolveExpressionNames(symbolTable,e);
-		case pos(e) : return resolveExpressionNames(symbolTable,e);
-		case not(e) : return resolveExpressionNames(symbolTable,e);
-		case mul(l,r) : return resolveExpressionNames(resolveExpressionNames(symbolTable,l),r);
-		case div(l,r) : return resolveExpressionNames(resolveExpressionNames(symbolTable,l),r);
-		case mod(l,r) : return resolveExpressionNames(resolveExpressionNames(symbolTable,l),r);
-		case amp(l,r) : return resolveExpressionNames(resolveExpressionNames(symbolTable,l),r);
-		case add(l,r) : return resolveExpressionNames(resolveExpressionNames(symbolTable,l),r);
-		case sub(l,r) : return resolveExpressionNames(resolveExpressionNames(symbolTable,l),r);
-		case or(l,r) : return resolveExpressionNames(resolveExpressionNames(symbolTable,l),r);
-		case eq(l,r) : return resolveExpressionNames(resolveExpressionNames(symbolTable,l),r);
-		case neq(l,r) : return resolveExpressionNames(resolveExpressionNames(symbolTable,l),r);
-		case lt(l,r) : return resolveExpressionNames(resolveExpressionNames(symbolTable,l),r);
-		case gt(l,r) : return resolveExpressionNames(resolveExpressionNames(symbolTable,l),r);
-		case leq(l,r) : return resolveExpressionNames(resolveExpressionNames(symbolTable,l),r);
-		case geq(l,r) : return resolveExpressionNames(resolveExpressionNames(symbolTable,l),r);
+		case nat(_) : return stBuilder;
+		case lookup(v,sl) : return resolveVariableNames(stBuilder,v,sl);
+		case neg(e) : return resolveExpressionNames(stBuilder,e);
+		case pos(e) : return resolveExpressionNames(stBuilder,e);
+		case not(e) : return resolveExpressionNames(stBuilder,e);
+		case mul(l,r) : return resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+		case div(l,r) : return resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+		case mod(l,r) : return resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+		case amp(l,r) : return resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+		case add(l,r) : return resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+		case sub(l,r) : return resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+		case or(l,r) : return resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+		case eq(l,r) : return resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+		case neq(l,r) : return resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+		case lt(l,r) : return resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+		case gt(l,r) : return resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+		case leq(l,r) : return resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+		case geq(l,r) : return resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
 	}
 		
 	throw "resolveNames: Unhandled expression <exp> at location <exp@location>";
@@ -84,9 +82,9 @@ public SymbolTable resolveExpressionNames(SymbolTable symbolTable, Expression ex
 // A version of the above which handles lists of expressions. Lists are processed
 // in a left-to-right ordering.
 //
-public SymbolTable resolveExpressionNames(SymbolTable symbolTable, list[Expression] exps) {
-	for (exp <- exps) symbolTable = resolveExpressionNames(symbolTable, exp);
-	return symbolTable;
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, list[Expression] exps) {
+	for (exp <- exps) stBuilder = resolveExpressionNames(stBuilder, exp);
+	return stBuilder;
 }
 
 //
@@ -95,16 +93,16 @@ public SymbolTable resolveExpressionNames(SymbolTable symbolTable, list[Expressi
 // scope, so we can handle the bodies without worrying about creating a new
 // scope in the symbol table, dealing with shadowing, etc.
 //
-public SymbolTable resolveStatementNames(SymbolTable symbolTable, Statement stmt) {
+public SymbolTableBuilder resolveStatementNames(SymbolTableBuilder stBuilder, Statement stmt) {
 	switch(stmt) {
-		case assign(v,sl,e) : return resolveVariableNames(resolveExpressionNames(symbolTable,e),v,sl);
-		case call(v,es) : return resolveVariableNames(resolveExpressionNames(symbolTable,es),v,[]);
+		case assign(v,sl,e) : return resolveVariableNames(resolveExpressionNames(stBuilder,e),v,sl);
+		case call(v,es) : return resolveVariableNames(resolveExpressionNames(stBuilder,es),v,[]);
 		case ifThen(e,bs,eifs,ep) : {
-			symbolTable = resolveStatementNames(resolveExpressionNames(symbolTable,e),bs);
-			for (<e2,bs2> <- eifs) symbolTable = resolveStatementNames(resolveExpressionNames(symbolTable,e2),bs2);
-			return resolveStatementNames(symbolTable,ep);
+			stBuilder = resolveStatementNames(resolveExpressionNames(stBuilder,e),bs);
+			for (<e2,bs2> <- eifs) stBuilder = resolveStatementNames(resolveExpressionNames(stBuilder,e2),bs2);
+			return resolveStatementNames(stBuilder,ep);
 		}
-		case whileDo(e,bs) : return resolveStatementNames(resolveExpressionNames(symbolTable,e),bs);
+		case whileDo(e,bs) : return resolveStatementNames(resolveExpressionNames(stBuilder,e),bs);
 	}
 	
 	throw "resolveNames: Unhandled statement <stmt> at location <stmt@location>";
@@ -114,9 +112,9 @@ public SymbolTable resolveStatementNames(SymbolTable symbolTable, Statement stmt
 // Handle lists of statements (such as are found in if bodies). These are processed in a left
 // to right (or, as on the page, top to bottom) order.
 //
-public SymbolTable resolveStatementNames(SymbolTable symbolTable, list[Statement] stmts) {
-	for (stmt <- stmts) symbolTable = resolveStatementNames(symbolTable, stmt);
-	return symbolTable;
+public SymbolTableBuilder resolveStatementNames(SymbolTableBuilder stBuilder, list[Statement] stmts) {
+	for (stmt <- stmts) stBuilder = resolveStatementNames(stBuilder, stmt);
+	return stBuilder;
 }
 
 //
@@ -125,16 +123,15 @@ public SymbolTable resolveStatementNames(SymbolTable symbolTable, list[Statement
 // defined. Types appear in fields, formal parameters, variable declarations, 
 // and type declarations.
 //
-// TODO: Do we need a check here to ensure that reserved words are not
-// used as type names? Or, does the parser currently handle this for us?
-//
-public SymbolTable resolveTypeNames(SymbolTable symbolTable, Type t) {
+public SymbolTableBuilder resolveTypeNames(SymbolTableBuilder stBuilder, Type t) {
 	// Named types, including built-in types.	
 	if (user(name) := t) {
-		if (size(getItemsForName(symbolTable, symbolTable.currentScope, name)) > 0) {
-			return addItemUses(symbolTable, getItemsForName(symbolTable, symbolTable.currentScope, name), name@location);
+		set[Item] types = getTypes(stBuilder, name);
+		if (size(types) > 0) {
+			for (ty <- types) stBuilder.itemUses = stBuilder.itemUses + <ty, name@location>;
+			return stBuilder;
 		} else {
-			return addScopeError(symbolTable, name@location, "<name.name> not defined before use");
+			return addScopeError(stBuilder, name@location, "Type <name.name> not defined before use");
 		}
 	}
 	
@@ -146,18 +143,16 @@ public SymbolTable resolveTypeNames(SymbolTable symbolTable, Type t) {
 	// done using evaluateConstantExp, which is why we don't use resolveExpressionNames
 	// here instead.			
 	if (array(e,ty) := t) {
-		symbolTable = resolveTypeNames(symbolTable,ty);
-		< symbolTable, evalResult, evalValue > = evaluateConstantExp(symbolTable,e);
+		stBuilder = resolveTypeNames(stBuilder,ty);
+		< stBuilder, evalResult, evalValue > = evaluateConstantExp(stBuilder,e);
 		if (evalResult && evalValue < 1)
-			symbolTable = addScopeError(symbolTable, t@location, "type invalid, array size must be larger than 0");
-		//if (!evalResult)
-		//	symbolTable = addScopeError(symbolTable, t@location, "type invalid, cannot compute constant result for array size expression");
-		return symbolTable;
+			stBuilder = addScopeError(stBuilder, t@location, "type invalid, array size must be larger than 0");
+		return stBuilder;
 	}
 	
 	// Record types. We need to resolve names in the types of the fields, but
 	// otherwise do nothing here.	
-	if (record(fs) := t) return resolveFieldNames(symbolTable,fs);
+	if (record(fs) := t) return resolveFieldNames(stBuilder,fs);
 
 	throw "resolveNames: Unhandled type <t> at location <t@location>";
 }
@@ -170,20 +165,17 @@ public SymbolTable resolveTypeNames(SymbolTable symbolTable, Type t) {
 // other words, if we have field f, we never want to return a field item
 // when we see f, we only check it when we see r.f, r[0].f, etc).
 //
-// TODO: Do we need a check here to ensure that reserved words are not
-// used as field names? Or, does the parser currently handle this for us?
-//
-public SymbolTable resolveFieldNames(SymbolTable symbolTable, Field f) {
-	if (field(ids,ty) := f) return resolveTypeNames(symbolTable,ty);
+public SymbolTableBuilder resolveFieldNames(SymbolTableBuilder stBuilder, Field f) {
+	if (field(ids,ty) := f) return resolveTypeNames(stBuilder,ty);
 	throw "resolveNames: Unhandled field <f> at location <f@location>";
 }
 
 //
 // Handle lists of fields, as found in record type declarations.
 //
-public SymbolTable resolveFieldNames(SymbolTable symbolTable, list[Field] fs) {
-	for (f <- fs) symbolTable = resolveFieldNames(symbolTable,f);
-	return symbolTable;
+public SymbolTableBuilder resolveFieldNames(SymbolTableBuilder stBuilder, list[Field] fs) {
+	for (f <- fs) stBuilder = resolveFieldNames(stBuilder,f);
+	return stBuilder;
 }
 
 //
@@ -192,57 +184,60 @@ public SymbolTable resolveFieldNames(SymbolTable symbolTable, list[Field] fs) {
 // then process the procedure declarations and body. We also do some checking to ensure
 // the procedure name and the end name are the same.
 //
-// TODO: Do we need a check here to ensure that reserved words are not
-// used as procedure and/or parameter names? Or, does the parser currently 
-// handle this for us?
-//
-public SymbolTable resolveProcedureNames(SymbolTable symbolTable, Procedure pr) {
+public SymbolTableBuilder resolveProcedureNames(SymbolTableBuilder stBuilder, Procedure pr) {
 	if (proc(pid,fs,ds,bs,eid) := pr) {
-		// First sanity check -- we aren't redefining an existing type name, are we?
-		if (/^integer$/i := pid.name)
-			return addScopeError(symbolTable, pid@location, "Procedure name <id.name> redefines a predefined identifier");
-
-		// conflicts will contain all items of the same name defined in the same scope
-		set[STItemId] conflicts = { c | c <- getItemsForName(symbolTable, pid), symbolTable.scopeItemMap[c].parentId == symbolTable.currentScope };
-
-		// NOTE: If we have conflicts, we don't process the procedure body, we enforce the surrounding scope to be
-		// correct before enforcing inner scope correctness.
+		// Find any conflicting items -- these are items in the same namespace as procedure names
+		// defined at either this level or at the top level (for builtins)
+		set[Item] conflicts = { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[0],pid], getName(x) in namespaceItems[UserNames()] } + 
+							  { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[size(stBuilder.scopeStack)-1],pid], getName(x) in namespaceItems[UserNames()] };
 		if (size(conflicts) > 0)
-			return addScopeError(symbolTable, pid@location, "A variable, constant, or procedure with name <pid.name> is already defined in the current scope");
+			stBuilder = addScopeError(stBuilder, pid@location, "A variable, constant, parameter, or procedure with name <pid.name> is already defined in the current scope");
 
-		// Next, get back the needed information for each of the parameters
-		list[tuple[Ident pname, OType ptype, loc ploc, loc nloc, bool isvar]] params = [];
-		for (f <- fs) {
-			if (formal(hasv,ids,ty) := f) {
-				symbolTable = resolveTypeNames(symbolTable, ty);
-				<symbolTable, cres, ot> = otype(symbolTable, ty);
-				for (fpid <- ids) {
-						params += < fpid, ot, fpid@location, f@location, hasv >;
+		// Next, check the parameters. We want to make sure here that the types are fine and
+		// that we don't have name collisions between the parameters and the procedure name.
+		// We will not add them into scope yet, this instead occurs once we know they are
+		// all fine and we push the procedure scope.
+		set[Ident] foundIds = { pid };
+		list[Formal] validFormals = [ ];
+		map[Ident,OType] otypes = ( );
+		for (f:formal(hasv,ids,ty) <- fs) {
+			stBuilder = resolveTypeNames(stBuilder, ty);
+			<stBuilder, cres, ot> = otype(stBuilder, ty); 
+			for (fpid <- ids) {
+				if (fpid in foundIds) {
+					if (fpid.name == pid.name)
+						stBuilder = addScopeError(stBuilder, fpid@location, "Parameter names cannot be the same as the name of the procedure");
+					else
+						stBuilder = addScopeError(stBuilder, fpid@location, "All parameters must have distinct names");
+				} else {
+					foundIds = foundIds + fpid;
+					validFormals = validFormals + formal(hasv,[fpid],ty)[@location = f@location];
+					otypes = otypes + ( fpid : ot );
 				}
-			} else {
-				throw "resolveNames: Unhandled formal <f> at location <f@location>";
-			}
+			}			
 		}
 		
-		// Then, add the new procedure into the scope
-		ResultTuple rt = pushNewProcedureScope(symbolTable,pid,params,pr@location);
-		symbolTable = justSymbolTable(addSTItemUses(rt,([<false,pr@location>, <true,pid@location>] + [<true,nloc> | <_,_,nloc,_,_> <- params])));
-		
+		// Now, add the procedure into scope. Two items of note. First, if we had a conflict with the name, just
+		// add the name as __INVALID, which is not a valid Oberon-0 identifier. Second, we pass the validFormals
+		// list instead of the formals that came in. This includes only those formals that did not collide
+		// with either the name of the procedure or the names of the other formals.
+		stBuilder = pushNewProcedureScope(stBuilder, size(conflicts)>0 ? id("__INVALID") : pid, validFormals, otypes, pr@location);
+				
 		// Next, process all declarations before the procedure body
-		symbolTable = resolveDeclarationNames(symbolTable, ds);
+		stBuilder = resolveDeclarationNames(stBuilder, ds);
 		
 		// Then, process the procedure body
-		symbolTable = resolveStatementNames(symbolTable, bs);
+		stBuilder = resolveStatementNames(stBuilder, bs);
 		
 		// Sanity check, ensure the final name is the same as the procedure name
 		if (pid.name != eid.name) {
-			symbolTable = addScopeError(symbolTable,pr@location,"The procedure name <pid.name> and the procedure end name <eid.name> do not match");
+			stBuilder = addScopeError(stBuilder,pr@location,"The procedure name <pid.name> and the procedure end name <eid.name> do not match");
 		} else {
-			symbolTable = addItemUse(symbolTable, rt.addedItems[1], eid@location);
+			stBuilder.itemUses = stBuilder.itemUses + < stBuilder.scopeStack[0], eid@location>;
 		}
 		
 		// Finally, pop the scope and return
-		return popScope(symbolTable);
+		return popScope(stBuilder);
 	}
 	
 	throw "resolveNames: Unhandled procedure <pr> at location <proc@location>";
@@ -252,22 +247,22 @@ public SymbolTable resolveProcedureNames(SymbolTable symbolTable, Procedure pr) 
 // Handle lists of procedures from top to bottom, as found in the procedure declarations
 // section of a module or another procedure.
 //
-public SymbolTable resolveProcedureNames(SymbolTable symbolTable, list[Procedure] procs) {
-	for (pr <- procs) symbolTable = resolveProcedureNames(symbolTable,pr);
-	return symbolTable;
+public SymbolTableBuilder resolveProcedureNames(SymbolTableBuilder stBuilder, list[Procedure] procs) {
+	for (pr <- procs) stBuilder = resolveProcedureNames(stBuilder,pr);
+	return stBuilder;
 }
 
 //
 // Process the declarations section of a module or procedure. This just involves
 // processing the sub-sections: constants, types, variables, and procedures.
 //
-public SymbolTable resolveDeclarationNames(SymbolTable symbolTable, Declarations d) {
+public SymbolTableBuilder resolveDeclarationNames(SymbolTableBuilder stBuilder, Declarations d) {
 	if (decls(cds, ts, vs, ps) := d) {
-		symbolTable = resolveConstDeclNames(symbolTable, cds);
-		symbolTable = resolveTypeDeclNames(symbolTable, ts);
-		symbolTable = resolveVarDeclNames(symbolTable, vs);
-		symbolTable = resolveProcedureNames(symbolTable, ps);
-		return symbolTable;
+		stBuilder = resolveConstDeclNames(stBuilder, cds);
+		stBuilder = resolveTypeDeclNames(stBuilder, ts);
+		stBuilder = resolveVarDeclNames(stBuilder, vs);
+		stBuilder = resolveProcedureNames(stBuilder, ps);
+		return stBuilder;
 	}
 	throw "resolveNames: Unhandled declarations <d> at location <d@location>";
 }
@@ -278,33 +273,25 @@ public SymbolTable resolveDeclarationNames(SymbolTable symbolTable, Declarations
 // the defining expression is really a constant expression returning
 // an INTEGER result.
 //
-// TODO: Do we need a check here to ensure that reserved words are not
-// used as constant names? Or, does the parser currently handle this for us?
-//
-public SymbolTable resolveConstDeclNames(SymbolTable symbolTable, ConstDecl cd) {
+public SymbolTableBuilder resolveConstDeclNames(SymbolTableBuilder stBuilder, ConstDecl cd) {
 	if (constDecl(cid,val) := cd) {
 		// Make sure we evaluate the constant expression before we add the constant
-		// to scope, definitions cannot be recursive.
-		< symbolTable, evalResult, evalValue > = evaluateConstantExp(symbolTable,val);
-		
-		// First sanity check -- we aren't redefining an existing name, are we?
-		if (/^integer$/i := cid.name)
-			return addScopeError(symbolTable, cid@location, "Name <cid.name> redefines a predefined identifier");
-			 
-		// Note that we need to check for conflicts here, since we cannot define the
-		// same constant/variable/procedure name more than once in the same scope. If 
-		// we do have conflicts, we do NOT add a new item for this constant.
-		set[STItemId] conflicts = { c | c <- getItemsForName(symbolTable, cid), symbolTable.scopeItemMap[c].parentId == symbolTable.currentScope };
-		
-		if (!evalResult)
-			evalValue = 0; // we still want to add the item, so we will find future scope problems, so just put in a default
-		
-		if (size(conflicts) > 0)
-			symbolTable = addScopeError(symbolTable, cid@location, "A variable, constant, or procedure with name <cid.name> is already defined in the current scope");
-		else
-			symbolTable = justSymbolTable(addSTItemUses(addConstantToScope(symbolTable,cid,evalValue,cd@location),[<true,cid@location>]));
+		// to scope, definitions cannot be recursive (i.e., a constant cannot be
+		// defined in terms of itself).
+		< stBuilder, evalResult, evalValue > = evaluateConstantExp(stBuilder,val);
 
-		return symbolTable;
+		if (!evalResult) evalValue = 0; // the eval proc will have flagged the errors, just provide a default value here
+		
+		// Find any conflicting items -- these are items in the same namespace as constant names
+		// defined at either this level or at the top level (for builtins)
+		set[Item] conflicts = { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[0],cid], getName(x) in namespaceItems[UserNames()] } + 
+							  { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[size(stBuilder.scopeStack)-1],cid], getName(x) in namespaceItems[UserNames()] };
+		if (size(conflicts) > 0)
+			stBuilder = addScopeError(stBuilder, cid@location, "A variable, constant, parameter, or procedure with name <cid.name> is already defined in the current scope");
+		else
+			stBuilder = addConstant(stBuilder,cid,evalValue,cd@location);
+
+		return stBuilder;
 	}
 
 	throw "resolveNames: Unhandled constant declaration <cd> at location <cd@location>";
@@ -313,9 +300,9 @@ public SymbolTable resolveConstDeclNames(SymbolTable symbolTable, ConstDecl cd) 
 //
 // Handles constants in a top to bottom ordering.
 //
-public SymbolTable resolveConstDeclNames(SymbolTable symbolTable, list[ConstDecl] cds) {
-	for (cd <- cds) symbolTable = resolveConstDeclNames(symbolTable, cd);
-	return symbolTable;
+public SymbolTableBuilder resolveConstDeclNames(SymbolTableBuilder stBuilder, list[ConstDecl] cds) {
+	for (cd <- cds) stBuilder = resolveConstDeclNames(stBuilder, cd);
+	return stBuilder;
 }
 
 //
@@ -324,31 +311,23 @@ public SymbolTable resolveConstDeclNames(SymbolTable symbolTable, list[ConstDecl
 // errors if we didn't add the type into the scope) without inadvertently
 // allowing broken programs to type.
 //
-// TODO: Do we need a check here to ensure that reserved words are not
-// used as type names? Or, does the parser currently handle this for us?
-//
-public SymbolTable resolveTypeDeclNames(SymbolTable symbolTable, TypeDecl td) {
+public SymbolTableBuilder resolveTypeDeclNames(SymbolTableBuilder stBuilder, TypeDecl td) {
 	if (typeDecl(tid,ty) := td) {
 		// Make sure we evaluate the type expression on the right before we add
 		// the type name to scope, definitions cannot be recursive
-		symbolTable = resolveTypeNames(symbolTable,ty);
+		stBuilder = resolveTypeNames(stBuilder,ty);
+		<stBuilder, cres, ot> = otype(stBuilder, ty); // NOTE: ot may be Invalid()
 
-		// First sanity check -- we aren't redefining an existing type name, are we?
-		if (/^integer$/i := tid.name)
-			return addScopeError(symbolTable, tid@location, "Type name <tid.name> redefines a predefined identifier");
-			 
-		// Note that we need to check for conflicts here, since we cannot define
-		// the same type more than once in the same scope. If we do have conflicts,
-		// we do NOT add a new item for this type.
-		set[STItemId] conflicts = { c | c <- getItemsForName(symbolTable, tid), symbolTable.scopeItemMap[c].parentId == symbolTable.currentScope };
-		
+		// Find any conflicting items -- these are items in the same namespace as type names
+		// defined at either this level or at the top level (for builtins)
+		set[Item] conflicts = { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[0],tid], getName(x) in namespaceItems[UserNames()] } + 
+							  { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[size(stBuilder.scopeStack)-1],tid], getName(x) in namespaceItems[UserNames()] };
 		if (size(conflicts) > 0)
-			symbolTable = addScopeError(symbolTable, tid@location, "Type <tid.name> is already defined in the current scope");
-		else {
-			<symbolTable, cres, ot> = otype(symbolTable, ty); // NOTE: ot may be Invalid()
-			symbolTable = justSymbolTable(addSTItemUses(addTypeToScope(symbolTable,tid,ot,td@location),[<true,tid@location>]));
-		}
-		return symbolTable;
+			stBuilder = addScopeError(stBuilder, tid@location, "A variable, constant, parameter, or procedure with name <tid.name> is already defined in the current scope");
+		else
+			stBuilder = addType(stBuilder,tid,ot,td@location);
+		
+		return stBuilder;
 	}
 	throw "resolveNames: Unhandled type declaration <td> at location <td@location>";
 }
@@ -358,39 +337,38 @@ public SymbolTable resolveTypeDeclNames(SymbolTable symbolTable, TypeDecl td) {
 // the default scoping rule of Oberon-0, which enforces scope in the textual order
 // of the program.
 //
-public SymbolTable resolveTypeDeclNames(SymbolTable symbolTable, list[TypeDecl] tds) {
-	for (td <- tds) symbolTable = resolveTypeDeclNames(symbolTable,td);
-	return symbolTable;
+public SymbolTableBuilder resolveTypeDeclNames(SymbolTableBuilder stBuilder, list[TypeDecl] tds) {
+	for (td <- tds) stBuilder = resolveTypeDeclNames(stBuilder,td);
+	return stBuilder;
 }
 
 //
 // Process variable names.
 //
-// TODO: Add check to ensure we aren't defining an existing keyword (if needed, the
-// parser may be taking care of this for us, although it won't for readln, etc)
-//
-public SymbolTable resolveVarDeclNames(SymbolTable symbolTable, VarDecl vd) {
+public SymbolTableBuilder resolveVarDeclNames(SymbolTableBuilder stBuilder, VarDecl vd) {
 	if (varDecl(ids,ty) := vd) {
 		// NOTE: Check the type first, in case the variable shadows a constant used
 		// in the type declaration.
-		symbolTable = resolveTypeNames(symbolTable,ty);
+		stBuilder = resolveTypeNames(stBuilder,ty);
 
 		// Now actually get the computed type back. ot could be Invalid() in cases where
 		// the type cannot be computed.
-		<symbolTable, cres, ot> = otype(symbolTable, ty);
+		<stBuilder, cres, ot> = otype(stBuilder, ty);
 		
 		// For each id in the var decl, we add a new variable item into the symbol table.
 		// Note that we need to check for conflicts here as well, since we cannot define
 		// the same name more than once in the same scope. If we do have conflicts,
 		// we do NOT add a new item for this variable.
 		for (vid <- ids) {
-			set[STItemId] conflicts = { c | c <- getItemsForName(symbolTable, vid), symbolTable.scopeItemMap[c].parentId == symbolTable.currentScope };
+			set[Item] conflicts = { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[0],vid], getName(x) in namespaceItems[UserNames()] } + 
+								  { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[size(stBuilder.scopeStack)-1],vid], getName(x) in namespaceItems[UserNames()] };
 			if (size(conflicts) > 0)
-				symbolTable = addScopeError(symbolTable, vid@location, "A variable, constant, or procedure with name <vid.name> is already defined in the current scope");
+				stBuilder = addScopeError(stBuilder, vid@location, "A variable, constant, parameter, or procedure with name <vid.name> is already defined in the current scope");
 			else
-				symbolTable = justSymbolTable(addSTItemUses(addVariableToScope(symbolTable,vid,ot,vd@location),[<true,vid@location>]));
+				stBuilder = addVariable(stBuilder,vid,ot,vd@location);
 		}
-		return symbolTable;
+
+		return stBuilder;
 	}
 	throw "resolveNames: Unhandled variable declaration <vd> at location <vd@location>";
 }
@@ -398,46 +376,58 @@ public SymbolTable resolveVarDeclNames(SymbolTable symbolTable, VarDecl vd) {
 //
 // Process variable declarations in top to down (lexical) order.
 //
-public SymbolTable resolveVarDeclNames(SymbolTable symbolTable, list[VarDecl] vds) {
-	for (vd <- vds) symbolTable = resolveVarDeclNames(symbolTable,vd);
-	return symbolTable;
+public SymbolTableBuilder resolveVarDeclNames(SymbolTableBuilder stBuilder, list[VarDecl] vds) {
+	for (vd <- vds) stBuilder = resolveVarDeclNames(stBuilder,vd);
+	return stBuilder;
 }
 
 //
 // Resolve names for Oberon-0 Modules
 //
-// TODO: Add check to ensure we aren't defining an existing keyword as the module name
-//
-public SymbolTable resolveModuleNames(SymbolTable symbolTable, Module m) {
+public SymbolTableBuilder resolveModuleNames(SymbolTableBuilder stBuilder, Module m) {
 	if (mod(mn, ds, bs, en) := m) {
-		symbolTable = justSymbolTable(setCurrentModule(addSTItemUses(pushNewModuleScope(symbolTable, mn, m@location),[<false,m@location>,<true,mn@location>])));
-		symbolTable = resolveDeclarationNames(symbolTable, ds);
-		symbolTable = resolveStatementNames(symbolTable, bs);
-		if (mn.name != en.name) {
-			symbolTable = addScopeError(symbolTable,m@location,"The module name <mn.name> and the module end name <en.name> do not match");
+		// First step -- add the new module into scope. This keeps open the possibility for
+		// having multiple modules, but, as of the current version, this is a redundant check,
+		// since we will never have more than one module at this point in time.
+		set[Item] conflicts = { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[0],mn], getName(x) in namespaceItems[Modules()] } + 
+							  { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[size(stBuilder.scopeStack)-1],mn], getName(x) in namespaceItems[Modules()] };
+		if (size(conflicts) > 0) {
+			stBuilder = addScopeError(stBuilder, mn@location, "A module with name <mn.name> is already defined in the current scope");
+			stBuilder = pushNewModuleScope(stBuilder, id("__INVALID"), m@location);
 		} else {
-			symbolTable = addItemUse(symbolTable, symbolTable.scopeItemMap[symbolTable.currentModule].itemId, en@location);
+			stBuilder = pushNewModuleScope(stBuilder, mn, m@location);
 		}
-		return popScope(symbolTable);
+
+		// Now process the module body
+		stBuilder = resolveDeclarationNames(stBuilder, ds);
+		stBuilder = resolveStatementNames(stBuilder, bs);
+		
+		// Finally, do a quick sanity check to make sure the begin and end names are identical.
+		if (mn.name != en.name) {
+			stBuilder = addScopeError(stBuilder,m@location,"The module name <mn.name> and the module end name <en.name> do not match");
+		} else {
+			stBuilder.itemUses = stBuilder.itemUses + < stBuilder.scopeStack[0], en@location>;
+		}
+		return popScope(stBuilder);
 	}
 
 	throw "resolveNames: Unhandled module <m> at <m@location>";
 }
 
-@doc{Entry module for the name resolver, this will give back a symbol table representing the module passed in.}
-public SymbolTable resolveNames(Module m) {
-	SymbolTable symbolTable = createNewSymbolTable();
-	symbolTable = justSymbolTable(pushNewTopScope(symbolTable, m@location));
+@doc{Entry module for the name resolver, this will give back a symbol table builder representing the module passed in.}
+public SymbolTableBuilder resolveNames(Module m) {
+	SymbolTableBuilder stBuilder = createNewSymbolTableBuilder();
 	
 	// Add built-in names
-	symbolTable = justSymbolTable(addBuiltInItemToScope(symbolTable,id("WriteLn")));
-	symbolTable = justSymbolTable(addBuiltInItemToScope(symbolTable,id("Write")));
-	symbolTable = justSymbolTable(addBuiltInItemToScope(symbolTable,id("ReadLn")));
-	symbolTable = justSymbolTable(addBuiltInItemToScope(symbolTable,id("Read")));
+	// TODO: Do we have more of these?
+	stBuilder = addBuiltInProcedure(stBuilder,id("WriteLn"));
+	stBuilder = addBuiltInProcedure(stBuilder,id("Write"));
+	stBuilder = addBuiltInProcedure(stBuilder,id("ReadLn"));
+	stBuilder = addBuiltInProcedure(stBuilder,id("Read"));
 	
 	// Add built-in types
-	symbolTable = justSymbolTable(addBuiltInTypeToScope(symbolTable,id("INTEGER")));
+	stBuilder = addBuiltInType(stBuilder,id("INTEGER"));
 	
-	symbolTable = resolveModuleNames(symbolTable, m);
-	return symbolTable;
+	stBuilder = resolveModuleNames(stBuilder, m);
+	return stBuilder;
 }
