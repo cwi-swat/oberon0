@@ -128,7 +128,7 @@ public Box formal2box(Formal form) {
 
 public Box proc2box(Procedure pr) {
   return V([
-    H([KW(L("PROCEDURE")), H([id2box(pr.name), hsepList(pr.formals, ";", formal2box), L(";")])[@hs=0]])[@hs=1],
+    H([KW(L("PROCEDURE")), H([id2box(pr.name), L("("), hsepList(pr.formals, ";", formal2box), L(")"), L(";")])[@hs=0]])[@hs=1],
     I([
       decls2box(pr.decls)
     ]),
@@ -157,7 +157,7 @@ public Box decls2box(Declarations ds) {
 
 
 public Box constDecl2box(ConstDecl cd) {
-  return R([L(cd.name), L("="), H([exp2box(cd.\value), L(";")])[@hs=0]]);
+  return R([L(cd.name.name), L("="), H([exp2box(cd.\value), L(";")])[@hs=0]]);
 }
 
 public Box typeDecl2box(TypeDecl td) {
