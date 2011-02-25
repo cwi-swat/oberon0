@@ -16,6 +16,7 @@ public str mod2c(Module m) {
 	env += ( p.name: p.formals | p <- m.decls.procs );
 return "
 #include \<builtins.h\>
+<procs2cdecls(m.decls.procs)>
 <consts2c(m.decls.consts)>
 <types2c(m.decls.types)>
 <vars2c(m.decls.vars)>
@@ -26,6 +27,15 @@ int main(int argc, char **argv) {
 ";
 }
 
+public str procs2cdecls(list[Procedure] procs) {
+	return ( "" | it + proc2csig(p) + ";\n" | p <- procs );
+}
+
+public str proc2csig(Procedure p) {
+	return "static void <p.name.name>(<formals2c(p)>)";
+}
+
+
 public str procs2c(list[Procedure] procs, Env env) {
 	return ( "" | it + proc2c(p, env) | p <- procs );
 }
@@ -33,7 +43,7 @@ public str procs2c(list[Procedure] procs, Env env) {
 public str proc2c(Procedure p, Env env) {
 	byRef = { n | f <- p.formals, f.hasVar, n <- f.names };
  	return "
-static void <p.name.name>(<formals2c(p)>) {
+<proc2csig(p)> {
   <vars2c(p.decls.vars)>
   <stats2c(p.body, env, byRef)>
 }
