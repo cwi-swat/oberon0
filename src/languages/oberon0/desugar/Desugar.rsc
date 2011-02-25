@@ -3,14 +3,20 @@ module languages::oberon0::desugar::Desugar
 import languages::oberon0::ast::Oberon0;
 
 data Statement 
-	= forLoop(Ident name, Expression from, Expression to, list[Statement] body)
+	= forDo(Ident name, Expression from, Expression to, list[Statement] body)
+	| repeatUntil(list[Statement] body, Expression cond)
 	| begin(list[Statement] body)
 	| let(list[VarDecl] vars, list[Statement] body)
 	;
 
 public Procedure EXAMPLE = proc(id("f"), [formal(false, [id("x")], user(id("INTEGER")))], 
 				decls([], [], [], []), 
-				[forLoop(id("i"), nat(1), nat(10), [call(id("Write"), [lookup(id("i"), [])])])],
+				[forDo(id("i"), nat(1), nat(10), [call(id("Write"), [lookup(id("i"), [])])])],
+				id("f")); 
+
+public Procedure REPEAT = proc(id("f"), [formal(false, [id("x")], user(id("INTEGER")))], 
+				decls([], [], [], []), 
+				[repeatUntil([call(id("Write"), [lookup(id("i"), [])])], geq(lookup(id("i"), []), nat(0)))],
 				id("f")); 
 
 public Module desugar(Module mod) {
@@ -19,10 +25,30 @@ public Module desugar(Module mod) {
 	}
 }
 
-
-public Procedure for2let(Procedure p) {
+public Procedure repeat2while(Procedure p) {
 	return visit (p) {
-		case forLoop(n, f, t, b) => 
+		case repeatUntil(b, c) => begin([b, whileDo(not(c), b)]) 
+	}
+}
+
+
+public Procedure repeat2letWhile(Procedure p) {
+	x = id("first");
+	return visit (p) {
+		case repeatUntil(b, c) => 
+			let([varDecl([x], user(id("INTEGER")))],[
+				assign(x, [], nat(1)), 
+				whileDo(or(eq(lookup(x, []), nat(1)), not(c)), [
+					assign(x, [], nat(0)), 
+					b
+				])
+			]) 
+	}
+}
+
+public Procedure for2letWhile(Procedure p) {
+	return visit (p) {
+		case forDo(n, f, t, b) => 
 			let([varDecl([n], user(id("INTEGER")))],
 				[assign(n, [], f), whileDo(geq(lookup(n, []), t), b)]) 
 	}
@@ -34,7 +60,7 @@ public Procedure let2begin(Procedure p) {
 	map[Ident, Ident] lift(list[VarDecl] vds) {
 		subs = ();
 		p.decls.vars += for (v <- vds, n <- v.names) {
-			nn = id("<n.name>_<cnt>");
+			nn = id("<n.name>_<cnt>"); // _ prevents nameclashes
 			cnt += 1;
 			subs[n] = nn;
 			append varDecl([nn], v.\type);
