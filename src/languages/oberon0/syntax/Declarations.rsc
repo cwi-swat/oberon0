@@ -35,7 +35,7 @@ syntax VarSect
 	;
 
 syntax ProcedureDecl 
-	= proc: "PROCEDURE" Ident name Formals? formals ";" Declarations decls Body? body "END" Ident ";"
+	= @Foldable proc: "PROCEDURE" Ident name Formals? formals ";" Declarations decls Body? body "END" Ident ";"
 	; 
 
 
