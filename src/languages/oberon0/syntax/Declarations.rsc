@@ -31,7 +31,7 @@ syntax VarDecl
 	;
 	
 syntax VarSect 
-	= "VAR" VarDecl* vars
+	= @Foldable "VAR" VarDecl* vars
 	;
 
 syntax ProcedureDecl 
@@ -48,7 +48,7 @@ syntax Formals
 	;
 
 syntax Body 
-	= "BEGIN" {Statement ";"}+ statements
+	= @Foldable "BEGIN" {Statement ";"}+ statements
 	;
 
 
