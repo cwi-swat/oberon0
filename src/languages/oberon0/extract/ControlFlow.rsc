@@ -68,13 +68,12 @@ private ControlFlowGraph getControlFlow(list[Statement] body, CFNode startNode) 
 
 // add IN, OUT, and SUC entries for each Statement type
 private void visitStatement(i : ifThen(cond, body, elseIfs, elsePart)) {
-	nodes[cond@location] = choice(cond@location, cond);
-
 	IN += {<i@location, cond@location>};
 
 	ifs = [<cond, body>] + elseIfs;
 
 	for (<c, b> <- ifs) {
+		nodes[c@location] = choice(c@location, c);
 		if (b != []) {
 			OUT += {<i@location, last(b)@location>};
 			SUC += {<c@location, head(b)@location>};
@@ -144,18 +143,18 @@ private str formatNode(CFNode n) {
 	switch(n) {
 		case choice(_, Expression e) : return replaceLast(format(exp2box(e)), "\n", "");
 		case statement(_, Statement s) : return replaceLast(format(stat2box(s)), "\n", "");
-		case start(_, Module p) : return "start <m.name.name>";
+		case start(_, Module m) : return "start <m.name.name>";
 		case start(_, Procedure p) : return "start <p.name.name>";
 		case end() : return "end";
 	}
 }
 
-private str getColor(CFNode n) {
+private Figure getFigure(CFNode n) {
 	switch(n) {
-		case choice(_,_) : return "yellow";
-		case start(_,_) : return "orange";
-		case end() : return "grey";
-		default: return "white";
+		case choice(_,_) : return ellipse(text(formatNode(n)), vis::Figure::id(getId(n)), fillColor("yellow"), size(0), gap(8));
+		case start(_,_) : return box(text(formatNode(n)), vis::Figure::id(getId(n)), fillColor("orange"), size(0), gap(4));
+		case end() : return box(text(formatNode(n)), vis::Figure::id(getId(n)), fillColor("grey"), size(0), gap(4));
+		default: return box(text(formatNode(n)), vis::Figure::id(getId(n)), fillColor("white"), size(0), gap(4));
 	}
 }
 
@@ -169,9 +168,8 @@ private str getId(CFNode n) {
 
 public void visControlFlow(ControlFlowGraph cfg) {
 
-	_nodes = [ box(text(formatNode(n)), vis::Figure::id(getId(n)), fillColor(getColor(n)), size(0))
-     			| n <- carrier(cfg.graph) ];
-    _edges = [ edge(getId(n1), getId(n2), shape([vertex(0,0), vertex(4,8), vertex(8, 0)], shapeClosed(), fillColor("black"))) | <n1, n2> <- cfg.graph ];
+	_nodes = [ getFigure(n) | n <- carrier(cfg.graph) + cfg.start ];
+    _edges = [ edge(getId(n1), getId(n2), shape([vertex(0,0), vertex(4,8), vertex(8, 0)], shapeClosed(true), fillColor("black"))) | <n1, n2> <- cfg.graph ];
 
     render(graph(_nodes, _edges, hint("layered"), size(800)));
 }
