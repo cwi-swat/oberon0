@@ -10,25 +10,34 @@ import languages::oberon0::ast::Oberon0;
 import languages::oberon0::check::Types;
 
 //
-// Flag different namespaces for names.
+// Flag different namespaces for names. Oberon0 ony has two: one for module
+// names, and one for everything else.
 //
 data Namespace = UserNames() | Modules();
 	
 //
-// Scope items, which represent either scope layers (created for modules and procedures)
-// or named items (types, variables, procedures, etc).
+// Scope items, representing either scopes (Top), items in the scope (Variable),
+// or both (Procedure, Module).
 //
 data Item =
-	  TopLayer()
+	  Top()
 	| Variable(Ident name, OType otype, loc definedAt)
 	| Constant(Ident name, int val, loc definedAt)
 	| Procedure(Ident name, list[Item] parameters, loc definedAt)
 	| FormalParameter(Ident name, OType otype, bool isVar, loc definedAt)
 	| Module(Ident name, loc definedAt)
 	| Type(Ident name, OType otype, loc definedAt)
-	| BuiltInProcedure(Ident name)
+	| BuiltInProcedure(Ident name, list[tuple[OType paramType, bool isVar]] params)
 	| BuiltInType(Ident name)
 	;
+
+//
+// Link the namespaces to the items that can be in that namespace.
+//
+public rel[Namespace,str] namespaceItems = { < UserNames(), "Variable" >, < UserNames(), "Constant" >,
+	< UserNames(), "Procedure" >, < UserNames(), "FormalParameter" >, < UserNames(), "Type" >,
+	< UserNames(), "BuiltInProcedure" >, < UserNames(), "BuiltInType" >, < Modules(), "Module" > };
+	
 	
 public str prettyPrint(Item i) {
 	switch(i) {
@@ -36,10 +45,9 @@ public str prettyPrint(Item i) {
 		case Constant(n,v,_) : return "CONST <n.name> = <v>";
 		case FormalParameter(n,t,v,_) : return "";
 		case Type(n,t,_) : return "TYPE <n.name> = <prettyPrint(t)>";
-		case BuiltInProcedure(n) : return "PROC <n.name>";
+		case BuiltInProcedure(n,_) : return "PROC <n.name>";
 		case BuiltInType(n) : return "TYPE <n.name>";
-		
-		case TopLayer() : return "TOP SCOPE";
+		case Top() : return "TOP SCOPE";
 		case Module(n,_) : return "MODULE <n.name>";
 		case Procedure(n,pl,_) : return "PROCEDURE <n.name>(<prettyPrint(pl)>)";
 	}
@@ -61,18 +69,14 @@ public str dumpTable(SymbolTable st) {
 		set[Item] items = st[currentScope];
 		for (item <- items) {
 			if (getName(item) notin {"FormalParameter"}) res = res + "<spaces><prettyPrint(item)>\n";
-			if (TopLayer() := item || Module(_,_) := item || Procedure(_,_,_) := item)
+			if (Top() := item || Module(_,_) := item || Procedure(_,_,_) := item)
 				res = res + dumpTableAux(item, spaces + "  ");
 		}
 		return res;
 	}
-	return dumpTableAux(TopLayer(), "  ");
+	return dumpTableAux(Top(), "  ");
 }
 
-public rel[Namespace,str] namespaceItems = { < UserNames(), "Variable" >, < UserNames(), "Constant" >,
-	< UserNames(), "Procedure" >, < UserNames(), "FormalParameter" >, < UserNames(), "Type" >,
-	< UserNames(), "BuiltInProcedure" >, < UserNames(), "BuiltInType" >, < Modules(), "Module" > };
-	
 //
 // This is the final version of the symbol table, not including all
 // the stuff that is needed to build it.
@@ -81,7 +85,6 @@ alias SymbolTable = rel[Item parent, Item child];
 
 //
 // General symbol table for Oberon0 programs.
-// NOTE: This is still being developed, not sure what we need yet...
 //
 alias SymbolTableBuilder = tuple[    
     SymbolTable symbolTable,
@@ -91,15 +94,12 @@ alias SymbolTableBuilder = tuple[
     list[Item] scopeStack
 	];
 
-//	
-// Create an empty symbol table
-//                        
 public SymbolTableBuilder createNewSymbolTableBuilder() {
-	return < { }, { }, { }, { }, [ TopLayer() ] >;
+	return < { }, { }, { }, { }, [ Top() ] >;
 }                    
 	
 //
-// Push an item onto the scope stack
+// Push a scope onto the scope stack. This opens a new scope.
 //
 public SymbolTableBuilder pushScope(SymbolTableBuilder stBuilder, Item item) {
 	stBuilder.scopeStack = [ item ] + stBuilder.scopeStack;
@@ -107,7 +107,7 @@ public SymbolTableBuilder pushScope(SymbolTableBuilder stBuilder, Item item) {
 }
 
 //
-// Pop the scope stack
+// Pop the scope stack, going back to the prior scope.
 //
 public SymbolTableBuilder popScope(SymbolTableBuilder stBuilder) {
 	if (size(stBuilder.scopeStack) == 0) throw "popScope: Scope Stack is empty, cannot pop!";
@@ -135,10 +135,10 @@ public SymbolTableBuilder addNamedBuiltIn(SymbolTableBuilder stBuilder, Item ite
 }
 
 //
-// Add a new module
+// Add a new module. Modules create a new scope, and must be added at the top (no nesting).
 //
 public SymbolTableBuilder pushNewModuleScope(SymbolTableBuilder stBuilder, Ident name, loc l) {
-	if (TopLayer() !:= stBuilder.scopeStack[0]) 
+	if (Top() !:= stBuilder.scopeStack[0]) 
 		throw "Modules cannot be added inside another scope!";
 	
 	// Wire the new module into the scope structure. Note that we add the module name into the visible
@@ -154,27 +154,27 @@ public SymbolTableBuilder pushNewModuleScope(SymbolTableBuilder stBuilder, Ident
 }
 
 //
-// Push a new procedure scope located inside a module or procedure
+// Push a new procedure scope located inside a module or procedure. Procedures also create a new scope.
+// Note that we add all the parameters in as well, so they are visible if looked up in the scope.
 //
 public SymbolTableBuilder pushNewProcedureScope(SymbolTableBuilder stBuilder, Ident name, list[Formal] formals, map[Ident,OType] otypes, loc l) {
 	if (Module(_,_) !:= stBuilder.scopeStack[0] && Procedure(_,_,_) !:= stBuilder.scopeStack[0]) 
 		throw "Procedures can only be added into modules or other procedures.";
 		
-	// Create the items for the parameters
-	// NOTE: We don't bother checking for type errors here, but assume instead that those are checked
-	// in the caller.
+	// Create the items for the parameters. We assume that any errors with these (duplicate names, bad
+	// types) are handled elsewhere, and that we can just add them here.
 	params = for(f:formal(hasv,ids,ty) <- formals, pid <- ids) {
 		Item paramItem = FormalParameter(pid,otypes[pid],hasv,f@location);
 		append(paramItem);
 		stBuilder.itemUses = stBuilder.itemUses + < paramItem, pid@location >;
 	}
 	
-	// Create the items representing the named entity (procedure) and the scope		 
+	// Create the item for the procedure, which also includes its parameters.		 
 	Item pi = Procedure(name, params, l);
 	
 	// Wire the new procedure into the scope structure. Note that we add the procedure name into the visible
 	// names for both the current scope and the procedure's scope, since the procedure name is visible within
-	// the procedure iteself. 
+	// the procedure itself as well as within the scope in which it is defined. 
 	stBuilder.symbolTable = stBuilder.symbolTable + < stBuilder.scopeStack[0], pi > + { <pi, p> | p <- params };
 	stBuilder.scopeNames = stBuilder.scopeNames + < stBuilder.scopeStack[0], pi.name, pi > + < pi, pi.name, pi > + { <pi,p.name,p> | p <- params };
 	stBuilder.itemUses = stBuilder.itemUses + < pi, name@location >;
@@ -189,8 +189,6 @@ public SymbolTableBuilder pushNewProcedureScope(SymbolTableBuilder stBuilder, Id
 public SymbolTableBuilder addVariable(SymbolTableBuilder stBuilder, Ident name, OType otype, loc l) {
 	if (Module(_,_) !:= stBuilder.scopeStack[0] && Procedure(_,_,_) !:= stBuilder.scopeStack[0]) 
 		throw "Variables can only be added into the scope of a module or procedure";
-
-	// Create the item and add it into the scope
 	return addNamedItem(stBuilder, Variable(name, otype, l), name@location);
 }
 
@@ -200,8 +198,6 @@ public SymbolTableBuilder addVariable(SymbolTableBuilder stBuilder, Ident name, 
 public SymbolTableBuilder addConstant(SymbolTableBuilder stBuilder, Ident name, int val, loc l) {
 	if (Module(_,_) !:= stBuilder.scopeStack[0] && Procedure(_,_,_) !:= stBuilder.scopeStack[0]) 
 		throw "Named constants can only be added into the scope of a module or procedure";
-
-	// Create the item and add it into the scope
 	return addNamedItem(stBuilder, Constant(name, val, l), name@location);
 }
 
@@ -211,16 +207,14 @@ public SymbolTableBuilder addConstant(SymbolTableBuilder stBuilder, Ident name, 
 public SymbolTableBuilder addType(SymbolTableBuilder stBuilder, Ident name, OType otype, loc l) {
 	if (Module(_,_) !:= stBuilder.scopeStack[0] && Procedure(_,_,_) !:= stBuilder.scopeStack[0]) 
 		throw "Named types can only be added into the scope of a module or procedure";
-
-	// Create the item and add it into the scope		 
 	return addNamedItem(stBuilder, Type(name, otype, l), name@location);
 }
 
 //
 // Add a new built-in procedure into the scope
 //
-public SymbolTableBuilder addBuiltInProcedure(SymbolTableBuilder stBuilder, Ident name) {
-	return addNamedBuiltIn(stBuilder, BuiltInProcedure(name));
+public SymbolTableBuilder addBuiltInProcedure(SymbolTableBuilder stBuilder, Ident name, list[tuple[OType paramType, bool isVar]] params) {
+	return addNamedBuiltIn(stBuilder, BuiltInProcedure(name,params));
 }
 
 //
@@ -243,11 +237,14 @@ public SymbolTableBuilder addScopeError(SymbolTableBuilder stBuilder, loc l, str
 //
 public set[Item] getItems(SymbolTableBuilder stBuilder, Item startingScope, Ident name, Namespace ns) {
 	set[Item] foundItems = { i | i <- stBuilder.scopeNames[startingScope,name], getName(i) in namespaceItems[ns] };
-	if (size(foundItems) == 0 && TopLayer() !:= startingScope)
+	if (size(foundItems) == 0 && Top() !:= startingScope)
 		return getItems(stBuilder,getOneFrom(invert(stBuilder.symbolTable)[startingScope]),name,ns); 	
 	return foundItems;
 }
 
+//
+// Lots of helpers to look up specific types of items. This just saves the caller from a filtering step.
+//
 public set[Item] lookupItems(SymbolTableBuilder stBuilder, Ident name) {
 	return { i | i <- getItems(stBuilder, stBuilder.scopeStack[0], name, UserNames()), getName(i) in {"Variable","Constant","Procedure","BuiltInProcedure","FormalParameter"} };
 }
@@ -266,6 +263,10 @@ public set[Item] getProcedures(SymbolTableBuilder stBuilder, Ident name) {
 
 public set[Item] getTypes(SymbolTableBuilder stBuilder, Ident name) {
 	return { i | i <- getItems(stBuilder, stBuilder.scopeStack[0], name, UserNames()), getName(i) == "Type" || getName(i) == "BuiltInType"};
+}
+
+public set[Item] getTypesAt(SymbolTableBuilder stBuilder, Ident name, Item ctx) {
+	return { i | i <- getItems(stBuilder, ctx, name, UserNames()), getName(i) == "Type" || getName(i) == "BuiltInType"};
 }
 
 public set[Item] getParameters(SymbolTableBuilder stBuilder, Ident name) {

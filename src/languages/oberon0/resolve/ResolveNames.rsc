@@ -12,11 +12,6 @@ import languages::oberon0::resolve::ConstantEvaluator;
 import languages::oberon0::resolve::TypeEvaluator;
 
 //
-// TODO: Check in which cases we should verify that a given name is not a duplicate of
-// an existing predefined name (INTEGER, etc)
-//
-
-//
 // Selectors are either fields (for records) or subscripts (for arrays).
 // Array selectors are expressions, so we recurse. We do nothing with
 // the fields, since we need to know the type of the var being selected
@@ -37,8 +32,10 @@ public SymbolTableBuilder resolveSelectorNames(SymbolTableBuilder stBuilder, Sel
 //
 public SymbolTableBuilder resolveVariableNames(SymbolTableBuilder stBuilder, Ident name, list[Selector] selectors) {
 	set[Item] vars = lookupItems(stBuilder, name);
-	if (size(vars) > 0) {
-		for (v <- vars) stBuilder.itemUses = stBuilder.itemUses + <v, name@location>;
+	if (size(vars) == 1) {
+		stBuilder.itemUses = stBuilder.itemUses + < getOneFrom(vars), name@location >;
+	} else if (size(vars) > 1) {
+		stBuilder = addScopeError(stBuilder, name@location, "<name.name> has multiple in-scope definitions");
 	} else {
 		stBuilder = addScopeError(stBuilder, name@location, "<name.name> not defined before use");
 	}
@@ -118,67 +115,6 @@ public SymbolTableBuilder resolveStatementNames(SymbolTableBuilder stBuilder, li
 }
 
 //
-// Resolve names in types. Note that the type declaration is a separate
-// syntactic strucure, so we expect type names used here to be already
-// defined. Types appear in fields, formal parameters, variable declarations, 
-// and type declarations.
-//
-public SymbolTableBuilder resolveTypeNames(SymbolTableBuilder stBuilder, Type t) {
-	// Named types, including built-in types.	
-	if (user(name) := t) {
-		set[Item] types = getTypes(stBuilder, name);
-		if (size(types) > 0) {
-			for (ty <- types) stBuilder.itemUses = stBuilder.itemUses + <ty, name@location>;
-			return stBuilder;
-		} else {
-			return addScopeError(stBuilder, name@location, "Type <name.name> not defined before use");
-		}
-	}
-	
-	// Array types. This includes both an array index expression and the array type.
-	// We need to check two things here -- first, we need to resolve any names in the
-	// type, and second, we need to resolve names in the index expression AND make sure
-	// that it is an evaluatable constant, since Oberon-0 requires this value to
-	// be computable at compile time. This combination of resolving and computing is
-	// done using evaluateConstantExp, which is why we don't use resolveExpressionNames
-	// here instead.			
-	if (array(e,ty) := t) {
-		stBuilder = resolveTypeNames(stBuilder,ty);
-		< stBuilder, evalResult, evalValue > = evaluateConstantExp(stBuilder,e);
-		if (evalResult && evalValue < 1)
-			stBuilder = addScopeError(stBuilder, t@location, "type invalid, array size must be larger than 0");
-		return stBuilder;
-	}
-	
-	// Record types. We need to resolve names in the types of the fields, but
-	// otherwise do nothing here.	
-	if (record(fs) := t) return resolveFieldNames(stBuilder,fs);
-
-	throw "resolveNames: Unhandled type <t> at location <t@location>";
-}
-
-//
-// For fields, we resolve the names in the field type, which should only
-// use already-declared names. We do NOT resolve the names in the IDs,
-// since they can be arbitrary, and they aren't visible in scope unless
-// we access them through a field dereference of a record variable (in
-// other words, if we have field f, we never want to return a field item
-// when we see f, we only check it when we see r.f, r[0].f, etc).
-//
-public SymbolTableBuilder resolveFieldNames(SymbolTableBuilder stBuilder, Field f) {
-	if (field(ids,ty) := f) return resolveTypeNames(stBuilder,ty);
-	throw "resolveNames: Unhandled field <f> at location <f@location>";
-}
-
-//
-// Handle lists of fields, as found in record type declarations.
-//
-public SymbolTableBuilder resolveFieldNames(SymbolTableBuilder stBuilder, list[Field] fs) {
-	for (f <- fs) stBuilder = resolveFieldNames(stBuilder,f);
-	return stBuilder;
-}
-
-//
 // Resolve names in procedure declarations. We need to ensure that the procedure name
 // is new (in this level of scope), add items for the procedure and its parameters,
 // then process the procedure declarations and body. We also do some checking to ensure
@@ -201,7 +137,6 @@ public SymbolTableBuilder resolveProcedureNames(SymbolTableBuilder stBuilder, Pr
 		list[Formal] validFormals = [ ];
 		map[Ident,OType] otypes = ( );
 		for (f:formal(hasv,ids,ty) <- fs) {
-			stBuilder = resolveTypeNames(stBuilder, ty);
 			<stBuilder, cres, ot> = otype(stBuilder, ty); 
 			for (fpid <- ids) {
 				if (fpid in foundIds) {
@@ -315,7 +250,6 @@ public SymbolTableBuilder resolveTypeDeclNames(SymbolTableBuilder stBuilder, Typ
 	if (typeDecl(tid,ty) := td) {
 		// Make sure we evaluate the type expression on the right before we add
 		// the type name to scope, definitions cannot be recursive
-		stBuilder = resolveTypeNames(stBuilder,ty);
 		<stBuilder, cres, ot> = otype(stBuilder, ty); // NOTE: ot may be Invalid()
 
 		// Find any conflicting items -- these are items in the same namespace as type names
@@ -347,12 +281,7 @@ public SymbolTableBuilder resolveTypeDeclNames(SymbolTableBuilder stBuilder, lis
 //
 public SymbolTableBuilder resolveVarDeclNames(SymbolTableBuilder stBuilder, VarDecl vd) {
 	if (varDecl(ids,ty) := vd) {
-		// NOTE: Check the type first, in case the variable shadows a constant used
-		// in the type declaration.
-		stBuilder = resolveTypeNames(stBuilder,ty);
-
-		// Now actually get the computed type back. ot could be Invalid() in cases where
-		// the type cannot be computed.
+		// Get the computed type. ot could be Invalid() in cases where the type cannot be computed.
 		<stBuilder, cres, ot> = otype(stBuilder, ty);
 		
 		// For each id in the var decl, we add a new variable item into the symbol table.
@@ -420,10 +349,10 @@ public SymbolTableBuilder resolveNames(Module m) {
 	
 	// Add built-in names
 	// TODO: Do we have more of these?
-	stBuilder = addBuiltInProcedure(stBuilder,id("WriteLn"));
-	stBuilder = addBuiltInProcedure(stBuilder,id("Write"));
-	stBuilder = addBuiltInProcedure(stBuilder,id("ReadLn"));
-	stBuilder = addBuiltInProcedure(stBuilder,id("Read"));
+	stBuilder = addBuiltInProcedure(stBuilder,id("WriteLn"),[]);
+	stBuilder = addBuiltInProcedure(stBuilder,id("Write"),[<Integer(),false>]);
+	stBuilder = addBuiltInProcedure(stBuilder,id("ReadLn"),[]);
+	stBuilder = addBuiltInProcedure(stBuilder,id("Read"),[<Integer(),true>]);
 	
 	// Add built-in types
 	stBuilder = addBuiltInType(stBuilder,id("INTEGER"));

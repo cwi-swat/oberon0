@@ -16,8 +16,8 @@ import languages::oberon0::check::Types;
 //
 // CITE: Wirth book, p. 30, paragraph 4.
 //
-public tuple[SymbolTableBuilder st, bool res, int val] evaluateConstantExp(SymbolTableBuilder stBuilder, Expression exp, bool registerErrors) {
-	int evaluateUnaryOp(SymbolTableBuilder stBuilder, Expression e, int(int) op) {
+public tuple[SymbolTableBuilder st, bool res, int val] evaluateConstantExp(SymbolTableBuilder stBuilder, Expression exp) {
+	tuple[SymbolTableBuilder st, bool res, int val] evaluateUnaryOp(SymbolTableBuilder stBuilder, Expression e, int(int) op) {
 		int result = 0;
 		< stBuilder, res, val > = evaluateConstantExp(stBuilder, e);
 		if (res) {
@@ -26,7 +26,7 @@ public tuple[SymbolTableBuilder st, bool res, int val] evaluateConstantExp(Symbo
 		return < stBuilder, res, result >;
 	}
 
-	int evaluateBinaryOp(SymbolTableBuilder stBuilder, Expression l, Expression r, int(int,int) op) {
+	tuple[SymbolTableBuilder st, bool res, int val] evaluateBinaryOp(SymbolTableBuilder stBuilder, Expression l, Expression r, int(int,int) op) {
 		int result = 0;
 		< stBuilder, res, lval > = evaluateConstantExp(stBuilder, l);
 		if (res) {
@@ -48,15 +48,15 @@ public tuple[SymbolTableBuilder st, bool res, int val] evaluateConstantExp(Symbo
 				stBuilder.itemUses = stBuilder.itemUses + < item, cid@location >;
 				return < stBuilder, true, item.val >;					
 			} else if (size(items) == 0) {
-				if (registerErrors) stBuilder = addScopeError(stBuilder,exp@location,"Name <cid.name> must be a defined constant.");
+				stBuilder = addScopeError(stBuilder,exp@location,"Name <cid.name> must be a defined constant.");
 			} else {
-				if (registerErrors) stBuilder = addScopeError(stBuilder,exp@location,"Unexpected error, multiple constant definitions were found for name <cid.name>");				
+				stBuilder = addScopeError(stBuilder,exp@location,"Unexpected error, multiple in-scope constant definitions were found for name <cid.name>");				
 			} 
 			return <stBuilder, false, 0>;
 		}
 
 		case lookup(cid,sels) : {
-			if (registerErrors) stBuilder = addScopeError(stBuilder,exp@location,"Names used in constant expressions must represent integer constants");
+			stBuilder = addScopeError(stBuilder,exp@location,"Names used in constant expressions must represent integer constants, not arrays or records");
 			return <stBuilder, false, 0>;
 		}
 		
@@ -75,16 +75,9 @@ public tuple[SymbolTableBuilder st, bool res, int val] evaluateConstantExp(Symbo
 		case sub(l,r) : return evaluateBinaryOp(stBuilder,l,r,int(int x, int y) { return x - y; });
 		
 		default : {
-			if (registerErrors) stBuilder = addScopeError(stBuilder, exp@location, "Invalid expression in constant definition.");
+			stBuilder = addScopeError(stBuilder, exp@location, "Invalid expression in constant definition.");
 			return < stBuilder, false, 0 >;
 		}		
 	}
 }
 
-public tuple[SymbolTableBuilder st, bool res, int val] evaluateConstantExp(SymbolTableBuilder stBuilder, Expression exp) {
-	return evaluateConstantExp(stBuilder, exp, true);
-}
-
-public tuple[SymbolTableBuilder st, bool res, int val] evaluateConstantExpNoFlags(SymbolTableBuilder stBuilder, Expression exp) {
-	return evaluateConstantExp(stBuilder, exp, false);
-}
