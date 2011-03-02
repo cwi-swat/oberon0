@@ -1,6 +1,6 @@
 module languages::oberon0::format::Oberon0
 
-import box::Box;
+import lang::box::util::Box;
 import List;
 import languages::oberon0::ast::Oberon0;
 

@@ -8,8 +8,8 @@ import Graph;
 import List;
 import IO;
 
-import box::Box;
-import box::Box2Text;
+import lang::box::util::Box;
+import lang::box::util::Box2Text;
 import languages::oberon0::format::Oberon0;
 
 import vis::Figure;
