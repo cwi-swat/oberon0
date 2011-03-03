@@ -7,9 +7,9 @@ import languages::oberon0::ast::Oberon0;
 anno bool Ident@receivedByRef;
 anno bool Expression@passByRef;
 
-alias Env = map[Ident, list[Formal]];
+alias Environment = map[Ident, list[Formal]];
 
-Env TOPLEVEL = (id("Write"): [formal(false, [id("x")], user(id("INTEGER")))],
+Environment TOPLEVEL = (id("Write"): [formal(false, [id("x")], user(id("INTEGER")))],
 				id("WriteLn"): [],
 				id("Read"): [formal(true, [id("x")], user(id("INTEGER")))]); 
 
@@ -20,13 +20,13 @@ public Module annotateByRefs(Module m) {
 	return m;
 }
 
-public Procedure annotateByRefs(Procedure p, Env env) {
+public Procedure annotateByRefs(Procedure p, Environment env) {
 	byRefs = { n | f <- p.formals, f.hasVar, n <- f.names };
 	p.body = annotateByRefsInBody(p.body, env, byRefs);
 	return p;
 }
 
-public list[Statement] annotateByRefsInBody(list[Statement] body, Env env, set[Ident] byRefs) {
+public list[Statement] annotateByRefsInBody(list[Statement] body, Environment env, set[Ident] byRefs) {
 	return visit (body) {
 		case lookup(n, sels): {
 			n@receivedByRef = (n in byRefs);
