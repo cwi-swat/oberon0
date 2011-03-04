@@ -1,11 +1,11 @@
-module lang::oberon0::syntax::Expressions
+module lang::oberon0::l1::syntax::Expressions
 
-import lang::oberon0::syntax::Layout;
-import lang::oberon0::syntax::Lexical;
+import lang::oberon0::l1::syntax::Layout;
+import lang::oberon0::l1::syntax::Lexical;
 
 syntax Expression 
 	= nat: Natural value
-	| lookup: Ident var Selector* selectors
+	| lookup: Ident var 
 	| bracket Bracket: "(" Expression exp ")"
 	| not: "~" Expression exp
 	> 
@@ -34,7 +34,3 @@ syntax Expression
 	)
 	;
 
-syntax Selector 
-	= field: "." Ident field
-	| subscript: "[" Expression exp "]" 
-	;

@@ -1,4 +1,4 @@
-module lang::oberon0::syntax::Layout
+module lang::oberon0::l1::syntax::Layout
 
 syntax Layout 
 	= lex whitespace: [\t-\n\r\ ] 

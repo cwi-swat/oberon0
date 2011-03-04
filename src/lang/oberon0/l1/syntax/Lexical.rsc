@@ -1,4 +1,4 @@
-module lang::oberon0::syntax::Lexical
+module lang::oberon0::l1::syntax::Lexical
 
 syntax Ident 
 	= lex id: [a-zA-Z][a-zA-Z0-9]* 
@@ -20,7 +20,6 @@ syntax Keywords
 	| "THEN" 
 	| "ELSE" 
 	| "ELSIF" 
-	| "OF" 
 	| "DO" 
 	| "WHILE" 
 	| "END" 
@@ -28,9 +27,6 @@ syntax Keywords
 	| "TYPE" 
 	| "CONST" 
 	| "MODULE"
-	| "ARRAY" 
-	| "RECORD" 
-	| "PROCEDURE" 
 	| "BEGIN"
 	;
 	
@@ -62,10 +58,6 @@ syntax "ELSIF"
 	= ... # [A-Za-z0-9] 
 	;
 	
-syntax "OF"
-	= ... # [A-Za-z0-9] 
-	;
-	
 syntax "DO" 
 	= ... # [A-Za-z0-9] 
 	;
@@ -93,19 +85,7 @@ syntax "CONST"
 syntax "MODULE" 
 	= ... # [A-Za-z0-9] 
 	;
-	
-syntax "ARRAY" 
-	= ... # [A-Za-z0-9] 
-	;
-	
-syntax "RECORD" 
-	= ... # [A-Za-z0-9]
-	;
-	
-syntax "PROCEDURE" 
-	= ... # [A-Za-z0-9] 
-	;
-	
+		
 syntax "BEGIN" 
 	= ... # [A-Za-z0-9] 
 	;
