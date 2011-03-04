@@ -2,18 +2,29 @@ MODULE Sample;
 
 (* abc *)
 
+TYPE Y = BOOLEAN;
+
 PROCEDURE Nesting;
-  VAR x, y: INTEGER;
+  CONST C = 5;
+  		A = 10;
+  TYPE Y = INTEGER;
+  VAR x, y: Y;
+  	
   PROCEDURE f(x: INTEGER; VAR z: INTEGER);
     PROCEDURE g(abc: INTEGER);
+    	CONST C = 4;
+    	TYPE Y = RECORD x: Y END;
+    	VAR Y: Y;
        PROCEDURE h(); 
        BEGIN
          Write(x);
          Write(z);
+         Write(A);
+         Write(C);
+         g();
          abc := x + z + y
        END h;
     BEGIN
-       y := 12;
        x := 42
     END g;
   BEGIN
