@@ -1,6 +1,6 @@
-module lang::oberon0::normalize::LiftProcs
+module lang::oberon0::l3::normalize::LiftProcs
 
-import lang::oberon0::ast::Oberon0;
+import lang::oberon0::l3::ast::Oberon0;
 import List;
 import Set;
 import Map;

@@ -1,6 +1,6 @@
-module lang::oberon0::normalize::Utils
+module lang::oberon0::l3::normalize::Utils
 
-import lang::oberon0::ast::Oberon0;
+import lang::oberon0::l3::ast::Oberon0;
 
 alias Env = map[Ident, Ident];
 

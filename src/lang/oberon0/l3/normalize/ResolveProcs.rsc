@@ -1,7 +1,7 @@
-module lang::oberon0::normalize::ResolveProcs
+module lang::oberon0::l3::normalize::ResolveProcs
 
-import lang::oberon0::ast::Oberon0;
-import lang::oberon0::normalize::Utils;
+import lang::oberon0::l3::ast::Oberon0;
+import lang::oberon0::l3::normalize::Utils;
 
 
 public Module resolveProcs(Module mod) {

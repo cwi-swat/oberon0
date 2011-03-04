@@ -1,6 +1,6 @@
-module lang::oberon0::normalize::LiftTypes
+module lang::oberon0::l3::normalize::LiftTypes
 
-import lang::oberon0::ast::Oberon0;
+import lang::oberon0::l3::ast::Oberon0;
 
 public Module liftTypes(Module mod) {
 	mod.decls.procs = visit (mod.decls.procs) {

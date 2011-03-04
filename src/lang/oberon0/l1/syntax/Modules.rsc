@@ -1,4 +1,4 @@
-module lang::oberon0::syntax::Oberon0
+module lang::oberon0::syntax::Modules
 
 import lang::oberon0::l1::syntax::Layout;
 import lang::oberon0::l1::syntax::Lexical;
