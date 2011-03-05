@@ -9,7 +9,6 @@ alias Env = map[Ident, Bindable];
 data Bindable 
 	= typeDef(Env env, Type \type)
 	| const(Value val)
-	| func(Env env, Procedure proc)
 	;              
               
 public void printEnv(Env env) {

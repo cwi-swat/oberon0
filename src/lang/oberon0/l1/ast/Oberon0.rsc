@@ -64,7 +64,6 @@ anno loc VarDecl@location;
 anno loc TypeDecl@location;
 anno loc ConstDecl@location;
 anno loc Declarations@location;
-anno loc Field@location;
 anno loc Type@location;
 anno loc Statement@location;
 anno loc Expression@location;

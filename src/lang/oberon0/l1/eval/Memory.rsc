@@ -53,5 +53,22 @@ public Memory update(Address addr, Value v, Memory mem) {
   	return mem;
 }
 
+public Address addressOf(Address base, Type t, Memory mem) {
+	return base;
+}
+public Value derefValue(Address base, Type t, Memory mem) {
+  	return deref(base, t, mem)[0];
+}
+
+public tuple[Value,Type] deref(Address base, Type t, Memory mem) {
+  	lv = lvalueOf(base, t, mem);
+  	return <mem[lv.addr], lv.\type>;
+}
+
+public Bindable lvalueOf(Address base, Type t, Memory mem) {
+  	return lvalue(base, t);
+}
+
+
 
 

@@ -28,10 +28,5 @@ public Value eval(Expression::mod(lhs, rhs), Env env, Memory mem) 	= integer(asI
 public Value eval(add(lhs, rhs), Env env, Memory mem) 	= integer(asInt(eval(lhs, env, mem)) + asInt(eval(rhs, env, mem)));
 public Value eval(sub(lhs, rhs), Env env, Memory mem) 	= integer(asInt(eval(lhs, env, mem)) - asInt(eval(rhs, env, mem)));
 
-public Bindable addressOf(Expression e, Env env, Memory mem) {
-  	if (lookup(Ident id) := e, lvalue(Address a, Type t) := env[id]) {
-    	return lvalueOf(a, t, mem);
-  	}
-  	throw "Cannot get address of non-variable: <id.name>";
-}
+public int asInt(integer(n)) = n;
 
