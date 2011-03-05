@@ -9,6 +9,7 @@ import lang::oberon0::l1::syntax::Lexical;
 import lang::oberon0::l1::syntax::Layout;
 import lang::oberon0::l1::ide::Outline;
 import lang::oberon0::l1::ide::Run;
+import lang::oberon0::l1::ide::Format;
 import lang::oberon0::l1::ide::VisualizeCFG;
 
 import SourceEditor;

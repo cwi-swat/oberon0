@@ -9,9 +9,12 @@ VAR
 
 BEGIN
 	x := c;
-	IF x > 3 THEN
-		y := x * c
-	ELSE
-		y := x DIV c
+	WHILE x < 0 DO
+		x := 5;
+		IF x > 3 THEN
+			y := x * c
+		ELSE
+			y := x DIV c
+		END
 	END
 END test.
