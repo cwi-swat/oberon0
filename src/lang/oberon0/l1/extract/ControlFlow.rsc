@@ -10,7 +10,6 @@ import IO;
 
 public data CFNode
 	= start(loc location, Module mod)
-	| start(loc location, Procedure prod)
 	| end()
 	| choice(loc location, Expression exp)
 	| statement(loc location, Statement stat);

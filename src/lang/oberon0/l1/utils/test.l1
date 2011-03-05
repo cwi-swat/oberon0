@@ -1,10 +1,17 @@
 MODULE test;
 
+CONST
+	c = 20;
+
 VAR
   x : INTEGER;
   y : INTEGER;
 
 BEGIN
-	x := 20;
-	y := x * 20
+	x := c;
+	IF x > 3 THEN
+		y := x * c
+	ELSE
+		y := x DIV c
+	END
 END test.

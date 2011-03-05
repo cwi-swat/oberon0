@@ -14,6 +14,10 @@ public Module parse(loc l) {
 	return parse(#Module, l);
 }
 
+public Module parse(str s, loc l) {
+	return parse(#Module, s, l);
+}
+
 
 
 
