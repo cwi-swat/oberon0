@@ -7,15 +7,10 @@ import lang::oberon0::l1::eval::Statements;
 import lang::oberon0::l1::eval::Env;
 import lang::oberon0::l1::eval::Memory;
 
-import IO;
-
-
 public State eval(Module m) {
   	env = ();
   	mem = empty();
   	<env, mem> = declare(m.decls, env, mem);
-  	println(mem);
-  	printEnv(env);
   	return evalStats(m.body, env, memory(mem));
 }
 
