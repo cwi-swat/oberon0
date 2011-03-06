@@ -11,12 +11,9 @@ import lang::oberon0::l1::syntax::Layout;
 import lang::oberon0::l2::syntax::Statements;
 import lang::oberon0::l2::ide::Run;
 import lang::oberon0::l2::ide::Format;
+import lang::oberon0::l2::ide::VisualizeCFG;
 
 import lang::oberon0::l1::ide::Outline;
-
-//import lang::oberon0::l2::ide::Run;
-//import lang::oberon0::l1::ide::Format;
-//import lang::oberon0::l1::ide::VisualizeCFG;
 
 import SourceEditor;
 import ParseTree;
@@ -29,8 +26,8 @@ public set[Contribution] L2_CONTRIBS = {
 	popup(
 		menu("Oberon",[
     		action("Run", runModule),
-    		action("Format", formatModule) 
-//   		action("CFlow", visualizeCFG) 
+    		action("Format", formatModule), 
+	   		action("CFlow", visualizeCFG) 
 	    ])
   	)
 };

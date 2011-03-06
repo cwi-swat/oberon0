@@ -75,6 +75,6 @@ public list[Statement] substitute(list[Statement] stats, map[Ident, Ident] subs)
 
 public list[Statement] flattenBegin(list[Statement] stats) {
 	return innermost visit (stats) {
-		case [s1*, begin(b), s2*] => insert [s1, b, s2]
+		case [s1*, begin(b), s2*] => [s1, b, s2]
 	}
 }
