@@ -33,7 +33,7 @@ public State evalStat(ifThen(c, b, eis, ep), Env env, State state) {
     
 public State evalStat(whileDo(c, b), Env env, State state) {
 	while (evalCond(c, env, state.mem)) {
-		<mem, io> = evalStats(b, env, state);
+		state = evalStats(b, env, state);
 	}
-	return <mem, io>;
+	return state;
 }

@@ -13,3 +13,25 @@ syntax Statement
 	;
 
 
+syntax Keywords
+	= "FOR"
+	| "TO"
+	| "REPEAT"
+	| "UNTIL"
+	;
+
+syntax "FOR" 
+	= ... # [A-Za-z0-9] 
+	;
+	
+syntax "TO" 
+	= ... # [A-Za-z0-9] 
+	;
+	
+syntax "REPEAT" 
+	= ... # [A-Za-z0-9] 
+	;
+	
+syntax "UNTIL" 
+	= ... # [A-Za-z0-9] 
+	;

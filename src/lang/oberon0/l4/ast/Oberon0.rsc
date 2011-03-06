@@ -1,6 +1,6 @@
 module lang::oberon0::l4::ast::Oberon0
 
-import lang::oberon0::l3::ast::Oberon0;
+extend lang::oberon0::l3::ast::Oberon0;
 
 rule n1 assign(Ident v, Expression e) => assign(v, [], e);
 rule n2 lookup(Ident v) => lookup(v, []);

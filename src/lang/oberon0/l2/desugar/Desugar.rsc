@@ -2,6 +2,8 @@ module lang::oberon0::l2::desugar::Desugar
 
 import lang::oberon0::l2::ast::Oberon0;
 
+import IO;
+
 data Statement 
 	= begin(list[Statement] body)
 	| let(list[VarDecl] vars, list[Statement] body)
@@ -27,9 +29,9 @@ public list[Statement] repeat2letWhile(list[Statement] stats) {
 	return visit (stats) {
 		case repeatUntil(b, c) => 
 			let([varDecl([x], user(id("INTEGER")))],[
-				assign(x, [], nat(1)), 
-				whileDo(or(eq(lookup(x, []), nat(1)), not(c)), [
-					assign(x, [], nat(0)), 
+				assign(x, nat(1)), 
+				whileDo(or(eq(lookup(x), nat(1)), not(c)), [
+					assign(x, nat(0)), 
 					b
 				])
 			]) 
@@ -40,7 +42,7 @@ public list[Statement] for2letWhile(list[Statement] stats) {
 	return visit (stats) {
 		case forDo(n, f, t, b) => 
 			let([varDecl([n], user(id("INTEGER")))],
-				[assign(n, [], f), whileDo(geq(lookup(n, []), t), b)]) 
+				[assign(n, f), whileDo(geq(lookup(n), t), b)]) 
 	}
 }
 
@@ -66,13 +68,13 @@ public tuple[Declarations, list[Statement]] liftLet(Declarations decls, list[Sta
 
 public list[Statement] substitute(list[Statement] stats, map[Ident, Ident] subs) {
 	return visit (stats) {
-		case lookup(n, sels) => lookup(subs[n], sels) when subs[n]?
-		case assign(n, sels, exp) => assign(subs[n], sels, exp) when subs[n]?
+		case lookup(n) => lookup(subs[n]) when subs[n]?
+		case assign(n, exp) => assign(subs[n], exp) when subs[n]?
 	}
 }
 
 public list[Statement] flattenBegin(list[Statement] stats) {
 	return innermost visit (stats) {
-		case [s1*, begin(b), s2*] => [s1, b, s2]
+		case [s1*, begin(b), s2*] => insert [s1, b, s2]
 	}
 }

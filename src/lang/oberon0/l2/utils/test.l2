@@ -16,5 +16,12 @@ BEGIN
 		ELSE
 			y := x DIV c
 		END
-	END
+	END;
+	FOR i := 1 TO 50 DO
+		x := i
+	END;
+	REPEAT
+		x := x
+	UNTIL x = x
+		
 END test.
