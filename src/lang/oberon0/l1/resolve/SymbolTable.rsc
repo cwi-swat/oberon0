@@ -155,7 +155,7 @@ public SymbolTableBuilder addBuiltInType(SymbolTableBuilder stBuilder, Ident nam
 // Register scope-level errors (e.g., illegal repetitions of variable names)
 //
 public SymbolTableBuilder addScopeError(SymbolTableBuilder stBuilder, loc l, str msg) {
-	return stBuilder[scopeErrors = stBuilder.scopeErrors + < l, "<stBuilder.scopeStack[0]>:<msg>" >];
+	return stBuilder[scopeErrors = stBuilder.scopeErrors + < l, "<msg>" >];
 }
 
 //
