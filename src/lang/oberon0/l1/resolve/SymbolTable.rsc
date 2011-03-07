@@ -5,6 +5,7 @@ import Set;
 import String;
 import Node;
 import Relation;
+import IO;
 
 import lang::oberon0::l1::ast::Oberon0;
 import lang::oberon0::l1::resolve::Types;
@@ -28,14 +29,6 @@ data Item =
 	| BuiltInType(Ident name)
 	;
 
-//
-// Link the namespaces to the items that can be in that namespace.
-//
-// dit snap ik niet.
-public rel[Namespace,str] namespaceItems = { < UserNames(), "Variable" >, < UserNames(), "Constant" >,
-	< UserNames(), "Procedure" >, < UserNames(), "FormalParameter" >, < UserNames(), "Type" >,
-	< UserNames(), "BuiltInProcedure" >, < UserNames(), "BuiltInType" >, < Modules(), "Module" > };
-	
 	
 public str prettyPrint(Variable(n,t,_)) = "VAR <n.name> : <prettyPrint(t)>";
 public str prettyPrint(Constant(n,v,_)) = "CONST <n.name> = <v>";
@@ -170,7 +163,8 @@ public SymbolTableBuilder addScopeError(SymbolTableBuilder stBuilder, loc l, str
 // scope and goes all the way to the top.
 //
 public set[Item] getItems(SymbolTableBuilder stBuilder, Item startingScope, Ident name, Namespace ns) {
-	set[Item] foundItems = { i | i <- stBuilder.scopeNames[startingScope,name], getName(i) in namespaceItems[ns] };
+	set[Item] foundItems = { i | i <- stBuilder.scopeNames[startingScope,name],
+			(Module() := ns) ? getName(i) == "Module" : getName(i) != "Module"  };
 	if (size(foundItems) == 0 && Top() !:= startingScope) {
 		return getItems(stBuilder,getOneFrom(invert(stBuilder.symbolTable)[startingScope]),name,ns);
 	} 	
@@ -180,12 +174,6 @@ public set[Item] getItems(SymbolTableBuilder stBuilder, Item startingScope, Iden
 //
 // Lots of helpers to look up specific types of items. This just saves the caller from a filtering step.
 //
-
-public set[Item] lookupItems(SymbolTableBuilder stBuilder, Ident name) {
-	return getVariables(stBuilder, name) 
-			+ getConstants(stBuilder, name) 
-			+ getTypes(stBuilder, name); 
-}
 
 public set[Item] getVariables(SymbolTableBuilder stBuilder, Ident name) {
 	return { i | i:Variable(_, _, _) <- getItems(stBuilder, stBuilder.scopeStack[0], name, UserNames()) };

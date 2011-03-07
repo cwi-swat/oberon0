@@ -12,7 +12,7 @@ BEGIN
 	WHILE x = c DO
 		x := 5;
 		IF x > 3 THEN
-			y := x * c
+			z := x * c
 		ELSE
 			y := x DIV c
 		END

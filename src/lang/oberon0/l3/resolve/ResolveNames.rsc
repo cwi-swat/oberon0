@@ -5,7 +5,6 @@ import List;
 import Set;
 import Node;
 
-import lang::oberon0::l1::ast::Oberon0;
 import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l1::resolve::Types;
 import lang::oberon0::l1::resolve::SymbolTable;
@@ -117,3 +116,4 @@ public SymbolTableBuilder resolveL3Names(Module m) {
 	stBuilder = resolveModuleNames(stBuilder, m);
 	return stBuilder;
 }
+

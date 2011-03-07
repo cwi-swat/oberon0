@@ -9,7 +9,8 @@ import Relation;
 import lang::oberon0::l1::ast::Oberon0;
 import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l1::resolve::Types;
-import lang::oberon0::l1::resolve::SymbolTable;
+
+extend lang::oberon0::l1::resolve::SymbolTable;
 
 data Item 
 	= Procedure(Ident name, list[Item] parameters, loc definedAt)
@@ -88,4 +89,6 @@ public SymbolTableBuilder pushNewProcedureScope(SymbolTableBuilder stBuilder, Id
 public SymbolTableBuilder addBuiltInProcedure(SymbolTableBuilder stBuilder, Ident name, list[tuple[OType paramType, bool isVar]] params) {
 	return addNamedBuiltIn(stBuilder, BuiltInProcedure(name,params));
 }
+
+
 
