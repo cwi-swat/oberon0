@@ -9,6 +9,7 @@ import lang::oberon0::l1::syntax::Lexical;
 import lang::oberon0::l1::syntax::Layout;
 import lang::oberon0::l1::ide::Outline;
 import lang::oberon0::l1::ide::Run;
+import lang::oberon0::l1::ide::Check;
 import lang::oberon0::l1::ide::Format;
 import lang::oberon0::l1::ide::VisualizeCFG;
 
@@ -32,6 +33,7 @@ public set[Contribution] L1_CONTRIBS = {
 public void registerL1() {
   registerLanguage(L1_NAME, L1_EXT, parser);
   registerOutliner(L1_NAME, outlineModule);
+  registerAnnotator(L1_NAME, checkModule);
   registerContributions(L1_NAME, L1_CONTRIBS);
 }   
 

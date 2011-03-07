@@ -5,14 +5,14 @@ CONST
 
 VAR
   x : INTEGER;
-  y : INTEGER;
+  y : BOOLEAN;
 
 BEGIN
-	x := c;
+	x := x = y;
 	WHILE x = c DO
 		x := 5;
 		IF x > 3 THEN
-			z := x * c
+			x := x * c
 		ELSE
 			y := x DIV c
 		END

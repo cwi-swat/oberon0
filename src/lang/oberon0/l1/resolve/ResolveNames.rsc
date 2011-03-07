@@ -1,6 +1,5 @@
 module lang::oberon0::l1::resolve::ResolveNames
 
-import IO;
 import List;
 import Set;
 import Node;
@@ -18,7 +17,6 @@ import lang::oberon0::l1::resolve::TypeEvaluator;
 //
 public SymbolTableBuilder resolveVariableNames(SymbolTableBuilder stBuilder, Ident name) {
 	set[Item] vars = lookupItems(stBuilder, name);
-	println(vars);
 	if (size(vars) == 1) {
 		stBuilder.itemUses = stBuilder.itemUses + < getOneFrom(vars), name@location >;
 	} else if (size(vars) > 1) {
@@ -244,11 +242,7 @@ public SymbolTableBuilder resolveNames(Module m) {
 }
 
 public set[Item] lookupItems(SymbolTableBuilder stBuilder, Ident name) {
-	result = { i | i <- getItems(stBuilder, stBuilder.scopeStack[0], name, UserNames()), oberonVar(i) };
-	result2 = { i | i <- getItems(stBuilder, stBuilder.scopeStack[0], name, UserNames()) };
-	println("zzItems returned at <name@location> for <name.name>: <result>");
-	println("Without filtering at <name@location> for <name.name>: <result2>");
-	return result;
+	return { i | i <- getItems(stBuilder, stBuilder.scopeStack[0], name, UserNames()), oberonVar(i) };
 }
 
 
