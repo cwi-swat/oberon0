@@ -16,3 +16,16 @@ public Box stat2box(repeatUntil(b, c)) = V([
                I([V(hsepList(b, ";", stat2box))]),
             H([KW(L("UNTIL")), exp2box(c)])[@hs=1]
         ]);   
+
+
+
+public Box stat2box(caseOf(e, cs, es)) = V([
+	 	H([L("CASE"), exp2box(e), KW(L("OF"))])[@hs=1],
+	 		I([V([ case2box(c) | c <- cs ])]),
+	 	KW(L("END"))
+	]);
+	
+public Box case2box(guard(e, b)) = V([
+		H([exp2box(e), L(":")])[@hs=0],
+		I([V(hsepList(b, ";", stat2box))])
+	]);

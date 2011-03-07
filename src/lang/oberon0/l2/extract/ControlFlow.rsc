@@ -39,3 +39,7 @@ public CFlow statementCFlow(r:repeatUntil(body, cond), CFlow cfl) {
 	return cfl;
 }
 
+public CFlow statementCFlow(c:caseDo(exp, cases, es), CFlow cfl) {
+	// TODO
+	return cfl;
+}
