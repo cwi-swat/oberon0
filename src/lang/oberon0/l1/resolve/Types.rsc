@@ -1,4 +1,4 @@
-module lang::oberon0::check::Types
+module lang::oberon0::l1::resolve::Types
 
 import lang::oberon0::l1::ast::Oberon0;
 

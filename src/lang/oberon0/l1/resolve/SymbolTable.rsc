@@ -181,6 +181,13 @@ public set[Item] getItems(SymbolTableBuilder stBuilder, Item startingScope, Iden
 // Lots of helpers to look up specific types of items. This just saves the caller from a filtering step.
 //
 
+public set[Item] lookupItems(SymbolTableBuilder stBuilder, Ident name) {
+	return getVariables(stBuilder, name) 
+			+ getConstants(stBuilder, name) 
+			+ getTypes(stBuilder, name) 
+			+ getModules(stBuilder, name); 
+}
+
 public set[Item] getVariables(SymbolTableBuilder stBuilder, Ident name) {
 	return { i | i:Variable(_, _, _) <- getItems(stBuilder, stBuilder.scopeStack[0], name, UserNames()) };
 }

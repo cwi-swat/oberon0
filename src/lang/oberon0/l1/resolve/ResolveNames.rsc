@@ -1,4 +1,4 @@
-module lang::oberon0::resolve::ResolveNames
+module lang::oberon0::l1::resolve::ResolveNames
 
 import IO;
 import List;
@@ -35,24 +35,24 @@ public SymbolTableBuilder resolveVariableNames(SymbolTableBuilder stBuilder, Ide
 // (which may or may not have selectors). This logic is contained in
 // resolveVariableNames, not here.
 //
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, nat(_)) = stBuilder;
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, lookup(v)) = resolveVariableNames(stBuilder,v);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, neg(e)) = resolveExpressionNames(stBuilder,e);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, pos(e)) = resolveExpressionNames(stBuilder,e);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, not(e)) = resolveExpressionNames(stBuilder,e);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, mul(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, div(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, mod(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, amp(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, add(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, sub(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, or(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, eq(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, neq(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, lt(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, gt(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, leq(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuild, geq(l,r)) =resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, nat(_)) = stBuilder;
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, lookup(v)) = resolveVariableNames(stBuilder,v);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, neg(e)) = resolveExpressionNames(stBuilder,e);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, pos(e)) = resolveExpressionNames(stBuilder,e);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, not(e)) = resolveExpressionNames(stBuilder,e);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, mul(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, div(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, Expression::mod(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, amp(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, add(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, sub(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, or(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, eq(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, neq(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, lt(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, gt(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, leq(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, geq(l,r)) =resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
 
 //
 // A version of the above which handles lists of expressions. Lists are processed
@@ -105,7 +105,7 @@ public SymbolTableBuilder resolveDeclarationNames(SymbolTableBuilder stBuilder, 
 // the defining expression is really a constant expression returning
 // an INTEGER result.
 //
-public SymbolTableBuilder resolveConstDeclNames(SymbolTableBuilder stBuilder, constDecl(cid, val)) {
+public SymbolTableBuilder resolveConstDeclNames(SymbolTableBuilder stBuilder, cd:constDecl(cid, val)) {
 	// Make sure we evaluate the constant expression before we add the constant
 	// to scope, definitions cannot be recursive (i.e., a constant cannot be
 	// defined in terms of itself).
@@ -173,7 +173,7 @@ public SymbolTableBuilder resolveTypeDeclNames(SymbolTableBuilder stBuilder, lis
 //
 // Process variable names.
 //
-public SymbolTableBuilder resolveVarDeclNames(SymbolTableBuilder stBuilder, varDecl(ids, ty)) {
+public SymbolTableBuilder resolveVarDeclNames(SymbolTableBuilder stBuilder, vd:varDecl(ids, ty)) {
 	// Get the computed type. ot could be Invalid() in cases where the type cannot be computed.
 	<stBuilder, cres, ot> = otype(stBuilder, ty);
 	
@@ -205,7 +205,7 @@ public SymbolTableBuilder resolveVarDeclNames(SymbolTableBuilder stBuilder, list
 //
 // Resolve names for Oberon-0 Modules
 //
-public SymbolTableBuilder resolveModuleNames(SymbolTableBuilder stBuilder, mod(mn, ds, bs, en)) {
+public SymbolTableBuilder resolveModuleNames(SymbolTableBuilder stBuilder, m:Module::mod(mn, ds, bs, en)) {
 	// First step -- add the new module into scope. This keeps open the possibility for
 	// having multiple modules, but, as of the current version, this is a redundant check,
 	// since we will never have more than one module at this point in time.

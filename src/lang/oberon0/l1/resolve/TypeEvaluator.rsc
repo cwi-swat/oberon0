@@ -1,4 +1,4 @@
-module lang::oberon0::resolve::TypeEvaluator
+module lang::oberon0::l1::resolve::TypeEvaluator
 
 import List;
 import Set;
