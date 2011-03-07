@@ -6,6 +6,7 @@ CONST
 VAR
   x : INTEGER;
   y : BOOLEAN;
+  i : BOOLEAN;
 
 BEGIN
 	x := c;
@@ -17,6 +18,7 @@ BEGIN
 			y := x DIV c
 		END
 	END;
+	
 
 	CASE i OF
 	1: 

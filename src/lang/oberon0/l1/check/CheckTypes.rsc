@@ -62,8 +62,8 @@ OType getTypeFor(Ident v, loc l) {
 // Unwind all the type aliases in a type. This ensures that we can compare two types
 // just by checking to see if their representations are equal (we have no subtyping).
 //
-OType unwind(User(n)) {
-	// where does stBuilder and ctx come from?
+OType unwind(User(n), Item ctx) {
+	// where does stBuilder come from?
 	if ({tItem} := getTypesAt(stBuilder,n,ctx)) {
 		switch (tItem) {
 			case BuiltInType(id("INTEGER")): return Integer();
@@ -74,7 +74,7 @@ OType unwind(User(n)) {
 	return Invalid();
 }
 
-OType default unwind(OType t) = t;
+OType default unwind(OType t, Item ctx) = t;
 
 
 //
@@ -87,7 +87,7 @@ OType getTypeFor(Integer(), loc l, Item ctx) = Integer();
 OType getTypeFor(Boolean(), loc l, Item ctx) = Boolean();
 
 OType getTypeFor(User(tid), loc l, Item ctx) {
-	OType unwound = unwind(ot);
+	OType unwound = unwind(ot, ctx);
 	if (Invalid() := unwound) {
 		errors += [error(l, "Named type <tid.name> cannot be resolved to a valid Oberon type")];
 		return Invalid();
