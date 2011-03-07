@@ -3,7 +3,7 @@ module lang::oberon0::l2::ide::VisualizeCFG
 import lang::oberon0::l2::ast::Oberon0;
 import lang::oberon0::l1::syntax::Modules;
 import lang::oberon0::l2::extract::ControlFlow;
-import lang::oberon0::l1::extract::CFGtoFigure;
+import lang::oberon0::l2::extract::CFGtoFigure;
 
 import ParseTree;
 

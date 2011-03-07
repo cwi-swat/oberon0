@@ -9,19 +9,22 @@ import Relation;
 import String;
 import lang::box::util::Box2Text;
 
-//public str formatNode(choice(_, Expression e)) = replaceLast(format(exp2box(e)), "\n", "");
-//public str formatNode(statement(_, Statement s)) = replaceLast(format(stat2box(s)), "\n", "");
-//public str formatNode(start(_, Module m)) = "start <m.name.name>";
+public str formatNode(CFNode::choice(_, Expression e)) = replaceLast(format(exp2box(e)), "\n", "");
+public str formatNode(statement(_, Statement s)) = replaceLast(format(stat2box(s)), "\n", "");
+public str formatNode(start(_, Module m)) = "start <m.name.name>";
+public str formatNode(end()) = "end";
 
-private str formatNode(CFNode n) {
+
+/*private str formatNode(CFNode n) {
 	switch(n) {
 		case choice(_, Expression e) : return replaceLast(format(exp2box(e)), "\n", "");
 		case statement(_, Statement s) : return replaceLast(format(stat2box(s)), "\n", "");
 		case start(_, Module m) : return "start <m.name.name>";
 		case start(_, Procedure p) : return "start <p.name.name>";
 		case end() : return "end";
+		default: return "<n>";
 	}
-}
+}*/
 
 //public Figure node2figure(n:choice(_,_)) = ellipse(text(formatNode(n)), vis::Figure::id(getId(n)), fillColor("yellow"), size(0), gap(8));
 //public Figure node2figure(n:start(_,_)) = box(text(formatNode(n)), vis::Figure::id(getId(n)), fillColor("orange"), size(0), gap(4));

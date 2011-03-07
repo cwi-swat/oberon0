@@ -29,7 +29,7 @@ public ControlFlowGraph getControlFlow(list[Statement] body, CFNode startNode) {
 	
 	cfl = extractCFlow(body);
 	
-	// merge IN OUT SUC into one relation
+	// convert (entry, exit, succ) graph into one succ graph
 	Graph[loc] locCfg = { <l1, l4> | <l2, l3> <- cfl.succ, l1 <- reachBottom(cfl.exit, l2), l4 <- reachBottom(cfl.entry, l3) }; 
 	
 	// create start and end edges 
@@ -59,8 +59,8 @@ public CFlow extractCFlow(list[Statement] body) {
 
 public CFlow statementCFlow(i:ifThen(cond, body, elseIfs, elsePart), CFlow cfl) {
 	cfl.entry += {<i@location, cond@location>};
-	ifs = [<cond, body>] + elseIfs;
 
+	ifs = [<cond, body>] + elseIfs;
 	for (<c, b> <- ifs) {
 		cfl.nodes[c@location] = choice(c@location, c);
 		if (b != []) {
@@ -70,13 +70,13 @@ public CFlow statementCFlow(i:ifThen(cond, body, elseIfs, elsePart), CFlow cfl) 
 		}
 	}
 	
-	for ([_*, <c1, b1>, <c2, b2>, _*] := ifs) {
+	for ([_*, <c1, _>, <c2, _>, _*] := ifs) {
 		cfl.succ += {<c1@location, c2@location>};
 	}
 	
 	if (elsePart != []) {
 		cfl.exit += {<i@location, last(elsePart)@location>};
-		if (<c, b> := last(ifs)) {
+		if (<c, _> := last(ifs)) {
 			cfl.succ += {<c@location, head(elsePart)@location>};
 		}
 		return statementListCFlow(elsePart, cfl);
@@ -97,7 +97,9 @@ public CFlow statementCFlow(w:whileDo(cond, body), CFlow cfl) {
 		cfl.succ += {<cond@location, head(body)@location>};
 		cfl.succ += {<last(body)@location, cond@location>};
 		cfl = statementListCFlow(body, cfl);
-	}	
+	} else {
+		cfl.succ += {<cond@location, cond@location>};
+	}
 	return cfl;
 }
 
@@ -106,6 +108,7 @@ public CFlow default statementCFlow(Statement _, CFlow cfl) {
 	return cfl;
 }
 
+// create succ edges between statements in a list
 public CFlow statementListCFlow(list[Statement] body, CFlow cfl) {
 	cfl.succ = ( cfl.succ | it + {<s1@location, s2@location>} | [_*, s1, s2, _*] := body );
 	return cfl;  
