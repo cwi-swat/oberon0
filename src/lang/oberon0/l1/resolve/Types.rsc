@@ -12,7 +12,7 @@ data OType =
 	;
 	
 public str prettyPrint(Integer()) = "INTEGER";
-public str prettyPrint(Boolean()) = "INTEGER";
+public str prettyPrint(Boolean()) = "BOOLEAN";
 public str prettyPrint(User(r)) = n.name;
 public str prettyPrint(Invalid()) = "INVALID TYPE";
 

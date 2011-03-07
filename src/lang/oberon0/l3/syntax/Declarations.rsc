@@ -24,10 +24,6 @@ syntax Formals
 	= "(" {Formal ";"}* formals ")"
 	;
 
-syntax Body 
-	= @Foldable "BEGIN" {Statement ";"}+ statements
-	;
-
 
 syntax Keywords
        = "PROCEDURE" 

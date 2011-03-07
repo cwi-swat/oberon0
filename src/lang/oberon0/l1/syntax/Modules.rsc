@@ -8,7 +8,7 @@ import lang::oberon0::l1::syntax::Declarations;
 start syntax Module = mod: "MODULE" Ident name ";" Declarations decls Body? body "END" Ident ".";
 
 syntax Body
-	= "BEGIN" {Statement ";"}*
+	= @Foldable "BEGIN" {Statement ";"}*
 	;
 
 

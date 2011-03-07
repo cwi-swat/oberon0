@@ -14,6 +14,8 @@ import lang::oberon0::l1::resolve::ConstantEvaluator;
 //
 public tuple[SymbolTableBuilder st, bool cres, OType ot] otype(SymbolTableBuilder stBuilder, user(id("INTEGER"))) = <stBuilder, true, Integer()>;
 
+public tuple[SymbolTableBuilder st, bool cres, OType ot] otype(SymbolTableBuilder stBuilder, user(id("BOOLEAN"))) = <stBuilder, true, Boolean()>;
+
 // NB: default, otherwise it could match INTEGER.
 public tuple[SymbolTableBuilder st, bool cres, OType ot] default otype(SymbolTableBuilder stBuilder, user(name)) {
 	set[Item] types = getTypes(stBuilder, name);

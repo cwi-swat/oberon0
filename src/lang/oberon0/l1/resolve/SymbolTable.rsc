@@ -184,8 +184,7 @@ public set[Item] getItems(SymbolTableBuilder stBuilder, Item startingScope, Iden
 public set[Item] lookupItems(SymbolTableBuilder stBuilder, Ident name) {
 	return getVariables(stBuilder, name) 
 			+ getConstants(stBuilder, name) 
-			+ getTypes(stBuilder, name) 
-			+ getModules(stBuilder, name); 
+			+ getTypes(stBuilder, name); 
 }
 
 public set[Item] getVariables(SymbolTableBuilder stBuilder, Ident name) {

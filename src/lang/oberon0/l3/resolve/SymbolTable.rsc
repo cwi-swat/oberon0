@@ -24,7 +24,7 @@ public str prettyPrint(BuiltInType(n)) = "TYPE <n.name>";
 public str prettyPrint(Top()) = "TOP SCOPE";
 
 public str prettyPrint(Procedure(n,pl, _)) = "PROCEDURE <n.name>(<prettyPrint(pl)>)";
-public str prettyPrint(BuildInProcedure(n, _)) = "PROC <n.name>";
+public str prettyPrint(BuiltInProcedure(n, _)) = "PROC <n.name>";
 public str prettyPrint(FormalParameter(n, t, v, _)) = "";
 
 

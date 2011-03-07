@@ -13,6 +13,8 @@ import lang::oberon0::l3::resolve::SymbolTable;
 import lang::oberon0::l1::resolve::ConstantEvaluator;
 import lang::oberon0::l1::resolve::TypeEvaluator;
 
+extend lang::oberon0::l1::resolve::ResolveNames;
+
 
 public SymbolTableBuilder resolveStatementNames(SymbolTableBuilder stBuilder, call(v, es)) = 
 	resolveVariableNames(resolveExpressionNames(stBuilder,es),v);
@@ -22,7 +24,7 @@ public SymbolTableBuilder resolveStatementNames(SymbolTableBuilder stBuilder, ca
 // then process the procedure declarations and body. We also do some checking to ensure
 // the procedure name and the end name are the same.
 //
-public SymbolTableBuilder resolveProcedureNames(SymbolTableBuilder stBuilder, proc(pid, fs, ds, bs, eid)) {
+public SymbolTableBuilder resolveProcedureNames(SymbolTableBuilder stBuilder, pr:proc(pid, fs, ds, bs, eid)) {
 	// Find any conflicting items -- these are items in the same namespace as procedure names
 	// defined at either this level or at the top level (for builtins)
 	set[Item] conflicts = { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[0],pid], getName(x) in namespaceItems[UserNames()] } + 

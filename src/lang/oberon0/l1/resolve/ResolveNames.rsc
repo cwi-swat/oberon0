@@ -236,6 +236,7 @@ public SymbolTableBuilder resolveNames(Module m) {
 	SymbolTableBuilder stBuilder = createNewSymbolTableBuilder();	
 	// Add built-in types
 	stBuilder = addBuiltInType(stBuilder,id("INTEGER"));
+	stBuilder = addBuiltInType(stBuilder,id("BOOLEAN"));
 	
 	stBuilder = resolveModuleNames(stBuilder, m);
 	return stBuilder;
