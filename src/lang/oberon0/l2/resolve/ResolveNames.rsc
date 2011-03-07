@@ -20,7 +20,7 @@ public SymbolTableBuilder resolveStatementNames(SymbolTableBuilder stBuilder, fo
 }
 
 public SymbolTableBuilder resolveStatementNames(SymbolTableBuilder stBuilder, repeatUntil(bs, e)) =
-	resolveStatementNames(resolveExpressionNames(stBuilder,e),bs);
+	resolveExpressionNames(resolveStatementNames(stBuilder,bs),e);
 
 public SymbolTableBuilder resolveStatementNames(SymbolTableBuilder stBuilder, caseOf(e, cs, es)) {
 	stBuilder = resolveExpressionNames(stBuilder, e);

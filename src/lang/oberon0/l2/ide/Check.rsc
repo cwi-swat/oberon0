@@ -14,7 +14,7 @@ public lang::oberon0::l1::syntax::Modules::Module checkModule(lang::oberon0::l1:
 	<m, st> = resolve(m);
 	errors = { error(l, s) | <l, s> <- st.scopeErrors };
 	if (errors == {}) {
-		errors = toSet(check(m, st.symbolTable));
+		errors = check(m, st.symbolTable);
 	}
 	return x[@messages = errors];
 }
