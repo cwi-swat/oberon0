@@ -11,6 +11,7 @@ import lang::oberon0::l1::syntax::Layout;
 import lang::oberon0::l2::syntax::Statements;
 import lang::oberon0::l2::ide::Run;
 import lang::oberon0::l2::ide::Format;
+import lang::oberon0::l2::ide::Check;
 import lang::oberon0::l2::ide::VisualizeCFG;
 
 import lang::oberon0::l1::ide::Outline;
@@ -35,6 +36,7 @@ public set[Contribution] L2_CONTRIBS = {
 public void registerL2() {
   registerLanguage(L2_NAME, L2_EXT, parser);
   registerOutliner(L2_NAME, outlineModule);
+  registerAnnotator(L2_NAME, checkModule);
   registerContributions(L2_NAME, L2_CONTRIBS);
 }   
 

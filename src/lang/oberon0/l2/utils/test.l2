@@ -5,7 +5,7 @@ CONST
 
 VAR
   x : INTEGER;
-  y : INTEGER;
+  y : BOOLEAN;
 
 BEGIN
 	x := c;

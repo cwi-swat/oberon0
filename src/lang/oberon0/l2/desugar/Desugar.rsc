@@ -13,8 +13,7 @@ data Statement
 alias DeclsBody = tuple[Declarations decls, list[Statement] body];
 
 public Module desugar(Module mod) {
-	mod.body = (for2letWhile o repeat2while o case2ifs o flattenBegin)(mod.body);
-	<mod.decls, mod.body> = liftLet(mod.decls, mod.body);
+	mod.body = (for2While o repeat2while o case2ifs o flattenBegin)(mod.body);
 	return mod;
 }
 
@@ -38,6 +37,25 @@ public list[Statement] repeat2while(list[Statement] stats) {
 	}
 }
 
+
+
+public list[Statement] for2while(list[Statement] stats) {
+	return visit (stats) {
+		case forDo(n, f, t, b) => 
+			begin([assign(n, f), whileDo(geq(lookup(n), t), b)]) 
+	}
+}
+
+
+// these desugarings introduce a new variable
+public list[Statement] for2letWhile(list[Statement] stats) {
+	return visit (stats) {
+		case forDo(n, f, t, b) => 
+			let([varDecl([n], user(id("INTEGER")))],
+				[assign(n, f), whileDo(geq(lookup(n), t), b)]) 
+	}
+}
+
 public list[Statement] repeat2letWhile(list[Statement] stats) {
 	x = id("first");
 	return visit (stats) {
@@ -49,14 +67,6 @@ public list[Statement] repeat2letWhile(list[Statement] stats) {
 					b
 				])
 			]) 
-	}
-}
-
-public list[Statement] for2letWhile(list[Statement] stats) {
-	return visit (stats) {
-		case forDo(n, f, t, b) => 
-			let([varDecl([n], user(id("INTEGER")))],
-				[assign(n, f), whileDo(geq(lookup(n), t), b)]) 
 	}
 }
 
