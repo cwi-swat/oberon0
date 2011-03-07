@@ -232,10 +232,11 @@ public SymbolTableBuilder resolveModuleNames(SymbolTableBuilder stBuilder, m:Mod
 
 @doc{Entry module for the name resolver, this will give back a symbol table builder representing the module passed in.}
 public SymbolTableBuilder resolveNames(Module m) {
-	SymbolTableBuilder stBuilder = createNewSymbolTableBuilder();	
+	SymbolTableBuilder stBuilder = createNewSymbolTableBuilder();
+		
 	// Add built-in types
-	stBuilder = addBuiltInType(stBuilder,id("INTEGER"));
-	stBuilder = addBuiltInType(stBuilder,id("BOOLEAN"));
+	stBuilder = addBuiltInType(stBuilder,id("INTEGER"),Integer());
+	stBuilder = addBuiltInType(stBuilder,id("BOOLEAN"),Boolean());
 	
 	stBuilder = resolveModuleNames(stBuilder, m);
 	return stBuilder;

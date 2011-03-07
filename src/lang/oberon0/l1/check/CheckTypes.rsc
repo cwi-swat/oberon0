@@ -16,12 +16,11 @@ import Message;
 anno OType Expression@otype;
 
 // must be global, otherwise the local functions are not available for extension.
-private list[Message] errors = [] ;
+private set[Message] errors = {} ;
 
-public tuple[Module mod, list[Message] errors] checkTypes(Module ast, SymbolTable st) {
+public tuple[Module mod, set[Message] errors] checkTypes(Module ast, SymbolTable st) {
 	// reset global
-	errors = [];
-
+	errors = {};
 	
 	// Here we actually compute the checked AST, which is the original AST
 	// decorated with type annotations. Any errors are tracked in the errors
@@ -35,40 +34,49 @@ public tuple[Module mod, list[Message] errors] checkTypes(Module ast, SymbolTabl
 
 	// At this point, we have gathered all type errors. Add these messages to the top node of the AST,
 	// returning it as the final result of the checker.	
-	return <checkedAst, sort(errors)>;
+	return <checkedAst, errors>;
 }
 
 
+//
+// Given a name, return the type for the name based upon the Item information
+// associated with the name.
+//
+OType getTypeFor(Ident v, loc l, SymbolTable st) = itemType(v@item, l, st);
 
 //
-// Get the type for an item. This is in the context of lvalues, so these are items that 
-// can be assigned into and read from, i.e., not names representing types, modules, or 
-// procedures. Variables and Formal Parameters can represent records and arrays, while
-// constants cannot, so we check here to make sure the selectors for a constant are
-// empty (and give an error if they are not).
+// Given the Item, either resolve the type name (for variables, for instance, which
+// could have aliases) or return the type directly (for constants, for instance,
+// which must have type INTEGER)
 //
+public OType itemType(item:Variable(_, ot, _), loc l, SymbolTable st) = getTypeFor(ot, l, item, st);
+public OType itemType(Constant(_, _, _), loc l, SymbolTable st) = Integer();
 
-public OType itemType(item:Variable(_, ot, _), loc l) = getTypeFor(ot, l,item);
-public OType itemType(Constant(_, _, _), loc l) = Integer();
+//
+// Given the type, resolve any type declarations used inside.
+//
+OType getTypeFor(Integer(), loc l, Item ctx, SymbolTable st) = Integer();
+OType getTypeFor(Boolean(), loc l, Item ctx, SymbolTable st) = Boolean();
+OType getTypeFor(Invalid(), loc l, Item ctx) = Invalid();
 
-
-OType getTypeFor(Ident v, loc l) {
-	Item item = v@item;
-	return itemType(item, l);	
+OType getTypeFor(User(tid), loc l, Item ctx, SymbolTable st) {
+	OType unwound = unwind(ot, ctx, st);
+	if (Invalid() := unwound) {
+		errors += [error(l, "Named type <tid.name> cannot be resolved to a valid Oberon type")];
+	}
+	return unwound;
 }
-
 
 //
 // Unwind all the type aliases in a type. This ensures that we can compare two types
 // just by checking to see if their representations are equal (we have no subtyping).
+// At this level, only User types can have type aliases.
 //
-OType unwind(User(n), Item ctx) {
-	// where does stBuilder come from?
-	if ({tItem} := getTypesAt(stBuilder,n,ctx)) {
+OType unwind(User(n), Item ctx, SymbolTable st) {
+	if ({tItem} := getTypesAt(st,n,ctx)) {
 		switch (tItem) {
-			case BuiltInType(id("INTEGER")): return Integer();
-			case BuiltInType(id("BOOLEAN")): return Boolean();
-			case Type(_,ut,_): return unwind(ut, tItem);
+			case BuiltInType(_,ot): return ot;
+			case Type(_,ut,_): return unwind(ut, tItem, st);
 		}
 	}
 	return Invalid();
@@ -76,28 +84,7 @@ OType unwind(User(n), Item ctx) {
 
 OType default unwind(OType t, Item ctx) = t;
 
-
 //
-// Encode the rules constraining the use of types (e.g., no subscripts on ints).
-// This detects any errors in variable expressions and returns either the resulting
-// type or Invalid() if there is an error. Note that this code also fully unwinds
-// the type, so we remove all type aliases (declared types).
-//
-OType getTypeFor(Integer(), loc l, Item ctx) = Integer();
-OType getTypeFor(Boolean(), loc l, Item ctx) = Boolean();
-
-OType getTypeFor(User(tid), loc l, Item ctx) {
-	OType unwound = unwind(ot, ctx);
-	if (Invalid() := unwound) {
-		errors += [error(l, "Named type <tid.name> cannot be resolved to a valid Oberon type")];
-		return Invalid();
-	}
-	return unwound;
-}
-
-
-OType getTypeFor(Invalid(), loc l, Item ctx) = Invalid();
-
 // Check lists of expected types against lists of given types, returning
 // the result type if the comparisons all succeed and none of the given
 // types are invalid. This abstracts checking unary and binary operations.
@@ -115,6 +102,7 @@ OType opTypes(list[OType] expected, list[OType] given, OType resType, loc l) {
 	return resType;
 }
 
+//
 // A number of wrappers calling the above function with preset expected and result types.
 //
 OType uI2I(OType operand, loc l) {
@@ -143,15 +131,14 @@ OType bII2B(OType left, OType right, loc l) {
 // an expression can be used with a var parameter, meaning it has an address that can
 // be written into (i.e., in C parlance is an lvalue or object).
 //
-bool expIsWritable(Expression e) {
-	return (lookup(v,ss) := e && isWritableKind(v@item));
-}
+bool expIsWritable(lookup(v)) = isWritableKind(v@item);
 
 // to be extended for formal params.
 bool isWritableKind(Variable(_, _, _)) = true;
 
-
-
+//
+// Actually check the various forms of expression
+//
 public Expression checkExp(e:nat(n)) 		= e[@otype = Integer()];
 public Expression checkExp(e:lookup(v)) 	= e[@otype = getTypeFor(v, e@location)];
 public Expression checkExp(e:neg(uop)) 		= e[@otype = uI2I(uop@otype,e@location)];

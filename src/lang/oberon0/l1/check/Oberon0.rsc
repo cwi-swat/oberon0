@@ -8,7 +8,7 @@ import lang::oberon0::l1::check::CheckTypes;
 
 import Message;
 
-public list[Message] check(Module astModule, SymbolTable tbl) {
+public set[Message] check(Module astModule, SymbolTable tbl) {
 	<astModule, errors> = checkTypes(astModule, tbl);
 	return errors;
 }

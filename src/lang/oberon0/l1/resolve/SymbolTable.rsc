@@ -26,14 +26,14 @@ data Item =
 	| Constant(Ident name, int val, loc definedAt)
 	| Module(Ident name, loc definedAt)
 	| Type(Ident name, OType otype, loc definedAt)
-	| BuiltInType(Ident name)
+	| BuiltInType(Ident name, OType otype)
 	;
 
 	
 public str prettyPrint(Variable(n,t,_)) = "VAR <n.name> : <prettyPrint(t)>";
 public str prettyPrint(Constant(n,v,_)) = "CONST <n.name> = <v>";
 public str prettyPrint(Type(n,t,_)) = "TYPE <n.name> = <prettyPrint(t)>";
-public str prettyPrint(BuiltInType(n)) = "TYPE <n.name>";
+public str prettyPrint(BuiltInType(n,_)) = "TYPE <n.name>";
 public str prettyPrint(Top()) = "TOP SCOPE";
 public str prettyPrint(Module(n,_)) = "MODULE <n.name>";
 
@@ -147,8 +147,8 @@ public SymbolTableBuilder addType(SymbolTableBuilder stBuilder, Ident name, OTyp
 //
 // Add a new built-in type into the scope
 //
-public SymbolTableBuilder addBuiltInType(SymbolTableBuilder stBuilder, Ident name) {
-	return addNamedBuiltIn(stBuilder, BuiltInType(name));
+public SymbolTableBuilder addBuiltInType(SymbolTableBuilder stBuilder, Ident name, OType otype) {
+	return addNamedBuiltIn(stBuilder, BuiltInType(name,otype));
 }
 
 //
@@ -172,6 +172,18 @@ public set[Item] getItems(SymbolTableBuilder stBuilder, Item startingScope, Iden
 }
 
 //
+// Same as above, but we only have the symbol table to work with, not the builder.
+//
+public set[Item] getItems(SymbolTable st, Item startingScope, Ident name, Namespace ns) {
+	set[Item] foundItems = { i | i <- st[startingScope], (i.name)?, i.name == name, 
+			(Module() := ns) ? getName(i) == "Module" : getName(i) != "Module"  };
+	if (size(foundItems) == 0 && Top() !:= startingScope) {
+		return getItems(st,getOneFrom(invert(st)[startingScope]),name,ns);
+	} 	
+	return foundItems;
+}
+
+//
 // Lots of helpers to look up specific types of items. This just saves the caller from a filtering step.
 //
 
@@ -189,6 +201,11 @@ public set[Item] getTypes(SymbolTableBuilder stBuilder, Ident name) {
 
 public set[Item] getTypesAt(SymbolTableBuilder stBuilder, Ident name, Item ctx) {
 	items = getItems(stBuilder, ctx, name, UserNames()) ;
+	return { i | i:Type(_, _, _) <- items } + { i | i:BuiltinType(_) <- items };
+}
+
+public set[Item] getTypesAt(SymbolTable st, Ident name, Item ctx) {
+	items = getItems(st, ctx, name, UserNames()) ;
 	return { i | i:Type(_, _, _) <- items } + { i | i:BuiltinType(_) <- items };
 }
 

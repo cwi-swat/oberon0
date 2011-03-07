@@ -9,7 +9,7 @@ import lang::oberon0::l1::resolve::Types;
 import lang::oberon0::l1::resolve::ConstantEvaluator;
 
 //
-// Generate an OType for a given AST Type. Must like the constant evaluator, we build the result
+// Generate an OType for a given AST Type. Much like the constant evaluator, we build the result
 // and we add any errors we find into the symbol table builder.
 //
 public tuple[SymbolTableBuilder st, bool cres, OType ot] otype(SymbolTableBuilder stBuilder, user(id("INTEGER"))) = <stBuilder, true, Integer()>;
