@@ -116,8 +116,8 @@ public SymbolTableBuilder resolveConstDeclNames(SymbolTableBuilder stBuilder, cd
 	
 	// Find any conflicting items -- these are items in the same namespace as constant names
 	// defined at either this level or at the top level (for builtins)
-	set[Item] conflicts = { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[0],cid], getName(x) in namespaceItems[UserNames()] } + 
-						  { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[size(stBuilder.scopeStack)-1],cid], getName(x) in namespaceItems[UserNames()] };
+	set[Item] conflicts = { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[0],cid], Module(_,_) !:= x } + 
+						  { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[size(stBuilder.scopeStack)-1],cid], Module(_,_) !:= x };
 	if (size(conflicts) > 0) {
 		stBuilder = addScopeError(stBuilder, cid@location, "A variable, constant, parameter, or procedure with name <cid.name> is already defined in the current scope");
 	}
@@ -148,8 +148,8 @@ public SymbolTableBuilder resolveTypeDeclNames(SymbolTableBuilder stBuilder, typ
 
 	// Find any conflicting items -- these are items in the same namespace as type names
 	// defined at either this level or at the top level (for builtins)
-	set[Item] conflicts = { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[0],tid], getName(x) in namespaceItems[UserNames()] } + 
-						  { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[size(stBuilder.scopeStack)-1],tid], getName(x) in namespaceItems[UserNames()] };
+	set[Item] conflicts = { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[0],tid], Module(_,_) !:= x } + 
+						  { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[size(stBuilder.scopeStack)-1],tid], Module(_,_) !:= x };
 	if (size(conflicts) > 0) {
 		stBuilder = addScopeError(stBuilder, tid@location, "A variable, constant, parameter, or procedure with name <tid.name> is already defined in the current scope");
 	}
@@ -181,8 +181,8 @@ public SymbolTableBuilder resolveVarDeclNames(SymbolTableBuilder stBuilder, vd:v
 	// the same name more than once in the same scope. If we do have conflicts,
 	// we do NOT add a new item for this variable.
 	for (vid <- ids) {
-		set[Item] conflicts = { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[0],vid], getName(x) in namespaceItems[UserNames()] } + 
-							  { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[size(stBuilder.scopeStack)-1],vid], getName(x) in namespaceItems[UserNames()] };
+		set[Item] conflicts = { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[0],vid], Module(_,_) !:= x } + 
+							  { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[size(stBuilder.scopeStack)-1],vid], Module(_,_) !:= x };
 		if (size(conflicts) > 0) {
 			stBuilder = addScopeError(stBuilder, vid@location, "A variable, constant, parameter, or procedure with name <vid.name> is already defined in the current scope");
 		}
@@ -208,8 +208,8 @@ public SymbolTableBuilder resolveModuleNames(SymbolTableBuilder stBuilder, m:Mod
 	// First step -- add the new module into scope. This keeps open the possibility for
 	// having multiple modules, but, as of the current version, this is a redundant check,
 	// since we will never have more than one module at this point in time.
-	set[Item] conflicts = { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[0],mn], getName(x) in namespaceItems[Modules()] } + 
-						  { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[size(stBuilder.scopeStack)-1],mn], getName(x) in namespaceItems[Modules()] };
+	set[Item] conflicts = { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[0],mn], Module(_,_) := x } + 
+						  { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[size(stBuilder.scopeStack)-1],mn], Module(_,_) := x };
 	if (size(conflicts) > 0) {
 		stBuilder = addScopeError(stBuilder, mn@location, "A module with name <mn.name> is already defined in the current scope");
 		stBuilder = pushNewModuleScope(stBuilder, id("__INVALID"), m@location);

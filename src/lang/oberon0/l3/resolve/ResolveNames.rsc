@@ -26,8 +26,8 @@ public SymbolTableBuilder resolveStatementNames(SymbolTableBuilder stBuilder, ca
 public SymbolTableBuilder resolveProcedureNames(SymbolTableBuilder stBuilder, pr:proc(pid, fs, ds, bs, eid)) {
 	// Find any conflicting items -- these are items in the same namespace as procedure names
 	// defined at either this level or at the top level (for builtins)
-	set[Item] conflicts = { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[0],pid], getName(x) in namespaceItems[UserNames()] } + 
-						  { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[size(stBuilder.scopeStack)-1],pid], getName(x) in namespaceItems[UserNames()] };
+	set[Item] conflicts = { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[0],pid], Module(_,_) !:= x } + 
+						  { x | x <- stBuilder.scopeNames[stBuilder.scopeStack[size(stBuilder.scopeStack)-1],pid], Module(_,_) !:= x };
 	if (size(conflicts) > 0)
 		stBuilder = addScopeError(stBuilder, pid@location, "A variable, constant, parameter, or procedure with name <pid.name> is already defined in the current scope");
 
