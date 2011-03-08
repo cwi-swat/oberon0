@@ -42,7 +42,8 @@ public list[Statement] repeat2while(list[Statement] stats) {
 public list[Statement] for2while(list[Statement] stats) {
 	return visit (stats) {
 		case forDo(n, f, t, b) => 
-			begin([assign(n, f), whileDo(geq(lookup(n), t), b)]) 
+			begin([assign(n, f), whileDo(geq(lookup(n), t), 
+					[b, assign(n, add(lookup(n), nat(1)))])]) 
 	}
 }
 
