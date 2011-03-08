@@ -12,7 +12,7 @@ public void compileModuleToC(Module x, loc l) {
 	m = implode(x);
 	m = desugar(m);
 	m = normalize(m);
-	s = compile2c(m);
+	s = compileL3toC(m);
 	cfile = |<l.scheme>://<l.host><l.path>.c|;
 	writeFile(cfile, s);
 }

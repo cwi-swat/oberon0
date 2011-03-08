@@ -19,7 +19,7 @@ Declarations resolveTypesInDecls(Declarations decls, Ident scope, Env env) {
 	
 	decls.vars = [ varDecl(ns, renameType(t, env)) | varDecl(ns, t) <- decls.vars ];
 	decls.procs = [ resolveTypesInProc(p, newScope(scope, p.name), env) | p <- decls.procs ];
-	
+
 	return decls; 
 }
 

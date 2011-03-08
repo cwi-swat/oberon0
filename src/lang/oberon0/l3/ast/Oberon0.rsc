@@ -2,7 +2,7 @@ module lang::oberon0::l3::ast::Oberon0
 
 extend lang::oberon0::l2::ast::Oberon0;
 
-rule n1 decls(list[ConstDecl] consts, list[TypeDecl] types, list[VarDecl] vars) => decls(consts, types, vars, []);
+//rule n1 decls(list[ConstDecl] consts, list[TypeDecl] types, list[VarDecl] vars) => decls(consts, types, vars, []);
 
 data Declarations 
 	= decls(list[ConstDecl] consts, list[TypeDecl] types, list[VarDecl] vars, list[Procedure] procs)

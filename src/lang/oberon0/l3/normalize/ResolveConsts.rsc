@@ -3,6 +3,7 @@ module lang::oberon0::l3::normalize::ResolveConsts
 import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l3::normalize::Utils;
 
+import IO;
 
 public Module resolveConsts(Module mod) {
 	env = ();
@@ -19,8 +20,8 @@ Declarations resolveConstsInDecls(Declarations decls, Ident scope, Env env) {
 	
 	decls.types = [ typeDecl(n, renameConst(t, env)) | typeDecl(n, t) <- decls.types ];
 	decls.vars = [ varDecl(ns, renameConst(t, env)) | varDecl(ns, t) <- decls.vars ];
-	decls.procs = [ resolveConstsInProc(p, newScope(scope, p.name), env) | p <- decls.procs ];
 	
+	decls.procs = [ resolveConstsInProc(p, newScope(scope, p.name), env) | p <- decls.procs ];
 	return decls; 
 }
 
