@@ -1,11 +1,13 @@
 module lang::oberon0::l3::eval::Statements
 
-import lang::oberon0::l1::ast::Oberon0;
 import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l3::eval::IO;
+
 import lang::oberon0::l1::eval::Expressions;
 import lang::oberon0::l1::eval::Env;
 import lang::oberon0::l1::eval::Memory;
+
+extend lang::oberon0::l1::eval::Statements;
 
 data State = memIO(Memory mem, IO io);
 
@@ -20,7 +22,7 @@ public State evalProc(Procedure pr, list[Expression] args, Env env, Env outer, S
   	return state;
 }
 
-public Result evalBuiltin(list[Formal] fs, State(Env, State) f, list[Expression] args, Env env, State state) 
+public State evalBuiltin(list[Formal] fs, State(Env, State) f, list[Expression] args, Env env, State state) 
 {
 	scope = push(state.mem);
 	<env, state.mem> = bind(args, fs, (), env, state.mem);

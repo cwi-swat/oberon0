@@ -1,5 +1,7 @@
 module lang::oberon0::l3::eval::IO
 
+import lang::oberon0::l1::eval::Memory;
+
 alias Stream = list[str];
 alias IO = tuple[Stream input, Stream output];
 

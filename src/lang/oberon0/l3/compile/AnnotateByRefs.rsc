@@ -1,8 +1,8 @@
-module lang::oberon0::compile::AnnotateByRefs
+module lang::oberon0::l3::compile::AnnotateByRefs
 
 // we asume oberon0 progs are normalized
 
-import lang::oberon0::ast::Oberon0;
+import lang::oberon0::l3::ast::Oberon0;
 
 anno bool Ident@receivedByRef;
 anno bool Expression@passByRef;

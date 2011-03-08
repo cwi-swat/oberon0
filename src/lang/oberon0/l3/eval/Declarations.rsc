@@ -1,11 +1,11 @@
 module lang::oberon0::l3::eval::Declarations
 
-import lang::oberon0::l1::ast::Oberon0;
 import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l1::eval::Env;
 import lang::oberon0::l1::eval::Memory;
 import lang::oberon0::l1::eval::Expressions;
-import lang::oberon0::l1::eval::Declarations;
+
+extend lang::oberon0::l1::eval::Declarations;
 
 import IO;
 import List;

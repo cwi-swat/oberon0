@@ -1,15 +1,14 @@
 module lang::oberon0::l3::format::Oberon0
 
 import lang::box::util::Box;
-import lang::oberon0::l1::ast::Oberon0;
-import lang::oberon0::l2::ast::Oberon0;
 import lang::oberon0::l3::ast::Oberon0;
-import lang::oberon0::l2::format::Oberon0;
+
+extend lang::oberon0::l2::format::Oberon0;
 
 
 
 public Box decls2box(decls(consts, types, vars, procs)) =
-	V([const2boxes(consts) + types2boxes(types) + vars2boxes(vars) + [proc2box(x) | x <- ds.procs]]);
+	V([consts2boxes(consts) + types2boxes(types) + vars2boxes(vars) + [proc2box(x) | x <- procs]]);
 
 
 public Box stat2box(call(Ident proc, list[Expression] args)) = H([id2box(proc), L("("),  H(hsepList(args, ",", exp2box))[@hs=1],  L(")")])[@hs=0];
