@@ -110,9 +110,9 @@ public SymbolTableBuilder resolveL3Names(Module m) {
 	stBuilder = addBuiltInProcedure(stBuilder,id("ReadLn"),[]);
 	stBuilder = addBuiltInProcedure(stBuilder,id("Read"),[<Integer(),true>]);
 	
-	// Add built-in types
-	stBuilder = addBuiltInType(stBuilder,id("INTEGER"));
-	
+	// Add built-in types (copy pasted from L1  :-()
+	stBuilder = addBuiltInType(stBuilder,id("INTEGER"),Integer());
+	stBuilder = addBuiltInType(stBuilder,id("BOOLEAN"),Boolean());
 	stBuilder = resolveModuleNames(stBuilder, m);
 	return stBuilder;
 }

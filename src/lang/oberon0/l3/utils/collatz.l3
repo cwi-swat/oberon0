@@ -4,7 +4,7 @@ VAR even,odd : INTEGER;
 
 PROCEDURE doCollatz();
   VAR current : INTEGER;
-      currentEven : BOOLEAN;
+      currentEven : INTEGER;
 
   PROCEDURE computeEven();
     BEGIN 
