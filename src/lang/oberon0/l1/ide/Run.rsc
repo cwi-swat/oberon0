@@ -1,21 +1,20 @@
 module lang::oberon0::l1::ide::Run
 
-import lang::oberon0::l1::ast::Oberon0;
-import lang::oberon0::l1::eval::Oberon0;
 import lang::oberon0::l1::syntax::Modules;
+import lang::oberon0::l1::utils::Implode;
+import lang::oberon0::l1::eval::Oberon0;
 
-import ParseTree;
 import IO;
 
+import vis::Render;
 
-public lang::oberon0::l1::syntax::Modules::Module runModule(
-	lang::oberon0::l1::syntax::Modules::Module x, loc selection) {
-	lang::oberon0::l1::ast::Oberon0::Module m = 
-		implode(#lang::oberon0::l1::ast::Oberon0::Module, x);
+public void runModule(Module x, loc selection) {
+	m = implode(x); 
 	println(eval(m));
-	return x;
 }
- 
+
+
+
 
 
 

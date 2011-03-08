@@ -51,7 +51,7 @@ public Module checkTypes(Module ast, SymbolTable st) {
 			case Array(et,n) : return Array(unwind(et,ctx),n);
 			case Record(fs) : return Record([<unwind(ft,ctx),fn> | <ft,fn> <- fs]);
 			case User(n) : {
-				if ({tItem} := getTypesAt(stBuilder,n,ctx)) {
+				if ({tItem} := getTypesAt(st,n,ctx)) {
 					switch (tItem) {
 						case BuiltInType(id("INTEGER")): return Integer();
 						case Type(_,ut,_): return unwind(ut, tItem);

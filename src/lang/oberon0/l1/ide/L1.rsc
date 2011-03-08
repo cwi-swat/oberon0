@@ -9,6 +9,7 @@ import lang::oberon0::l1::syntax::Lexical;
 import lang::oberon0::l1::syntax::Layout;
 import lang::oberon0::l1::ide::Outline;
 import lang::oberon0::l1::ide::Run;
+import lang::oberon0::l1::ide::Compile;
 import lang::oberon0::l1::ide::Check;
 import lang::oberon0::l1::ide::Format;
 import lang::oberon0::l1::ide::VisualizeCFG;
@@ -24,8 +25,9 @@ public set[Contribution] L1_CONTRIBS = {
 	popup(
 		menu("Oberon",[
     		action("Run", runModule),
-    		action("Format", formatModule), 
-    		action("CFlow", visualizeCFG) 
+    		edit("Format", formatModule), 
+    		action("CFlow", visualizeCFG),
+    		action("To C", compileModuleToC) 
 	    ])
   	)
 };

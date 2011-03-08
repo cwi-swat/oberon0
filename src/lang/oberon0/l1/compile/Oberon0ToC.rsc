@@ -16,15 +16,15 @@ return "
 }
 
 public str decls2c(Declarations decls) {
-	return "<consts2c(m.decls.consts)>
-<types2c(m.decls.types)>
-<vars2c(m.decls.vars)>";
+	return "<consts2c(decls.consts)>
+<types2c(decls.types)>
+<vars2c(decls.vars)>";
 }
 
 public str body2c(list[Statement] stats) {
 	return "
 int main(int argc, char **argv) {
-  <stats2c(m.body)>
+  <stats2c(stats)>
 }";
 }
 
@@ -55,12 +55,12 @@ while (<exp2c(c)>) {
 }";
 
 public str exp2c(nat(int val)) = "<val>";
-public str exp2c(lookup(v)) = var2c(v);
+public str exp2c(lookup(v)) = v.name;
 public str exp2c(neg(exp)) = "(-<exp2c(exp)>)";
 public str exp2c(pos(exp)) = exp2c(exp);
 public str exp2c(mul(lhs, rhs)) = "(<exp2c(lhs)>*<exp2c(rhs)>)";
 public str exp2c(div(lhs, rhs)) = "(<exp2c(lhs)>/<exp2c(rhs)>)";
-public str exp2c(mod(lhs, rhs)) = "(<exp2c(lhs)>%<exp2c(rhs)>)";
+public str exp2c(Expression::mod(lhs, rhs)) = "(<exp2c(lhs)>%<exp2c(rhs)>)";
 public str exp2c(add(lhs, rhs)) = "(<exp2c(lhs)>+<exp2c(rhs)>)";
 public str exp2c(sub(lhs, rhs)) = "(<exp2c(lhs)>-<exp2c(rhs)>)";
 public str exp2c(not(exp)) = "(!<exp2c(exp)>)";

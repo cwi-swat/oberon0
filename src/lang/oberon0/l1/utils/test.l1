@@ -6,9 +6,10 @@ CONST
 VAR
   x : INTEGER;
   z : BOOLEAN;
+  y : INTEGER;
 
 BEGIN
-	x := x = y;
+	x := c;
 	WHILE x = c DO
 		x := 5;
 		IF x > 3 THEN
@@ -17,4 +18,5 @@ BEGIN
 			y := x DIV c
 		END
 	END
+	
 END test.

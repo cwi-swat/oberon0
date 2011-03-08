@@ -13,15 +13,15 @@ data Statement
 alias DeclsBody = tuple[Declarations decls, list[Statement] body];
 
 public Module desugar(Module mod) {
-	mod.body = (for2While o repeat2while o case2ifs o flattenBegin)(mod.body);
+	mod.body = (for2while o repeat2while o case2ifs o flattenBegin)(mod.body);
 	return mod;
 }
 
 public list[Statement] case2ifs(list[Statement] stats) {
 	Statement cases2if(Expression e, list[Case] cs, list[Statement] es) {
-		eis = [ <eq(e, c.guard), c.body> | c <- tail(cs) ];
+		list[tuple[Expression condition, list[Statement] body]] eis = [ <eq(e, c.guard), c.body> | c <- tail(cs) ];
 		c = head(cs);
-		return ifThen(eq(e, c.guard), c.body, es); 
+		return ifThen(eq(e, c.guard), c.body, eis, es); 
 	}
 	
 	return visit (stats) {
