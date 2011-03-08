@@ -3,15 +3,14 @@ module lang::oberon0::l3::compile::Oberon0ToC
 extend lang::oberon0::l1::compile::Oberon0ToC;
 
 import lang::oberon0::l3::ast::Oberon0;
-import lang::oberon0::l3::compile::AnnotateByRefs;
+import lang::oberon0::l3::compile::AnnotateByRefs; // for annos
 
 import String;
 import List;
+import IO;
 
 public str compileL3toC(Module m) {
-	// call annotate here, since the compiler will throw if annos are absent
-	// we assume m is resolved and lifted.
-	m = annotateByRefs(m);
+	// assume byRefs are annotated
 	return "
 #include \<builtins.h\>
 <decls2c(m.decls)>
@@ -62,7 +61,8 @@ public str stat2c(call(Ident id, args)) {
 
 public str var2c(Ident id) {
 	e = id.name;
-	if (id@receivedByRef) {
+	// const ids in array type- and vardecls are not annotated
+	if ((id@receivedByRef)? && id@receivedByRef) {
 		e = "(*<e>)";
 	}
   	return e;

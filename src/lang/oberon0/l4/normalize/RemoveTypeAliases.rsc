@@ -1,10 +1,7 @@
 module lang::oberon0::l4::normalize::RemoveTypeAliases
 
 
-import lang::oberon0::l1::ast::Oberon0;
-import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l4::ast::Oberon0;
-
 import lang::oberon0::l3::normalize::Utils;
 
 // precondition: resolveTypes, resolveProcs, resolveConsts, liftTypes, liftProcs, constantElimination

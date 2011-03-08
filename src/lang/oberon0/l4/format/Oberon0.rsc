@@ -1,14 +1,7 @@
 module lang::oberon0::l4::format::Oberon0
 
-import lang::oberon0::l1::ast::Oberon0;
-import lang::oberon0::l2::ast::Oberon0;
-import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l4::ast::Oberon0;
-
-import lang::oberon0::l1::format::Oberon0;
-import lang::oberon0::l2::format::Oberon0;
-import lang::oberon0::l3::format::Oberon0;
-import lang::oberon0::l4::format::Oberon0;
+extend lang::oberon0::l3::format::Oberon0;
 
 import lang::box::util::Box;
 import List;

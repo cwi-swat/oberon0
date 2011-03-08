@@ -86,7 +86,7 @@ public str consts2c(list[ConstDecl] cds) {
 	return ("" | it + "#define <cd.name.name> <exp2c(cd.\value)>\n" | cd <- cds );
 }
 
-public str varType2c(str v, Type t) = "<type2c(t)> <v>";
+public str default varType2c(str v, Type t) = "<type2c(t)> <v>";
 
 public str type2c(user(id("INTEGER"))) = "int";
 public str type2c(user(id("BOOLEAN"))) = "int";

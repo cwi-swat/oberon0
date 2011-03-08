@@ -28,23 +28,32 @@ public Procedure annotateByRefs(Procedure p, Env env) {
 
 public list[Statement] annotateByRefsInBody(list[Statement] body, Env env, set[Ident] byRefs) {
 	return visit (body) {
-		case lookup(n, sels): {
-			n@receivedByRef = (n in byRefs);
-			insert lookup(n, sels);
-		}
-		case assign(n, sels, exp): {
-			n@receivedByRef = (n in byRefs);
-			insert assign(n, sels, exp);
-		}
-		case call(n, args): {
-			i = 0;
-			args = for (f <- env[n], _ <- f.names) {
-				args[i]@passByRef = f.hasVar;
-				append args[i];
-				i += 1;
-			}
-			insert call(n, args);
-		}
+		case Expression e => annotateExp(e, byRefs)
+		case Statement s => annotateStat(s, env, byRefs)
 	}
 }
+
+public Expression annotateExp(lookup(n), set[Ident] byRefs) {
+	n@receivedByRef = (n in byRefs);
+	return lookup(n);
+}
+
+public Expression default annotateExp(Expression exp, set[Ident] byRefs) = exp;
+
+public Statement annotateStat(assign(n, exp), Env env, set[Ident] byRefs) {
+	n@receivedByRef = (n in byRefs);
+	return assign(n, exp);
+}
+
+public Statement annotateStat(call(n, args), Env env, set[Ident] byRefs) {
+	i = 0;
+	args = for (f <- env[n], _ <- f.names) {
+		args[i]@passByRef = f.hasVar;
+		append args[i];
+		i += 1;
+	}
+	return call(n, args);
+}
+
+public Statement default annotateStat(Statement stat, Env env, set[Ident] byRefs) = stat;
 

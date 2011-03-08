@@ -1,0 +1,65 @@
+MODULE QuickSort;
+
+CONST
+  INPUTLENGTH = 5;
+
+VAR
+  input: ARRAY INPUTLENGTH OF INTEGER;
+  i: INTEGER;
+
+
+PROCEDURE QuickSort(VAR array: ARRAY INPUTLENGTH OF INTEGER; left, right: INTEGER);
+  VAR
+    pivot, leftIdx, rightIdx: INTEGER;
+
+  PROCEDURE Swap(VAR x, y: INTEGER);
+  VAR
+    temp: INTEGER;
+  BEGIN
+    temp := x;
+    x := y;
+    y := temp
+  END Swap;
+
+BEGIN
+  leftIdx := left;
+  rightIdx := right;
+  IF right - left > 0 THEN
+    pivot := (left + right) DIV 2;
+    WHILE (leftIdx <= pivot) & (rightIdx >= pivot) DO
+      WHILE (array[leftIdx] < array[pivot]) & (leftIdx <= pivot) DO
+        leftIdx := leftIdx + 1
+      END;
+      WHILE (array[rightIdx] > array[pivot]) & (rightIdx >= pivot) DO
+        rightIdx := rightIdx - 1
+      END;
+      Swap(array[leftIdx], array[rightIdx]);
+      leftIdx := leftIdx + 1;
+      rightIdx := rightIdx - 1;
+      IF leftIdx - 1 = pivot THEN
+        rightIdx := rightIdx + 1;
+        pivot := rightIdx
+      ELSIF rightIdx + 1 = pivot THEN
+        leftIdx := leftIdx - 1;
+        pivot := leftIdx
+      END
+    END;
+    QuickSort(array, left, pivot - 1);
+    QuickSort(array, pivot + 1, right)
+  END
+END QuickSort;
+
+BEGIN
+ i := 0;
+ WHILE i < INPUTLENGTH DO
+   Read(input[i]);
+   i := i + 1
+ END;
+ QuickSort(input, 0, INPUTLENGTH - 1);
+ i := 0;
+ WHILE i < INPUTLENGTH DO
+   Write(input[i]);
+   WriteLn;
+   i := i + 1
+ END
+END QuickSort.

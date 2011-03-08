@@ -42,6 +42,6 @@ Type renameConst(Type t, Env env) {
 
 Expression renameConst(Expression e, Env env) {
 	return visit (e) {
-		case lookup(n, s) => lookup(env[n], s) when env[n]?
+		case lookup(n) => lookup(env[n]) when env[n]?
 	}
 }

@@ -11,9 +11,6 @@ extend lang::oberon0::l1::check::CheckTypes;
 
 import Message;
 
-public void default checkStat(Statement s, SymbolTable st) {
-	println(s);
-}
 
 public void checkStat(forDo(n, f, t, b), SymbolTable st) {
 	OType ot = getTypeFor(n, n@location, st);
