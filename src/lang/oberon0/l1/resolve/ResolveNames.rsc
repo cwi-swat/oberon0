@@ -35,6 +35,8 @@ public SymbolTableBuilder resolveVariableNames(SymbolTableBuilder stBuilder, Ide
 // resolveVariableNames, not here.
 //
 public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, nat(_)) = stBuilder;
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, \true()) = stBuilder;
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, \false()) = stBuilder;
 public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, lookup(v)) = resolveVariableNames(stBuilder,v);
 public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, neg(e)) = resolveExpressionNames(stBuilder,e);
 public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, pos(e)) = resolveExpressionNames(stBuilder,e);
