@@ -10,6 +10,7 @@ import lang::oberon0::l1::syntax::Layout;
 
 import lang::oberon0::l2::syntax::Statements;
 import lang::oberon0::l2::ide::Run;
+import lang::oberon0::l2::ide::Desugar;
 import lang::oberon0::l2::ide::Compile;
 import lang::oberon0::l2::ide::Format;
 import lang::oberon0::l2::ide::Check;
@@ -30,6 +31,7 @@ public set[Contribution] L2_CONTRIBS = {
     		action("Run", runModule),
     		action("Compile", compileModuleToC),
     		edit("Format", formatModule), 
+    		edit("Desugar", desugarModule), 
 	   		action("CFlow", visualizeCFG) 
 	    ])
   	)
