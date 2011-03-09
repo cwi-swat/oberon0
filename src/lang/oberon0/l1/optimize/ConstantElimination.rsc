@@ -40,7 +40,20 @@ bool int2bool(int truth){
 Expression evaluate(ConstantMap constants, Expression exp){
 	return innermost visit(exp){
 		case lookup(id(var),[])     :  if(var in constants) insert nat(constants[var]);
-		case neg(nat(val))          => nat(val)
+		
+		case amp(_, \false()) 		=> \false()
+		case amp(\false(), _) 		=> \false()
+		case amp(\true(), \true()) 	=> \true()
+
+		case or(_, \true()) 		=> \true()
+		case or(\true(), _) 		=> \true()
+		case or(\false(), \false()) => \false()
+		
+		case not(\false())			=> \true()
+		case not(\true())			=> \false()
+		
+		
+		case neg(nat(val))          => nat(- val)
 		case pos(nat(val))          => nat(val)
 		case mul(lhs,nat(0))        => nat(0)
 		case mul(nat(0),rhs)        => nat(0)
@@ -56,14 +69,17 @@ Expression evaluate(ConstantMap constants, Expression exp){
 		case mod(nat(lhs),nat(rhs)) => nat(lhs % rhs)
 		case add(nat(lhs),nat(rhs)) => nat(lhs + rhs)
 		case sub(nat(lhs),nat(rhs)) => nat(lhs - rhs)
-		case amp(nat(lhs),nat(rhs)) => nat(bool2int(int2bool(lhs) && int2bool(rhs)))
-		case or(nat(lhs),nat(rhs))  => nat(bool2int(int2bool(lhs) || int2bool(rhs)))
-		case eq(nat(lhs),nat(rhs))  => nat(bool2int(lhs == rhs))
-		case neq(nat(lhs),nat(rhs)) => nat(bool2int(lhs == rhs))
-		case lt(nat(lhs),nat(rhs))  => nat(bool2int(lhs < rhs))
-		case gt(nat(lhs),nat(rhs))  => nat(bool2int(lhs > rhs))
-		case leq(nat(lhs),nat(rhs)) => nat(bool2int(lhs <= rhs))
+		
+		// no side effects in exps, so must be true
+		case eq(x,x)  				=> \true()
+		
+		case neq(nat(lhs),nat(rhs)) => lhs == rhs ? \true() : \false()
+		case lt(nat(lhs),nat(rhs)) => lhs < rhs ? \true() : \false()
+		case gt(nat(lhs),nat(rhs)) => lhs > rhs ? \true() : \false()
+		case leq(nat(lhs),nat(rhs)) => lhs <= rhs ? \true() : \false()
+		case geq(nat(lhs),nat(rhs)) => lhs >= rhs ? \true() : \false()
 		case geq(nat(lhs),nat(rhs)) => nat(bool2int(lhs >= rhs))
+
 		// some rewrite rules for cases with unkown variables, like (x + 2) + 3
 		case add(add(lhs,nat(v1)),nat(v2)) => add(lhs,nat(v1+v2))
 		case add(add(nat(v1),lhs),nat(v2)) => add(lhs,nat(v1+v2))
