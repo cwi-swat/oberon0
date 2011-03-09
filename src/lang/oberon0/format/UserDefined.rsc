@@ -1,8 +1,25 @@
 module lang::oberon0::format::UserDefined
 
-import lang::oberon0::syntax::Oberon0;
-import box::Box;
-import box::Concrete;
+import lang::oberon0::l1::syntax::Modules;
+import lang::oberon0::l1::syntax::Layout;
+import lang::oberon0::l1::syntax::Lexical;
+import lang::oberon0::l1::syntax::Declarations;
+import lang::oberon0::l1::syntax::Expressions;
+import lang::oberon0::l1::syntax::Statements;
+import lang::oberon0::l1::syntax::Types;
+
+import lang::oberon0::l2::syntax::Statements;
+
+import lang::oberon0::l3::syntax::Declarations;
+import lang::oberon0::l3::syntax::Statements;
+
+import lang::oberon0::l4::syntax::Expressions;
+import lang::oberon0::l4::syntax::Statements;
+import lang::oberon0::l4::syntax::Types;
+
+
+import lang::box::util::Box;
+import lang::box::util::Concrete;
 import ParseTree;
 import IO;
 import List;
