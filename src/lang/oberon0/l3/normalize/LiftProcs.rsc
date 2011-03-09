@@ -5,8 +5,6 @@ import List;
 import Set;
 import Map;
 
-import IO;
-
 alias Variables = map[Ident, Type];
 
 alias SortedVariables = list[tuple[Ident, Type]];
@@ -31,15 +29,12 @@ public Module extendSignatures(Module mod) {
 	fvsm = sortFreeVarsMap(freeVarsMap(mod));
 
 	Procedure extendSig(Procedure p) {
-		println("extending sig");
 		p.formals += [ formal(true, [fn], t) | <fn, t> <- fvsm[p.name] ];
 		return p;
 	}
 	
 	Statement extendCall(Statement call) {
-		println("extending call <call>");
 		call.args += [ lookup(fn) | <fn, _> <- fvsm[call.proc] ];
-		println("extending args: <call.args>");
 		return call;
 	}
 	
@@ -90,11 +85,11 @@ public FreeVarsMap freeVarsMap(Module mod) {
 }
 
 
-// ARGH this has be overridden in L4, since the
-// patterns for assign and lookup are invalid
+// Don't use explicit pattern matching on stats/exps here, such 
+// patterns for assign and lookup make this function unusable at L4.
 public Variables usedVars(Procedure p, Variables env) {
-	return ( i: env[i] | /assign(i, _) <- p.body, env[i]? ) 
-			+ ( i: env[i] | /lookup(i) <- p.body, env[i]? );
+	return ( i: env[i] | /Statement s <- p.body, s is assign, i := s.var, env[i]? ) 
+			+ ( i: env[i] | /Expression e <- p.body, e is lookup, i := e.var, env[i]? );
 }
 
 
