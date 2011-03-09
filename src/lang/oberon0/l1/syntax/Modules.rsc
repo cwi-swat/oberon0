@@ -11,4 +11,17 @@ syntax Body
 	= @Foldable "BEGIN" {Statement ";"}*
 	;
 
-
+syntax Keywords 
+	= "MODULE"
+	| "BEGIN"
+	;
+	
+	
+syntax "MODULE" 
+	= ... # [A-Za-z0-9] 
+	;
+		
+syntax "BEGIN" 
+	= ... # [A-Za-z0-9] 
+	;
+	

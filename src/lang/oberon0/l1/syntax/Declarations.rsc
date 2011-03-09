@@ -34,6 +34,24 @@ syntax VarSect
 	= @Foldable "VAR" VarDecl* vars
 	;
 
+syntax Keywords 
+	= "VAR" 
+	| "TYPE" 
+	| "CONST" 
+	;
+	
+syntax "VAR" 
+	= ... # [A-Za-z0-9] 
+	;
+	
+syntax "TYPE" 
+	= ... # [A-Za-z0-9] 
+	;
+	
+syntax "CONST" 
+	= ... # [A-Za-z0-9] 
+	;
+	
 
 
 

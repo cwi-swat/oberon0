@@ -5,6 +5,8 @@ import lang::oberon0::l1::syntax::Lexical;
 
 syntax Expression 
 	= nat: Natural value
+	| \true: "TRUE"
+	| \false: "FALSE"
 	| lookup: Ident var 
 	| bracket Bracket: "(" Expression exp ")"
 	| not: "~" Expression exp
@@ -34,3 +36,31 @@ syntax Expression
 	)
 	;
 
+syntax Keywords 
+	= "DIV" 
+	| "MOD" 
+	| "OR" 
+	| "TRUE" 
+	| "FALSE"
+	; 
+	
+syntax "DIV" 
+	= ... # [A-Za-z0-9] 
+	;
+	
+syntax "MOD" 
+	= ... # [A-Za-z0-9] 
+	;
+	
+syntax "OR" 
+	= ... # [A-Za-z0-9] 
+	;
+
+syntax "TRUE" 
+	= ... # [A-Za-z0-9] 
+	;
+
+syntax "FALSE" 
+	= ... # [A-Za-z0-9] 
+	;
+	
