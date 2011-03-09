@@ -55,6 +55,8 @@ while (<exp2c(c)>) {
 }";
 
 public str exp2c(nat(int val)) = "<val>";
+public str exp2c(\true()) = "1";
+public str exp2c(\false()) = "0";
 public str exp2c(lookup(v)) = v.name;
 public str exp2c(neg(exp)) = "(-<exp2c(exp)>)";
 public str exp2c(pos(exp)) = exp2c(exp);
