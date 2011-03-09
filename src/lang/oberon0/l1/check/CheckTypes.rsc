@@ -158,6 +158,8 @@ bool isWritableKind(Variable(_, _, _)) = true;
 // Actually check the various forms of expression
 //
 public Expression checkExp(e:nat(n), SymbolTable st) 		= e[@otype = Integer()];
+public Expression checkExp(e:\true(), SymbolTable st) 		= e[@otype = Boolean()];
+public Expression checkExp(e:\false(), SymbolTable st) 		= e[@otype = Boolean()];
 public Expression checkExp(e:lookup(v), SymbolTable st) 	= e[@otype = getTypeFor(v, e@location, st)];
 public Expression checkExp(e:neg(uop), SymbolTable st) 		= e[@otype = uI2I(uop@otype,e@location)];
 public Expression checkExp(e:pos(uop), SymbolTable st) 		= e[@otype = uI2I(uop@otype,e@location)];
