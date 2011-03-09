@@ -34,6 +34,8 @@ data Statement
 
 data Expression 
 	= nat(int val)
+	| \true()
+	| \false()
 	| lookup(Ident var)
 	| neg(Expression exp)
 	| pos(Expression exp)

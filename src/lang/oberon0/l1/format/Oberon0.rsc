@@ -77,9 +77,12 @@ public Box stat2box(whileDo(Expression condition, list[Statement] body)) = V([
             KW(L("END"))
         ]);   
 
+public Box default stat2box(Statement s) = L("<s>");
 
 
 public Box exp2box(nat(int val)) = L("<val>");
+public Box exp2box(\true()) = L("TRUE");
+public Box exp2box(\false()) = L("FALSE");
 public Box exp2box(lookup(Ident var)) = id2box(var);
 public Box exp2box(neg(Expression arg)) = H([L("-"), exp2box(arg)])[@hs=0];
 public Box exp2box(pos(Expression arg)) = H([L("+"), exp2box(arg)])[@hs=0];
