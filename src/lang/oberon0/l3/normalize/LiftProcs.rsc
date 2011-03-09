@@ -5,6 +5,8 @@ import List;
 import Set;
 import Map;
 
+import IO;
+
 alias Variables = map[Ident, Type];
 
 alias SortedVariables = list[tuple[Ident, Type]];
@@ -29,16 +31,19 @@ public Module extendSignatures(Module mod) {
 	fvsm = sortFreeVarsMap(freeVarsMap(mod));
 
 	Procedure extendSig(Procedure p) {
+		println("extending sig");
 		p.formals += [ formal(true, [fn], t) | <fn, t> <- fvsm[p.name] ];
 		return p;
 	}
 	
 	Statement extendCall(Statement call) {
-		call.args += [ lookup(fn, []) | <fn, _> <- fvsm[call.proc] ];
+		println("extending call <call>");
+		call.args += [ lookup(fn) | <fn, _> <- fvsm[call.proc] ];
+		println("extending args: <call.args>");
 		return call;
 	}
 	
-	return visit(mod) {
+	return visit (mod) {
 		case Procedure p => extendSig(p)
 		case c:call(_, _) => extendCall(c)
 	} 
@@ -85,10 +90,13 @@ public FreeVarsMap freeVarsMap(Module mod) {
 }
 
 
+// ARGH this has be overridden in L4, since the
+// patterns for assign and lookup are invalid
 public Variables usedVars(Procedure p, Variables env) {
-	return ( i: env[i] | /assign(i, _, _) <- p.body, env[i]? ) 
-			+ ( i: env[i] | /lookup(i, _) <- p.body, env[i]? );
+	return ( i: env[i] | /assign(i, _) <- p.body, env[i]? ) 
+			+ ( i: env[i] | /lookup(i) <- p.body, env[i]? );
 }
+
 
 public Variables localVars(Procedure p) {
     return declaredVars(p.decls) + formalVars(p);

@@ -5,7 +5,7 @@ import lang::oberon0::l3::ide::Compile;
 import lang::oberon0::l3::ide::Format;
 import lang::oberon0::l3::ide::Check;
 import lang::oberon0::l3::ide::VisualizeCFG;
-
+import lang::oberon0::l3::ide::Normalize;
 import lang::oberon0::l3::ide::Outline;
 
 import lang::oberon0::l3::utils::Parse;
@@ -21,6 +21,7 @@ public set[Contribution] L3_CONTRIBS = {
 		menu("Oberon",[
     		action("Compile", compileModuleToC),
     		edit("Format", formatModule), 
+    		edit("Normalize", normalizeModule), 
 	   		action("CFlow", visualizeCFG) 
 	    ])
   	)
