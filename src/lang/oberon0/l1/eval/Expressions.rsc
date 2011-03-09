@@ -7,16 +7,17 @@ import List;
 import IO;
 
 
-public bool evalCond(not(exp), Env env, Memory mem) 		= !evalCond(exp, env);
-public bool evalCond(amp(lhs, rhs), Env env, Memory mem) 	= evalCond(lhs, env, mem) && evalCond(rhs, env, mem);
-public bool evalCond(or(lhs, rhs), Env env, Memory mem) 	= evalCond(lhs, env, mem) || evalCond(rhs, env, mem);
-public bool evalCond(eq(lhs, rhs), Env env, Memory mem) 	= eval(lhs, env, mem) == eval(rhs, env, mem);
-public bool evalCond(neq(lhs, rhs), Env env, Memory mem) 	= eval(lhs, env, mem) != eval(rhs, env, mem);
-public bool evalCond(lt(lhs, rhs), Env env, Memory mem) 	= asInt(eval(lhs, env, mem)) < asInt(eval(rhs, env, mem));
-public bool evalCond(gt(lhs, rhs), Env env, Memory mem) 	= asInt(eval(lhs, env, mem)) > asInt(eval(rhs, env, mem));
-public bool evalCond(leq(lhs, rhs), Env env, Memory mem) 	= asInt(eval(lhs, env, mem)) <= asInt(eval(rhs, env, mem));
-public bool evalCond(geq(lhs, rhs), Env env, Memory mem) 	= asInt(eval(lhs, env, mem)) >= asInt(eval(rhs, env, mem));
-
+public Value eval(\true(), Env env, Memory mem)			= boolean(true);
+public Value eval(\false(), Env env, Memory mem)		= boolean(false);
+public Value eval(not(exp), Env env, Memory mem) 		= boolean(!asBool(eval(exp, env)));
+public Value eval(amp(lhs, rhs), Env env, Memory mem) 	= boolean(asBool(eval(lhs, env, mem)) && asBool(eval(rhs, env, mem)));
+public Value eval(or(lhs, rhs), Env env, Memory mem) 	= boolean(asBool(eval(lhs, env, mem)) || asBool(eval(rhs, env, mem)));
+public Value eval(eq(lhs, rhs), Env env, Memory mem) 	= boolean(eval(lhs, env, mem) == eval(rhs, env, mem));
+public Value eval(neq(lhs, rhs), Env env, Memory mem) 	= boolean(eval(lhs, env, mem) != eval(rhs, env, mem));
+public Value eval(lt(lhs, rhs), Env env, Memory mem) 	= boolean(asInt(eval(lhs, env, mem)) < asInt(eval(rhs, env, mem)));
+public Value eval(gt(lhs, rhs), Env env, Memory mem) 	= boolean(asInt(eval(lhs, env, mem)) > asInt(eval(rhs, env, mem)));
+public Value eval(leq(lhs, rhs), Env env, Memory mem) 	= boolean(asInt(eval(lhs, env, mem)) <= asInt(eval(rhs, env, mem)));
+public Value eval(geq(lhs, rhs), Env env, Memory mem) 	= boolean(asInt(eval(lhs, env, mem)) >= asInt(eval(rhs, env, mem)));
 
 public Value eval(nat(int val), Env env, Memory mem) 	= integer(val);
 public Value eval(lookup(v), Env env, Memory mem) 		= lookupValue(v, env, mem);
@@ -29,4 +30,5 @@ public Value eval(add(lhs, rhs), Env env, Memory mem) 	= integer(asInt(eval(lhs,
 public Value eval(sub(lhs, rhs), Env env, Memory mem) 	= integer(asInt(eval(lhs, env, mem)) - asInt(eval(rhs, env, mem)));
 
 public int asInt(integer(n)) = n;
+public bool asBool(boolean(b)) = b;
 
