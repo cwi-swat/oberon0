@@ -16,7 +16,8 @@ public Box mod2box(Module m) {
   ])[@vs=1];
 }
 
-public Box decls2box(decls(consts, types, vars)) = V(consts2boxes(consts) + types2boxes(types) + vars2boxes(vars))[@vs=1];
+public Box decls2box(decls(consts, types, vars)) = 
+	V(consts2boxes(consts) + types2boxes(types) + vars2boxes(vars))[@vs=1];
 
 public list[Box] consts2boxes(list[ConstDecl] consts) {
    	if (consts != []) {
@@ -77,8 +78,6 @@ public Box stat2box(whileDo(Expression condition, list[Statement] body)) = V([
             KW(L("END"))
         ]);   
 
-public Box default stat2box(Statement s) = L("<s>");
-
 
 public Box exp2box(nat(int val)) = L("<val>");
 public Box exp2box(\true()) = L("TRUE");
@@ -86,7 +85,7 @@ public Box exp2box(\false()) = L("FALSE");
 public Box exp2box(lookup(Ident var)) = id2box(var);
 public Box exp2box(neg(Expression arg)) = H([L("-"), exp2box(arg)])[@hs=0];
 public Box exp2box(pos(Expression arg)) = H([L("+"), exp2box(arg)])[@hs=0];
-public Box exp2box(not(Expression arg)) = H([L("~"), exp2box()])[@hs=0];
+public Box exp2box(not(Expression arg)) = H([L("~"), exp2box(arg)])[@hs=0];
 public Box exp2box(mul(Expression lhs, Expression rhs)) = H([exp2box(lhs), L("*"), exp2box(rhs)])[@hs=1];
 public Box exp2box(div(Expression lhs, Expression rhs)) = H([exp2box(lhs), L("DIV"), exp2box(rhs)])[@hs=1];
 public Box exp2box(Expression::mod(Expression lhs, Expression rhs)) = H([exp2box(lhs), L("MOD"), exp2box(rhs)])[@hs=1];
