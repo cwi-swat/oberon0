@@ -6,16 +6,13 @@ import lang::oberon0::l1::resolve::NameAnnotator;
 import lang::oberon0::l3::extract::CallGraph;
 import lang::oberon0::l3::extract::ControlFlow;
 import lang::oberon0::l3::analyze::Aliases;
+import lang::oberon0::l3::analyze::Defs;
+import lang::oberon0::l3::analyze::Kills;
+import lang::oberon0::l3::analyze::Gens;
 import Relation;
 import List;
 import Set;
 import Graph;
-
-alias Def = tuple[Item,CFNode];
-anno rel[Ident,loc] Statement@defUses;
-anno rel[Ident,loc] Procedure@defUses;
-anno rel[Ident,loc] Module@defUses;
-anno set[CFNode] Ident@useDefs;
 
 //
 // Compute the local defs, made up of all direct definitions and all
@@ -115,31 +112,3 @@ public Module useDefAnalysis(Module m, SymbolTable st) {
 	
 	return m;
 }
-
-//
-// Get defs for a CF node.
-//
-public set[Def] IDef(nd:statement(_,s:assign(v,_))) = { < v@item, nd > };
-public set[Def] IDef(nd:statement(_,s:call(v,as))) {
-	if (size(as) == 0) return { };
-	if (Procedure(_,ps,_) := v@item) return { < v@item, nd > | idx <- [0..size(ps)-1], FormalParameter(_,_,true,_) := ps[idx], lookup(v) := as[idx] };
-	return { }; 
-}
-public set[Def] IDef(nd:statement(_,s:forDo(v,_,_,_))) = { < v@item, nd > };
-public set[Def] default IDef(_) = { };
-
-//
-// Get kills for a CF node.
-//
-public set[Def] IKill(nd:statement(_,assign(v,_)), defs) = { k | k:<i,_> <- defs, i := v@item } - {<v@item,nd>};
-public set[Def] IKill(nd:statement(_,forDo(v,_,_,_)), defs) = { k | k:<i,_> <- defs, i := v@item } - {<v@item,nd>};
-public set[Def] default IKill(_,_) = { };
-
-//
-// Calculate gens for a CF node. This logic works under the assumption that
-// a node cannot kill anything it defines. If the language changes to allow
-// this (e.g., functions with VAR parameters) then we will need to calculate
-// gens differently.
-//
-public set[Def] IGen(nd, defs) = { <i,nd> | i <- invert(defs)[nd] };
-
