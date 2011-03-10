@@ -1,0 +1,41 @@
+MODULE Swap;
+
+VAR a,b,c,d : INTEGER;
+
+PROCEDURE swap2(VAR x,y : INTEGER);
+  VAR temp : INTEGER;
+  BEGIN
+    temp := x;
+    x := y;
+    y := temp
+  END swap2;
+  
+PROCEDURE swap3(VAR x,y,z : INTEGER);
+  BEGIN
+    swap2(x,y);
+    swap2(z,x)
+  END swap3;
+
+PROCEDURE swap4(VAR w,x,y,z : INTEGER);
+  BEGIN
+    swap2(w,x);
+    swap2(x,y);
+    swap2(y,z);
+    swap2(z,w)
+  END swap4;
+
+PROCEDURE swap3Twice(VAR x,y,z : INTEGER);
+  BEGIN
+    swap3(x,y,z);
+    swap3(x,y,z)
+  END swap3Twice;
+  
+BEGIN
+  a := 1;
+  b := 2;
+  c := 3;
+  d := 4;
+  Write(a); Write(b); Write(c); Write(d); WriteLn;
+  swap4(a,b,c,a); swap3Twice(a,b,c); swap3Twice(b,c,d);
+  Write(a); Write(b); Write(c); Write(d); WriteLn
+END Swap.
