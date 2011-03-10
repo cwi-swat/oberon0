@@ -29,14 +29,6 @@ ConstantMap getConstants(list[ConstDecl] constants, ConstantMap constantMap){
 }
 
 
-int bool2int(bool truth){
-	return truth? 1 :0;
-}
-
-bool int2bool(int truth){
-	return truth!=0;
-}
-
 Expression evaluate(ConstantMap constants, Expression exp){
 	return innermost visit(exp){
 		case lookup(id(var),[])     :  if(var in constants) insert nat(constants[var]);
