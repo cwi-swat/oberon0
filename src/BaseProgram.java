@@ -1,33 +1,9 @@
 import java.util.Scanner;
 
 class BaseProgram {
-	static final int INIT_MAX_MEM = 1000000;
-	static int stackSize = INIT_MAX_MEM;
-    static int[] stack = new int[stackSize];
+	static int STACK_SIZE = 1000000;
+    static int[] stack = new int[STACK_SIZE];
     static int sp = 0;
-    static int $eq (int a,int b) { return a == b ? 1 : 0; }
-    static int $neq(int a,int b) { return a != b ? 1 : 0; }
-    static int $lt (int a,int b) { return a < b  ? 1 : 0; }
-    static int $gt (int a,int b) { return a > b  ? 1 : 0; }
-    static int $leq(int a,int b) { return a <= b ? 1 : 0; }
-    static int $geq(int a,int b) { return a >= b ? 1 : 0; }    
-    
-    static void copy_(int destPointer, int sourcePointer, int size) {
-    	for(int i = 0 ; i < size ; i++){
-    			stack[destPointer+i] = stack[sourcePointer+i];
-    	}
-    }
-    
-    static void assureStack_(int size) {
-    	if(sp + size > stackSize ) {
-    			int[] newStack = new int[stackSize * 2];
-    			for(int i = 0 ; i < stackSize ; i++){
-    				newStack[i] = stack[i];
-    			}
-    			stackSize*=2;
-    			stack = newStack;
-    	}
-    }
     
     static void Read() {
       while(true){

@@ -15,7 +15,7 @@ data Statement
 
 
 public Module normalizeL4(Module m) {
-	return normalize(normalizeSelectors(m));
+	return normalizeSelectors(normalize(m));
 }
 
 public Module normalizeSelectors(Module m) {
@@ -37,12 +37,14 @@ public Module flattenBegins(Module m) {
 }
 
 public Module liftLets(Module m) {
-	return visit (m) {
+    m = visit (m) {
 		case Procedure p: {
 			<p.decls, p.body> = liftLet(p.decls, p.body);
 			insert p;
 		}
 	}
+	<m.decls, m.body> = liftLet(m.decls, m.body);
+	return m;
 }
 
 public Module desugarBooleans(Module m) {
@@ -52,6 +54,9 @@ public Module desugarBooleans(Module m) {
 			whileDo(lookup(x, []), [b, assign(x, [], c)])]);
 	}
 	
+	Statement assignCompareToIf(assign(n,sels,compare)) {
+		return ifThen(compare, [assign(n, sels, \true())], [], [assign(n, sels, \false())]);
+	}
 	return innermost visit (m) {
 		case assign(n, sels, not(exp)) =>
 			ifThen(exp, [assign(n, sels, \false())], [], [assign(n, sels, \true())])
@@ -70,7 +75,14 @@ public Module desugarBooleans(Module m) {
 				[ifThen(rhs, 
 					[assign(n, sels, \true())], [], 
 					[assign(n, sels, \false())])])
-
+					
+		case s:assign(n, sels, eq(lhs,rhs)) => assignCompareToIf(s)
+		case s:assign(n, sels, neq(lhs,rhs)) => assignCompareToIf(s)
+		case s:assign(n, sels, lt(lhs,rhs)) => assignCompareToIf(s)
+		case s:assign(n, sels, gt(lhs,rhs)) => assignCompareToIf(s)
+		case s:assign(n, sels, geq(lhs,rhs)) => assignCompareToIf(s)		
+		case s:assign(n, sels, leq(lhs,rhs)) => assignCompareToIf(s)
+			
 		case ifThen(not(c), b, [], es) =>
 			ifThen(c, es, [], b)
 
@@ -80,10 +92,15 @@ public Module desugarBooleans(Module m) {
 		case ifThen(or(lhs, rhs), b, [], es) =>
 			ifThen(lhs, b, [], [ifThen(rhs, b, [], es)])
 
-		case s:whileDo(not(_), _) => while2let(s)
-		case s:whileDo(amp(_, _), _) => while2let(s)
-		case s:whileDo(or(_, _), _) => while2let(s)
+		case ifThen(\true(), b, [], es) => begin(b)
+		case ifThen(\false(), b, [], es) => begin(es)
+
+		case s:whileDo(cond, _) : {
+			if(lookup(_,_) := cond) fail;
+			insert while2let(s);
+		}
 		
+		case whileDo(\false(),_) => begin([])
 		// Normalize elsifs					
 		case ifThen(c, b, [<ec, eb>, eis*], es) =>
 				ifThen(c, b, [], [ifThen(ec, eb, [eis], es)]) 

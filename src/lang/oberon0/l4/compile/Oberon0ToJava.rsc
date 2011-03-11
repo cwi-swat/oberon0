@@ -4,8 +4,6 @@ import lang::oberon0::l1::ast::Oberon0;
 import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l4::ast::Oberon0;
 
-import lang::oberon0::l3::compile::AnnotateByRefs;
-
 import String;
 import List;
 
@@ -40,9 +38,6 @@ public str stat2Java(Statement stat) {
   switch (stat) {
     case assign(id("stack"), [subscript(s)], exp): return "stack[<intExp2Java(s)>] = <intExp2Java(exp)>;";
     case assign(id("sp"), [] , exp) : return "sp =  <intExp2Java(exp)>;";
-    case call(id("assureStack_"),[nat(s)]) : return "assureStack_(<s>);";
-    case call(id("copy_"),[destPointer,sourcePointer,nat(s)]) :
-    	 return "copy_(<intExp2Java(destPointer)>,<intExp2Java(sourcePointer)>,<s>);";
     case call(Ident id, []): return "<id.name>();"; 
     case ifThen(c, b, eis, ep):
       return "

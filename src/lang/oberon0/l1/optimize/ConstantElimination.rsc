@@ -8,7 +8,7 @@ import IO;
 import Set;
 import Map;
 
-alias ConstantMap = map[str,int];
+alias ConstantMap = map[Ident,int];
 
 public Module eliminateConstants(Module m) {
 	constantMap = getConstants(m.decls.consts,());
@@ -20,18 +20,17 @@ public Module eliminateConstants(Module m) {
 }
 
 ConstantMap getConstants(list[ConstDecl] constants, ConstantMap constantMap){ 
-	for(constDecl(id(name),exp) <- constants){
+	for(constDecl(name,exp) <- constants){
 		if (nat(i) := evaluate(constantMap,exp)) {
-			constantMap+=(name:i);
+			constantMap[name]=i;
 		}
  	}
 	return constantMap;
 }
 
-
 Expression evaluate(ConstantMap constants, Expression exp){
 	return innermost visit(exp){
-		case lookup(id(var),[])     :  if(var in constants) insert nat(constants[var]);
+		case lookup(var,[])         => nat(constants[var]) when (var in constants)
 		
 		case amp(_, \false()) 		=> \false()
 		case amp(\false(), _) 		=> \false()

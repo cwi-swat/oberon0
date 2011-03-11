@@ -1,0 +1,16 @@
+MODULE VerySmall;
+
+VAR i,j,z :INTEGER;
+
+PROCEDURE f();
+BEGIN
+	i := 5
+END f;  
+  
+BEGIN
+  i := 3;
+  j := 0;
+  IF (i > j) THEN
+  	f()
+  END
+END Test.

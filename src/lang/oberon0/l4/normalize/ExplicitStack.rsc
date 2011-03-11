@@ -7,7 +7,7 @@ import IO;
 import List;
 
 data StackLocation = stackLocation(int offset, bool \global, Type \type, bool byRef);   
-data Env = env(int frameSize, map[Ident,StackLocation] offsetMap);
+data Envir = envir(int frameSize, map[Ident,StackLocation] offsetMap);
 
 
 /* Rewrites a oberon0 program such that it uses an explicit stack
@@ -16,152 +16,158 @@ data Env = env(int frameSize, map[Ident,StackLocation] offsetMap);
    
    Notice that this also changes the semantics of the builtins Read and Write
    
-   stack[0] is reserved as a temp variable for use when copying multiple words
+   stack[0] and stack[1] are reserved as temp variables for use when copying multiple words
 */
 
 Ident stack = id("stack");
 Ident sp = id("sp");
-Expression tempVarIndex = nat(0);
-
-
+Expression tempVarAIndex = nat(0);
+Expression tempVarBIndex = nat(1);
+int nrTempVar = 2;
 /* Assumes: resolve, lift, removeTypeAliases, annotateByRefs */
 
 int stackSize = 100000;
 
 public Module explicitStack(Module mod){
 	mod = annotateByRefs(mod);
-	Env env = globalEnvironment(mod);
+	Envir envir = globalEnvironment(mod);
 	mod.decls.vars = [varDecl([stack],array(nat(stackSize),user(id("INTEGER"))))
 	                 ,varDecl([sp],user(id("INTEGER")))];
-	mod.decls.procs = explicitStackInProcedures(mod.decls.procs,env);
-	mod.body = explicitStackInStatements(mod.body,env);
+	mod.decls.procs = explicitStackInProcedures(mod.decls.procs,envir);
+	mod.body = explicitStackInStatements(mod.body,envir);
 	return mod;
 }
 
-list[Procedure] explicitStackInProcedures(list[Procedure] procs, Env env){
-	return [ explicitStackInProcedure(p,env) | p <- procs ];
+list[Procedure] explicitStackInProcedures(list[Procedure] procs, Envir envir){
+	return [ explicitStackInProcedure(p,envir) | p <- procs ];
 }
 
-Procedure explicitStackInProcedure(Procedure proc, Env env) {
-	env = envOfProcedure(proc,env);
-	proc.body = explicitStackInStatements(proc.body,env);
+Procedure explicitStackInProcedure(Procedure proc, Envir envir) {
+	envir = envOfProcedure(proc,envir);
+	proc.body = explicitStackInStatements(proc.body,envir);
 	proc.formals = [];
 	proc.decls.vars = [];
 	return proc;
 }
 
-list[Statement] explicitStackInStatements(list[Statement] statements, Env env) {
+list[Statement] explicitStackInStatements(list[Statement] statements, Envir envir) {
 	// use auto-splice
-	return [ explicitStackInStatement(statement,env) | statement <- statements];
+	return [ explicitStackInStatement(statement,envir) | statement <- statements];
 }
 
-list[Statement] explicitStackInStatement(Statement statement,Env env) {
+list[Statement] explicitStackInStatement(Statement statement,Envir envir) {
 	switch(statement) {
 		case assign(varTo,selectorsTo,lookup(varFrom,selectorsFrom)) : {
-				return copyVar(varTo,selectorsTo,varFrom,selectorsFrom,env);
+				return copyVar(varTo,selectorsTo,varFrom,selectorsFrom,envir);
 		}
 		case assign(varTo,selectorsTo,exp) : {
-			exp = rewriteLookups(exp,env);
-			i = subscript(varUseOffset(varTo,selectorsTo,env));
+			exp = rewriteLookups(exp,envir);
+			i = subscript(varUseOffset(varTo,selectorsTo,envir));
 			return [assign(stack,[i],exp)];
 		}
 		case call(p,args) : {
-			return rewriteCall(p,args,env);
+			return rewriteCall(p,args,envir);
 		}
 		default : {
 			statement = top-down-break visit(statement) {
-				case list[Statement] s => explicitStackInStatements(s,env) when s != []
-				case Expression exp    => rewriteLookups(exp,env)
+				case list[Statement] s => explicitStackInStatements(s,envir) when s != []
+				case Expression exp    => rewriteLookups(exp,envir)
 			}
 			return [statement];
 		}
 	}
 }
 
-list[Statement] rewriteCall(Ident procName,list[Expression] args, Env env){
+list[Statement] rewriteCall(Ident procName,list[Expression] args, Envir envir){
 	int argOffset = 0;
 	list[Statement] result = [];
 	for(arg <- args) {
-		offset = add(lookup(sp,[]),nat(env.frameSize + argOffset));
+		offset = add(lookup(sp,[]),nat(envir.frameSize + argOffset));
 		switch(arg) {
 			case lookup(var,selectors) : {
-				offsetFrom = varUseOffset(var,selectors,env);
+				offsetFrom = varUseOffset(var,selectors,envir);
+				
 				if(arg@passByRef) {
 					result+= [assign(stack,[subscript(offset)],offsetFrom)];
 					argOffset+=1;
 				} else {
-					int size = sizeOf(varUseType(var,selectors,env));
-					result+= copy(offset,offsetFrom,size,env);
+					int size = sizeOf(varUseType(var,selectors,envir));
+					result+= copy(offset,offsetFrom,size,envir);
 					argOffset+=size;
 				}
 			}
 			default : {
-				arg = rewriteLookups(arg,env);
+				arg = rewriteLookups(arg,envir);
 				result+= [assign(stack,[subscript(offset)],arg)];
 				argOffset+=1;
 			}
 		}
 	}
-	result+= [assign(sp,[],add(lookup(sp,[]),nat(env.frameSize)))];
+	result+= [assign(sp,[],add(lookup(sp,[]),nat(envir.frameSize)))];
 	result+= [call(procName,[])];
-	result+= [assign(sp,[],sub(lookup(sp,[]),nat(env.frameSize)))];
+	result+= [assign(sp,[],sub(lookup(sp,[]),nat(envir.frameSize)))];
 	return result;
 }
 
-Expression rewriteLookups(Expression exp, Env env) {
+Expression rewriteLookups(Expression exp, Envir envir) {
 	return top-down-break visit(exp) {
 		case lookup(var,selectors) => {
-			i = subscript(varUseOffset(var,selectors,env));
+			i = subscript(varUseOffset(var,selectors,envir));
 			insert lookup(stack,[i]);
 		}
 	};
 }
 
-list[Statement] copyVar(Ident varTo,list[Selector] selectorsTo, Ident varFrom, list[Selector] selectorsFrom, Env env) {
-	offsetTo = varUseOffset(varTo,selectorsTo,env);
-	offsetFrom = varUseOffset(varFrom,selectorsFrom,env);
-	copySize = sizeOf(varUseType(varTo,selectorsTo,env));
-	return copy(offsetTo,offsetFrom,copySize,env);
+list[Statement] copyVar(Ident varTo,list[Selector] selectorsTo, Ident varFrom, list[Selector] selectorsFrom, Envir envir) {
+	offsetTo = varUseOffset(varTo,selectorsTo,envir);
+	offsetFrom = varUseOffset(varFrom,selectorsFrom,envir);
+	copySize = sizeOf(varUseType(varTo,selectorsTo,envir));
+	return copy(offsetTo,offsetFrom,copySize,envir);
 }
 
-list[Statement] copy(Expression destinationPointer, Expression sourcePointer, int copySize, Env env){
+list[Statement] copy(Expression destinationPointer, Expression sourcePointer, int copySize, Envir envir){
 	if(copySize == 1) {
 		return [assign(stack,[subscript(destinationPointer)],lookup(stack,[subscript(sourcePointer)]))];
 	} 
-	return [assign(stack,[subscript(tempVarIndex)],nat(copySize-1)),
-			whileDo(geq(lookup(stack,[subscript(tempVarIndex)]),nat(0)),
+	return [assign(stack,[subscript(tempVarAIndex)],nat(copySize-1)),
+			assign(stack,[subscript(tempVarBIndex)],\true()),
+			whileDo(lookup(stack,[subscript(tempVarBIndex)]),
 				[assign(stack,
-				    [subscript(add(destinationPointer,lookup(stack,[subscript(tempVarIndex)])))],
-					lookup(stack,[subscript(add(sourcePointer,lookup(stack,[subscript(tempVarIndex)])))])),
-				 assign(stack,[subscript(tempVarIndex)],add(lookup(stack,[subscript(tempVarIndex)]),nat(1)))
-				]
-			 )
-			];
+				    [subscript(add(destinationPointer,lookup(stack,[subscript(tempVarAIndex)])))],
+					lookup(stack,[subscript(add(sourcePointer,lookup(stack,[subscript(tempVarAIndex)])))])),
+				 assign(stack,[subscript(tempVarAIndex)],add(lookup(stack,[subscript(tempVarAIndex)]),nat(1))),
+				 ifThen(geq(lookup(stack,[subscript(tempVarAIndex)]),nat(0)),
+				 	[assign(stack,[subscript(tempVarBIndex)],\true())],
+				 	[],
+				 	[assign(stack,[subscript(tempVarBIndex)],\false())]
+				 )
+				 ])
+				];
 }
 
-Env globalEnvironment(Module mod) {
-	return envOfDecls(mod.decls,true,env(1,()));
+Envir globalEnvironment(Module mod) {
+	return envOfDecls(mod.decls,true,envir(nrTempVar,())); 
 }
 	 
-Env envOfProcedure(Procedure p,Env env) {
-	env.frameSize = 0;
+Envir envOfProcedure(Procedure p,Envir envir) {
+	envir.frameSize = 0;
 	for(f <- p.formals, name <- f.names){
-        env.offsetMap+=(name : stackLocation(env.frameSize,false, f.\type,f.hasVar));
-        env.frameSize+=f.hasVar? 1 : sizeOf(f.\type);
+        envir.offsetMap+=(name : stackLocation(envir.frameSize,false, f.\type,f.hasVar));
+        envir.frameSize+=f.hasVar? 1 : sizeOf(f.\type);
     }
-    return envOfDecls(p.decls,false,env);
+    return envOfDecls(p.decls,false,envir);
 }
 
-Env envOfDecls(Declarations decls, bool \global, Env env) {
+Envir envOfDecls(Declarations decls, bool \global, Envir envir) {
 	for(var <- decls.vars, name <- var.names){
-        env.offsetMap+=(name : stackLocation(env.frameSize,\global,var.\type,false));
-        env.frameSize+=sizeOf(var.\type);
+        envir.offsetMap+=(name : stackLocation(envir.frameSize,\global,var.\type,false));
+        envir.frameSize+=sizeOf(var.\type);
     }
-    return env;
+    return envir;
 }
 
-Expression varUseOffset(Ident var, list[Selector] selectors, Env env){
-	StackLocation stackLocation = env.offsetMap[var];
+Expression varUseOffset(Ident var, list[Selector] selectors, Envir envir){
+	StackLocation stackLocation = envir.offsetMap[var];
 	result = nat(stackLocation.offset);
 	if(!stackLocation.\global) {
 		result = add(lookup(sp,[]),result);
@@ -170,24 +176,24 @@ Expression varUseOffset(Ident var, list[Selector] selectors, Env env){
 		result = lookup(stack,[subscript(result)]);
 	} 
 	if(selectors != []) {
-		result = add(result,offsetOfSelectors(selectors,stackLocation.\type,env));
+		result = add(result,offsetOfSelectors(selectors,stackLocation.\type,envir));
 	}
 	return result;
 }
 	
-Expression offsetOfSelectors([selector], Type \type,Env env) {
-	return offsetOfSelector(selector,\type,env);
+Expression offsetOfSelectors([selector], Type \type,Envir envir) {
+	return offsetOfSelector(selector,\type,envir);
 }
-Expression offsetOfSelectors([selector,l*],Type \type,Env env) {
+Expression offsetOfSelectors([selector,l*],Type \type,Envir envir) {
 	nextType = getSelectorType(selector,\type);
-	offset = offsetOfSelector(selector,\type,env);
+	offset = offsetOfSelector(selector,\type,envir);
 	return add(offset,offsetOfSelectors(l,nextType));
 }
 
-Expression offsetOfSelector(Selector selector, Type \type,Env env) {
+Expression offsetOfSelector(Selector selector, Type \type,Envir envir) {
 	switch(<selector,\type>) {
 		case <field(name)     , record(fields)> : return offsetOfRecordField(name,\type);
-		case <subscript(i), array(_,innerType)> : return mul(rewriteLookups(i,env),nat(sizeOf(innerType)));
+		case <subscript(i), array(_,innerType)> : return mul(rewriteLookups(i,envir),nat(sizeOf(innerType)));
 		default : throw "Selector does not match type!";
 	}
 }
@@ -200,8 +206,8 @@ int offsetOfRecordField(str fieldName,Type recordType){
 	}
 }
 
-Type varUseType(Ident var,list[Selector] selectors, Env env){
-	return selectorsType(selectors,env.offsetMap[var].\type);
+Type varUseType(Ident var,list[Selector] selectors, Envir envir){
+	return selectorsType(selectors,envir.offsetMap[var].\type);
 }
 
 Type selectorsType(list[Selector] selectors,Type \type) {
@@ -234,42 +240,3 @@ int sizeOf(Type \type){
         case record(fields) : return (0 | it + sizeOf(field.\type) | field <- fields);
     }
 }
-
-/*
-Procedure copyProc() {
-*/
-	/* returns a oberon0 function which copies words on the stack
-	   (arguments: sp+0 = destPointer, sp+1 = sourcePointer, sp+2 = size)
-  PROCEDURE copy_();
-    BEGIN
-      WHILE(stack[sp+2] # 0) DO
-	    stack[stack[sp+0] + stack[sp+2]] :=  stack[stack[sp+1] + stack[sp+2]];
-	    stack[sp+2] := stack[sp+2] - 1;
-	  END
-   END copy_;
-	*/
-/*
-	list[Selector] variableIndex(int offset) {
-		return [subscript(add(lookup(sp,[]),nat(offset)))];
-	}
-	Statement increment(Selector pointer) {
-		return assign(stack,lookup(stack,pointer),add(lookup(stack,pointer),nat(1)));
-	}
-	list[Selector] offsetOfPointer(list[Selector] pointer,list[Selector] offset) {
-		return  [subscript(add(lookup(stack,pointer),lookup(stack,offset)))];
-	}
-	destPointerIndex = variableIndex(0);
-	sourcePointerIndex = variableIndex(1);
-	sizeIndex = variableIndex(2);
-	body = [
-			whileDo(neq(lookup(stack,sizeIndex), nat(0)),
-				[assign(stack,offsetOfPointer(destPointerIndex,sizeIndex), 
-		                      lookup(stack,offsetOfPointer(sourcePointerIndex,sizeIndex))),
-		         assign(stack,sizeIndex,sub(lookup(stack,sizeIndex),nat(1)))]
-		    )
-		  ];
-	
-	emptyDecls = decls([],[], [], []);
-	return proc(id("copy_"), [], emptyDecls , body, id("copy_"));
-}
-*/

@@ -1,0 +1,18 @@
+MODULE VerySmall;
+
+VAR i,j,z :INTEGER;
+
+PROCEDURE f();
+BEGIN
+	i := 5;
+	Write(i)
+END f;  
+  
+BEGIN
+  i := 3;
+  j := 0;
+  WHILE (i > j) DO
+  	f();
+  	i := i - 1
+  END
+END Test.
