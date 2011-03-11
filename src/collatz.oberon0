@@ -25,6 +25,7 @@ PROCEDURE doCollatz();
 	  ELSE current := (current * 3) + 1
 	END
       END
+    WriteLn;
     END printSequence;
 
   BEGIN

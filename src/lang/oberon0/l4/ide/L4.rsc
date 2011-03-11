@@ -21,7 +21,8 @@ public set[Contribution] L4_CONTRIBS = {
 		menu("Oberon",[
     		action("Compile", compileModuleToC),
     		edit("Format", formatModule), 
-	   		action("CFlow", visualizeCFG) 
+	   		action("CFlow", visualizeCFG),
+	   		action("Compile to Java bytecode and run", compileModuleToC)
 	    ])
   	)
 };
