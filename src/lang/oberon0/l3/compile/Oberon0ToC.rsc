@@ -36,8 +36,8 @@ public str proc2c(Procedure p) {
 	byRef = { n | f <- p.formals, f.hasVar, n <- f.names };
  	return "
 <proc2csig(p)> {
-'   <vars2c(p.decls.vars)>
-'   <stats2c(p.body)>
+'    <vars2c(p.decls.vars)>
+'    <stats2c(p.body)>
 }
 ";
 }
@@ -56,7 +56,7 @@ public str default varType2C(str v, Type t) = "<type2c(t)> <v>";
 
 public str stat2c(call(Ident id, args)) {
   cargs = [ (a@passByRef) ? "&(<e>)" : e | a <- args, str e := exp2c(a) ];
-  return "<id.name>(<intercalate(", ", cargs)>)";
+  return "<id.name>(<intercalate(", ", cargs)>);";
 }
 
 public str var2c(Ident id) {
