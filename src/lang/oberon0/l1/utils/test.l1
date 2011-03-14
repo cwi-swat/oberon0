@@ -1,5 +1,6 @@
 MODULE test;
 
+(* skadjklasjdlkasjd *)
 CONST
 	c = 20;
 
@@ -9,7 +10,11 @@ VAR
   y : INTEGER;
 
 BEGIN
-	x := c;
+	IF x > 3 THEN
+		WHILE x > 3 DO
+		  	  y := y
+		END
+	END;
 	WHILE x = c DO
 		x := 5;
 		IF x > 3 THEN
@@ -18,5 +23,6 @@ BEGIN
 			y := x DIV c
 		END
 	END
+
 	
 END test.

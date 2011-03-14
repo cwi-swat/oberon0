@@ -22,37 +22,34 @@ public str decls2c(Declarations decls) {
 }
 
 public str body2c(list[Statement] stats) {
-	return "
-int main(int argc, char **argv) {
-  <stats2c(stats)>
-}";
+	return "int main(int argc, char **argv) {
+           '    <stats2c(stats)>
+           '}";
 }
 
 public str stats2c(list[Statement] stats) {
-  return ("" | it + stat2c(s) + "\n" | s <- stats);
+  return intercalate("\n", [ stat2c(s) | s <- stats ]);
 }
 
 public str stat2c(assign(v, exp)) = "<v.name> = <exp2c(exp)>;";
 
-public str stat2c(ifThen(c, b, eis, ep)) = "
-if (<exp2c(c)>) {
-  <stats2c(b)>
-}
-<for (ei <- eis) {>
-else if (<exp2c(ei[0])>) {
-  <stats2c(ei[1])>
-}
-<}>
-<if (ep != []) {>
-else {
-  <stats2c(ep)>
-}
-<}>";
+public str stat2c(ifThen(c, b, eis, ep)) = "if (<exp2c(c)>) {
+                                           '    <stats2c(b)>
+                                           '}
+										   '<for (ei <- eis) {>
+										       'else if (<exp2c(ei[0])>) {
+										       '    <stats2c(ei[1])>
+										       '}
+										   '<}>
+										   '<if (ep != []) {>
+										        'else {
+										        '    <stats2c(ep)>
+										        '}
+										   '<}>";
     
-public str stat2c(whileDo(c, b)) = "
-while (<exp2c(c)>) {
-   <stats2c(b)>
-}";
+public str stat2c(whileDo(c, b)) = "while (<exp2c(c)>) {
+                                   '    <stats2c(b)>
+                                   '}";
 
 public str exp2c(nat(int val)) = "<val>";
 public str exp2c(\true()) = "1";

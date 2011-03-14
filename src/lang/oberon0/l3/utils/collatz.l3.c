@@ -5,64 +5,51 @@
 int even;
 int odd;
 
-static void doCollatz_computeEven();
-static void doCollatz_printSequence();
+static void doCollatz_computeEven(int (*current), int (*currentEven));
+static void doCollatz_printSequence(int (*current), int (*currentEven));
 static void doCollatz();
 
 
-static void doCollatz_computeEven() {
-  
-  
-if (((current%2) == 0)) {
-  currentEven = even;
-
+static void doCollatz_computeEven(int (*current), int (*currentEven)) {
+   
+   if (((current%2) == 0)) {
+       currentEven = even;
+   }
+   
+   
+   else {
+       currentEven = odd;
+   }
+   
 }
 
-
-else {
-  currentEven = odd;
-
-}
-
-
-}
-
-static void doCollatz_printSequence() {
-  
-  
-while ((current != 1)) {
-   doCollatz_computeEven()
-Write(current)
-
-if ((currentEven == even)) {
-  current = (current/2);
-
-}
-
-
-else {
-  current = ((current*3)+1);
-
-}
-
-
-}
-
+static void doCollatz_printSequence(int (*current), int (*currentEven)) {
+   
+   while ((current != 1)) {
+       doCollatz_computeEven(&(current), &(currentEven))
+       Write(current)
+       if ((currentEven == even)) {
+           current = (current/2);
+       }
+       
+       
+       else {
+           current = ((current*3)+1);
+       }
+       
+   }
 }
 
 static void doCollatz() {
-  int current;
-int currentEven;
-
-  Read(&(current))
-doCollatz_printSequence()
-
+   int current;
+   int currentEven;
+   
+   Read(&(current))
+   doCollatz_printSequence(&(current), &(currentEven))
 }
 
-
 int main(int argc, char **argv) {
-  even = 1;
-odd = 0;
-doCollatz()
-
+    even = 1;
+    odd = 0;
+    doCollatz()
 }

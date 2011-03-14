@@ -36,8 +36,8 @@ public str proc2c(Procedure p) {
 	byRef = { n | f <- p.formals, f.hasVar, n <- f.names };
  	return "
 <proc2csig(p)> {
-  <vars2c(p.decls.vars)>
-  <stats2c(p.body)>
+'   <vars2c(p.decls.vars)>
+'   <stats2c(p.body)>
 }
 ";
 }

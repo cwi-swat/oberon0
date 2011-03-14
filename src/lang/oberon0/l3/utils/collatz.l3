@@ -17,7 +17,7 @@ PROCEDURE doCollatz();
 
   PROCEDURE printSequence();
     BEGIN
-      WHILE(current # 1) DO
+      WHILE current # 1 DO
 	computeEven;
 	Write(current);
 	IF currentEven = even
