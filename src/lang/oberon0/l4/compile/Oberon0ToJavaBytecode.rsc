@@ -15,7 +15,7 @@ import String;
 import List;
 
 public Class jBytecodeCompilerPipeline(Module m) {
-	return compile2JavaBytecode((normalizeBooleans o normalizeL4  o removeTypeAliases o eliminateConstantsL3  o explicitStack o eliminateConstantsL3  )(m));
+	return compile2JavaBytecode((normalizeBooleans o normalizeL4  o removeTypeAliases o eliminateConstantsL3  o explicitStack)(m));
 }
 	
 public Class compile2JavaBytecode(Module m) {

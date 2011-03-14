@@ -3,9 +3,21 @@ module lang::oberon0::l4::compile::Oberon0ToJava
 import lang::oberon0::l1::ast::Oberon0;
 import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l4::ast::Oberon0;
-
+import lang::oberon0::l3::compile::AnnotateByRefs;
+import lang::oberon0::l4::normalize::Normalize;
+import lang::oberon0::l4::normalize::RemoveTypeAliases;
+import lang::oberon0::l4::normalize::ExplicitStack;
+import lang::oberon0::l3::optimize::ConstantElimination;
 import String;
 import List;
+
+public str javBytecodeCompilerPipeline(Module m) {
+	return compile2Java((normalizeBooleans o normalizeL4  o removeTypeAliases o eliminateConstantsL3  o explicitStack  )(m));
+}
+
+public Module javBc(Module m) {
+	return (normalizeBooleans o normalizeL4  o removeTypeAliases o eliminateConstantsL3  o explicitStack)(m);
+}
 
 public str compile2Java(Module m) {
 	return "
@@ -84,6 +96,8 @@ str boolExp2Java(Expression e) {
 
 str intExp2Java(Expression e) {
   switch (e) {
+    case \true()            : return "1";
+    case \false()            : return "0";
     case nat(int val): 		return "<val>";
     case lookup(id("sp"), []) : return "sp";
     case lookup(id("stack"), [subscript(exp)]): return "stack[<intExp2Java(exp)>]";

@@ -2,11 +2,14 @@ module lang::oberon0::l4::ide::L4
 
 import lang::oberon0::l1::syntax::Modules;
 import lang::oberon0::l4::ide::Compile;
+import lang::oberon0::l4::ide::JavCompile;
 import lang::oberon0::l4::ide::Format;
 import lang::oberon0::l4::ide::Check;
 
 import lang::oberon0::l3::ide::VisualizeCFG;
 import lang::oberon0::l3::ide::Outline;
+
+
 
 import lang::oberon0::l4::utils::Parse;
 
@@ -19,7 +22,8 @@ private str L4_EXT = "l4";
 public set[Contribution] L4_CONTRIBS = {
 	popup(
 		menu("Oberon",[
-    		action("Compile", compileModuleToC),
+    		action("Compile to C", compileModuleToC),
+    		action("Compile to Java", compileModuleToJava),
     		edit("Format", formatModule), 
 	   		action("CFlow", visualizeCFG),
 	   		action("Compile to Java bytecode and run", compileToJavaBytecodeAndRun)
