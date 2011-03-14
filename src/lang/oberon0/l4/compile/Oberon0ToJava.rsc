@@ -20,26 +20,21 @@ public Module javBc(Module m) {
 }
 
 public str compile2Java(Module m) {
-	return "
-class <m.name.name> extends BaseProgram{
-	<procs2Java(m.decls.procs)>
-	public static void main(String[] argv) {
-  		<stats2Java(m.body)>
-	}
-}
-";
-}
+	return "class <m.name.name> extends BaseProgram{
+		   '   <for(p <- m.decls.procs){>
+		   '   <proc2Java(p)> 
+		   '   <}> 
+	       '   public static void main(String[] argv) {
+  		   '      <stats2Java(m.body)>
+  		   '   }
+           '}";
 
-public str procs2Java(list[Procedure] procs) {
-	return ( "" | it + proc2Java(p) | p <- procs );
 }
 
 public str proc2Java(Procedure p) {
- 	return "
-static void <p.name.name>() {
-  <stats2Java(p.body)>
-}
-";
+ 	return "static void <p.name.name>() {
+           '   <stats2Java(p.body)>
+		   '}";
 }
 
 public str stats2Java(list[Statement] stats) {
@@ -52,25 +47,18 @@ public str stat2Java(Statement stat) {
     case assign(id("sp"), [] , exp) : return "sp =  <intExp2Java(exp)>;";
     case call(Ident id, []): return "<id.name>();"; 
     case ifThen(c, b, eis, ep):
-      return "
-if (<boolExp2Java(c)>) {
-  <stats2Java(b)>
-}
-<for (ei <- eis) {>
-else if (<boolExp2Java(ei[0])>) {
-  <stats2Java(ei[1])>
-}
-<}>
-<if (ep != []) {>
-else {
-  <stats2Java(ep)>
-}
-<}>";
-    
-    case whileDo(c, b): return "
-while (<boolExp2Java(c)>) {
-   <stats2Java(b)>
- }";
+      return "if (<boolExp2Java(c)>) {
+  			 '    <stats2Java(b)>
+             '}
+			 '<if (ep != []) {>
+			 	'else {
+                '    <stats2Java(ep)>
+                '}
+             <}>";
+    case whileDo(c, b): 
+    	return "while (<boolExp2Java(c)>) {
+               '    <stats2Java(b)>
+               '}";
  
  	default: throw "unhandled statement : <stat>";
   }
