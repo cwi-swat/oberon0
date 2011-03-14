@@ -2,7 +2,7 @@ module lang::oberon0::l4::normalize::ExplicitStack
 
 import lang::oberon0::l4::ast::Oberon0;
 
-import lang::oberon0::l3::compile::AnnotateByRefs;
+import lang::oberon0::l4::compile::AnnotateByRefs;
 import IO;
 import List;
 

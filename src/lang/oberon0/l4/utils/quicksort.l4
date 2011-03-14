@@ -59,7 +59,7 @@ BEGIN
  i := 0;
  WHILE i < INPUTLENGTH DO
    Write(input[i]);
-   WriteLn;
    i := i + 1
- END
+ END;
+ WriteLn
 END QuickSort.

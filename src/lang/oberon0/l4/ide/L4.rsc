@@ -22,7 +22,7 @@ public set[Contribution] L4_CONTRIBS = {
     		action("Compile", compileModuleToC),
     		edit("Format", formatModule), 
 	   		action("CFlow", visualizeCFG),
-	   		action("Compile to Java bytecode and run", compileModuleToC)
+	   		action("Compile to Java bytecode and run", compileToJavaBytecodeAndRun)
 	    ])
   	)
 };
