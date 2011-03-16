@@ -3,27 +3,14 @@ module lang::oberon0::l4::compile::Oberon0ToJava
 import lang::oberon0::l1::ast::Oberon0;
 import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l4::ast::Oberon0;
-import lang::oberon0::l3::compile::AnnotateByRefs;
-import lang::oberon0::l4::normalize::Normalize;
-import lang::oberon0::l4::normalize::RemoveTypeAliases;
-import lang::oberon0::l4::normalize::ExplicitStack;
-import lang::oberon0::l3::optimize::ConstantElimination;
 import String;
 import List;
-
-public str javBytecodeCompilerPipeline(Module m) {
-	return compile2Java((normalizeBooleans o normalizeL4  o removeTypeAliases o eliminateConstantsL3  o explicitStack  )(m));
-}
-
-public Module javBc(Module m) {
-	return (normalizeBooleans o normalizeL4  o removeTypeAliases o eliminateConstantsL3  o explicitStack)(m);
-}
 
 public str compile2Java(Module m) {
 	return "class <m.name.name> extends BaseProgram{
 		   '   <for(p <- m.decls.procs){>
-		   '   <proc2Java(p)> 
-		   '   <}> 
+		   '   <proc2Java(p)>  <}> 
+		   '  
 	       '   public static void main(String[] argv) {
   		   '      <stats2Java(m.body)>
   		   '   }
@@ -45,6 +32,8 @@ public str stat2Java(Statement stat) {
   switch (stat) {
     case assign(id("stack"), [subscript(s)], exp): return "stack[<intExp2Java(s)>] = <intExp2Java(exp)>;";
     case assign(id("sp"), [] , exp) : return "sp =  <intExp2Java(exp)>;";
+    case call(id("Read"), [lookup(id("stack"),[subscript(s)])]): return "Read(stack,<intExp2Java(s)>);"; 
+    case call(id("Write"), [lookup(id("stack"),[subscript(s)])]): return "Write(stack[<intExp2Java(s)>]);"; 
     case call(Ident id, []): return "<id.name>();"; 
     case ifThen(c, b, eis, ep):
       return "if (<boolExp2Java(c)>) {
@@ -54,7 +43,7 @@ public str stat2Java(Statement stat) {
 			 	'else {
                 '    <stats2Java(ep)>
                 '}
-             <}>";
+             '<}>";
     case whileDo(c, b): 
     	return "while (<boolExp2Java(c)>) {
                '    <stats2Java(b)>

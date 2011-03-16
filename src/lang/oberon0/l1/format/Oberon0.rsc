@@ -65,11 +65,17 @@ public Box stat2box(ifThen(Expression condition, list[Statement] body, list[tupl
         I(hsepList(ebody, ";", stat2box))
       ]);
     }
-    els = V([
-        L("ELSE"),
-        I(hsepList(elsePart, ";", stat2box))
-    ]);
+    Box els;
+    if(elsePart != []){
+    	els = V([
+        	L("ELSE"),
+        	I(hsepList(elsePart, ";", stat2box))
+    	]);
+    } else {
+    	els = [];
+    }
     return V([ift] + elifs + [els] + [KW(L("END"))]);
+    
 }
     
 public Box stat2box(whileDo(Expression condition, list[Statement] body)) = V([
@@ -83,22 +89,22 @@ public Box exp2box(nat(int val)) = L("<val>");
 public Box exp2box(\true()) = L("TRUE");
 public Box exp2box(\false()) = L("FALSE");
 public Box exp2box(lookup(Ident var)) = id2box(var);
-public Box exp2box(neg(Expression arg)) = H([L("-"), exp2box(arg)])[@hs=0];
-public Box exp2box(pos(Expression arg)) = H([L("+"), exp2box(arg)])[@hs=0];
-public Box exp2box(not(Expression arg)) = H([L("~"), exp2box(arg)])[@hs=0];
-public Box exp2box(mul(Expression lhs, Expression rhs)) = H([exp2box(lhs), L("*"), exp2box(rhs)])[@hs=1];
-public Box exp2box(div(Expression lhs, Expression rhs)) = H([exp2box(lhs), L("DIV"), exp2box(rhs)])[@hs=1];
-public Box exp2box(Expression::mod(Expression lhs, Expression rhs)) = H([exp2box(lhs), L("MOD"), exp2box(rhs)])[@hs=1];
-public Box exp2box(amp(Expression lhs, Expression rhs)) = H([exp2box(lhs), L("&"), exp2box(rhs)])[@hs=1];
-public Box exp2box(add(Expression lhs, Expression rhs)) = H([exp2box(lhs), L("+"), exp2box(rhs)])[@hs=1];
-public Box exp2box(sub(Expression lhs, Expression rhs)) = H([exp2box(lhs), L("-"), exp2box(rhs)])[@hs=1];
-public Box exp2box(or(Expression lhs, Expression rhs)) = H([exp2box(lhs), L("OR"), exp2box(rhs)])[@hs=1];
-public Box exp2box(eq(Expression lhs, Expression rhs)) = H([exp2box(lhs), L("="), exp2box(rhs)])[@hs=1];
-public Box exp2box(neq(Expression lhs, Expression rhs)) = H([exp2box(lhs), L("#"), exp2box(rhs)])[@hs=1];
-public Box exp2box(lt(Expression lhs, Expression rhs)) = H([exp2box(lhs), L("\<"), exp2box(rhs)])[@hs=1];
-public Box exp2box(gt(Expression lhs, Expression rhs)) = H([exp2box(lhs), L("\>"), exp2box(rhs)])[@hs=1];
-public Box exp2box(leq(Expression lhs, Expression rhs)) = H([exp2box(lhs), L("\<="), exp2box(rhs)])[@hs=1];
-public Box exp2box(geq(Expression lhs, Expression rhs)) = H([exp2box(lhs), L("\>="), exp2box(rhs)])[@hs=1];
+public Box exp2box(neg(Expression arg)) = H([L("("),L("-"), exp2box(arg),L(")")])[@hs=0];
+public Box exp2box(pos(Expression arg)) = H([L("("),L("+"), exp2box(arg),L(")")])[@hs=0];
+public Box exp2box(not(Expression arg)) = H([L("("),L("~"), exp2box(arg),L(")")])[@hs=0];
+public Box exp2box(mul(Expression lhs, Expression rhs)) = H([L("("), exp2box(lhs), L("*"), exp2box(rhs),L(")")])[@hs=1];
+public Box exp2box(div(Expression lhs, Expression rhs)) = H([L("("),exp2box(lhs), L("DIV"), exp2box(rhs),L(")")])[@hs=1];
+public Box exp2box(Expression::mod(Expression lhs, Expression rhs)) = H([L("("),exp2box(lhs), L("MOD"), exp2box(rhs),L(")")])[@hs=1];
+public Box exp2box(amp(Expression lhs, Expression rhs)) = H([L("("),exp2box(lhs), L("&"), exp2box(rhs),L(")")])[@hs=1];
+public Box exp2box(add(Expression lhs, Expression rhs)) = H([L("("),exp2box(lhs), L("+"), exp2box(rhs),L(")")])[@hs=1];
+public Box exp2box(sub(Expression lhs, Expression rhs)) = H([L("("),exp2box(lhs), L("-"), exp2box(rhs),L(")")])[@hs=1];
+public Box exp2box(or(Expression lhs, Expression rhs)) = H([L("("),exp2box(lhs), L("OR"), exp2box(rhs),L(")")])[@hs=1];
+public Box exp2box(eq(Expression lhs, Expression rhs)) = H([L("("),exp2box(lhs), L("="), exp2box(rhs),L(")")])[@hs=1];
+public Box exp2box(neq(Expression lhs, Expression rhs)) = H([L("("),exp2box(lhs), L("#"), exp2box(rhs),L(")")])[@hs=1];
+public Box exp2box(lt(Expression lhs, Expression rhs)) = H([L("("),exp2box(lhs), L("\<"), exp2box(rhs),L(")")])[@hs=1];
+public Box exp2box(gt(Expression lhs, Expression rhs)) = H([L("("),exp2box(lhs), L("\>"), exp2box(rhs),L(")")])[@hs=1];
+public Box exp2box(leq(Expression lhs, Expression rhs)) = H([L("("),exp2box(lhs), L("\<="), exp2box(rhs),L(")")])[@hs=1];
+public Box exp2box(geq(Expression lhs, Expression rhs)) = H([L("("),exp2box(lhs), L("\>="), exp2box(rhs),L(")")])[@hs=1];
 
 
 

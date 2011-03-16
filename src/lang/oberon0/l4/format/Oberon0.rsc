@@ -22,6 +22,8 @@ public Box var2box(Ident var, list[Selector] selectors) {
 
 public Box stat2box(assign(Ident var, list[Selector] selectors, Expression exp)) = H([var2box(var, selectors), L(":="), exp2box(exp)])[@hs=1];
 
+public Box stat2box(Statement s) { throw "Unhandelded <s>"; }
+
 public Box type2box(array(Expression exp, Type t)) = H([KW(L("ARRAY")), exp2box(exp), KW(L("OF")), type2box(t)])[@hs=1];
 
 public Box type2box(record(list[Field] fields)) {

@@ -25,9 +25,6 @@ public Module normalizeSelectors(Module m) {
 	}
 }
 
-public Module normalizeBooleans(Module m) {
-	return (desugarBooleans o liftLets o flattenBegins)(m);
-}
 
 
 public Module flattenBegins(Module m) {
@@ -47,7 +44,14 @@ public Module liftLets(Module m) {
 	return m;
 }
 
+
+public Module normalizeBooleans(Module m) {
+	return (desugarBooleans o liftLets o flattenBegins)(m);
+}
+
+
 public Module desugarBooleans(Module m) {
+
 	Statement while2let(s:whileDo(c, b)) {
 		x = uniqueName(s);
 		return let([varDecl([x], user(id("BOOLEAN")))], [assign(x, [], c),

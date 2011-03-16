@@ -4,7 +4,7 @@ import lang::oberon0::l1::syntax::Modules;
 import lang::oberon0::l4::ide::Compile;
 import lang::oberon0::l4::ide::JavCompile;
 import lang::oberon0::l4::ide::Format;
-import lang::oberon0::l4::ide::ToExplicitStack;
+import lang::oberon0::l4::ide::Obfuscate;
 import lang::oberon0::l4::ide::Check;
 
 import lang::oberon0::l3::ide::VisualizeCFG;
@@ -26,8 +26,8 @@ public set[Contribution] L4_CONTRIBS = {
     		action("Compile to C", compileModuleToC),
     		action("Compile to Java", compileModuleToJava),
     		edit("Format", formatModule), 
-    		edit("Normalize to explicit stack", toExplicitStack),
-	   		action("CFlow", visualizeCFG),
+    		edit("Obfuscate (protect your precious oberon0 code!)", obfuscate),
+	   		action("Show control flow graphs", visualizeCFG),
 	   		action("Compile to Java bytecode and run", compileToJavaBytecodeAndRun)
 	    ])
   	)

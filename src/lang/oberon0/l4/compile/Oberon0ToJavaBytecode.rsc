@@ -4,20 +4,17 @@ module lang::oberon0::l4::compile::Oberon0ToJavaBytecode
 import lang::oberon0::l1::ast::Oberon0;
 import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l4::ast::Oberon0;
-
-import lang::oberon0::l3::compile::AnnotateByRefs;
 import lang::jvm::ast::Level0;
-import lang::oberon0::l4::normalize::Normalize;
-import lang::oberon0::l4::normalize::RemoveTypeAliases;
-import lang::oberon0::l4::normalize::ExplicitStack;
-import lang::oberon0::l3::optimize::ConstantElimination;
 import String;
 import List;
 
-public Class jBytecodeCompilerPipeline(Module m) {
-	return compile2JavaBytecode((normalizeBooleans o normalizeL4  o removeTypeAliases o eliminateConstantsL3  o explicitStack)(m));
-}
-	
+Ident stack = id("stack");
+Ident sp = id("sp");
+
+Instruction getStack = fieldRef(GETSTATIC,"BaseProgram","stack","[I");
+Instruction getSp    = fieldRef(GETSTATIC,"BaseProgram","sp","I");
+Instruction putSp    = fieldRef(PUTSTATIC,"BaseProgram","sp","I");
+
 public Class compile2JavaBytecode(Module m) {
 	int labelCounter = 0;
 
@@ -28,11 +25,10 @@ public Class compile2JavaBytecode(Module m) {
 	}
 	
 	Method main2JavaBytecode(list[Statement] body) {
-		begin = newLabel();
-		end = newLabel();
 	 	return method(ACC_PUBLIC + ACC_STATIC, "main", "([Ljava/lang/String;)V", "", [/* no exceptions */],
-						[label(begin)] /*+ allocateStackArray()*/ + stats2JavaBytecode(body) + [instruction(RETURN), label(end)], [/* no try catch blocks */], 
-		[localVariable("inextistadnt", "I", "", begin, end, 0)]);// [/* no local variables */]);
+						stats2JavaBytecode(body) + [instruction(RETURN)], 
+						[/* no try catch blocks */], 
+		                [/* no local variables */]);
 	}
 	
 	list[Instruction] allocateStackArray() {
@@ -42,8 +38,10 @@ public Class compile2JavaBytecode(Module m) {
 	}
 	
 	Method proc2JavaBytecode(Procedure p) {
-	 	return method(ACC_PROTECTED + ACC_STATIC, p.name.name, "()V", "", [/* no exceptions */],
-						 stats2JavaBytecode(p.body) + [instruction(RETURN)], [/* no try catch blocks */], [/* no local variables */]);
+	 	return method(ACC_PROTECTED + ACC_STATIC, p.name.name, "()V", "", 
+	 				  [/* no exceptions */], 
+	 				  stats2JavaBytecode(p.body) + [instruction(RETURN)],
+	 				   [/* no try catch blocks */], [/* no local variables */]);
 	}
 	
 	list[Instruction] stats2JavaBytecode(list[Statement] stats) {
@@ -52,30 +50,21 @@ public Class compile2JavaBytecode(Module m) {
 	
 	list[Instruction] stat2JavaBytecode(Statement stat) {
 	  switch (stat) {
-	    case assign(id("stack"), [subscript(s)], exp):
-	    	 return [fieldRef(GETSTATIC,"BaseProgram","stack","[I")] 
+	    case assign(stack, [subscript(s)], exp):
+	    	 return [getStack] 
 	    	        + exp2JavaBytecode(s) + exp2JavaBytecode(exp)
 	    	        + [instruction(IASTORE)];
-	    case assign(id("sp"), [] , exp) : return exp2JavaBytecode(exp) + [fieldRef(PUTSTATIC,"BaseProgram","sp","I")];
-	    case call(id("Read")) : return [method(INVOKESTATIC,"BaseProgram","Read","()V")];
-	    case call(id("Write")) : return [method(INVOKESTATIC,"BaseProgram","Write","()V")];
-	    case call(id("WriteLn")) : return [method(INVOKESTATIC,"BaseProgram","WriteLn","()V")];
+	    case assign(sp, [] , exp) : return exp2JavaBytecode(exp) + [putSp];
+	    case call(id("Write"),[exp]) : {
+	    	return exp2JavaBytecode(exp) + [method(INVOKESTATIC,"BaseProgram","Write","(I)V")];
+	    }
+	    case call(id("Read"),[lookup(stack,[subscript(indexExp)])]) : {
+	    	return [getStack] + 
+	    	       exp2JavaBytecode(indexExp) + 
+	    	       [method(INVOKESTATIC,"BaseProgram","Read","([II)V")];
+	    }
+	    case call(id("WriteLn"),[]) : return [method(INVOKESTATIC,"BaseProgram","WriteLn","()V")];
 	    case call(Ident id, []): return [method(INVOKESTATIC,m.name.name,id.name,"()V")];
-	    // asm doesn't like label(label
-	    case ifThen(c, b, [], []): {
-	    	endLabel = newLabel();
-	    	return compareJump2JavaByteCode(c,endLabel) +
-	    		   stats2JavaBytecode(b) +
-	    		   [label(endLabel)];
-	    }
-	    case ifThen(c, [], [], el): {
-	    	elseLabel = newLabel();
-	    	endLabel = newLabel();
-	    	return compareJump2JavaByteCode(c,elseLabel) +
-	    		   [jump(GOTO,endLabel),label(endLabel)] +
-	    		   stats2JavaBytecode(el) +
-	    		   [label(endLabel)];
-	    }
 	    case ifThen(c, b, [], el): {
 	    	elseLabel = newLabel();
 	    	endLabel = newLabel();
@@ -85,8 +74,6 @@ public Class compile2JavaBytecode(Module m) {
 	    		   stats2JavaBytecode(el) +
 	    		   [label(endLabel)];
 	    }
-
-	    
 	    case whileDo(c, b): {
 	    	startLabel = newLabel();
 	    	endLabel = newLabel();
@@ -120,9 +107,9 @@ public Class compile2JavaBytecode(Module m) {
 	    case \true()     : return [integer(BIPUSH,1)];
 	    case \false()    : return [integer(BIPUSH,0)]; 
 	    case nat(int val): 		return [integer(BIPUSH,val)];
-	    case lookup(id("sp"), []) : return [fieldRef(GETSTATIC,"BaseProgram","sp","I")];
+	    case lookup(id("sp"), []) : return [getSp];
 	    case lookup(id("stack"), [subscript(exp)]): 
-	    	return [fieldRef(GETSTATIC,"BaseProgram","stack","[I")] + exp2JavaBytecode(exp) + [instruction(IALOAD)];
+	    	return [getStack] + exp2JavaBytecode(exp) + [instruction(IALOAD)];
 	    case neg(exp): 			return exp2JavaBytecode(exp) + [instruction(INEG)];
 	    case pos(exp): 			return exp2JavaBytecode(exp);
 	    case mul(lhs, rhs): 	return exp2JavaBytecode(lhs) + exp2JavaBytecode(rhs) + [instruction(IMUL)];
