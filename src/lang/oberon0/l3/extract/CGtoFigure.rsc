@@ -1,6 +1,6 @@
 module lang::oberon0::l3::extract::CGtoFigure
 
-import lang::oberon0::l3::analyze::CallGraph;
+import lang::oberon0::l3::extract::CallGraph;
 import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l3::resolve::SymbolTable;
 import vis::Figure;
