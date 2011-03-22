@@ -14,7 +14,7 @@ import lang::oberon0::l1::ide::Check;
 import lang::oberon0::l1::ide::Format;
 import lang::oberon0::l1::ide::VisualizeCFG;
 
-import SourceEditor;
+import util::IDE;
 import ParseTree;
 
 

@@ -10,7 +10,7 @@ import lang::oberon0::l3::ide::Outline;
 
 import lang::oberon0::l3::utils::Parse;
 
-import SourceEditor;
+import util::IDE;
 
 
 private str L3_NAME = "Oberon-0/L3";

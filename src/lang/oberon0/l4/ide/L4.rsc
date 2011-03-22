@@ -14,7 +14,7 @@ import lang::oberon0::l3::ide::Outline;
 
 import lang::oberon0::l4::utils::Parse;
 
-import SourceEditor;
+import util::IDE;
 
 
 private str L4_NAME = "Oberon-0/L4";
@@ -40,4 +40,7 @@ public void registerL4() {
   registerContributions(L4_NAME, L4_CONTRIBS);
 }   
 
+public void main() {
+  registerL4();
+}
 
