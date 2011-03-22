@@ -4,6 +4,7 @@ import lang::oberon0::l1::extract::ControlFlow;
 import lang::oberon0::l1::format::Oberon0;
 import lang::oberon0::l1::ast::Oberon0;
 import vis::Figure;
+import vis::Render;
 
 import Relation;
 import String;
@@ -31,11 +32,16 @@ public str formatNode(end()) = "end";
 //public Figure node2figure(n:end()) = box(text(formatNode(n)), vis::Figure::id(getId(n)), fillColor("grey"), size(0), gap(4));
 
 private Figure node2figure(CFNode n) {
+    cl = onClick(void(){;});
+    
+    if (n has location) 
+      cl = onClick(void () { println("Hoi!"); edit(n.location,[]);});
+      
 	switch(n) {
-		case choice(_,_) : return ellipse(text(formatNode(n)), vis::Figure::id(getId(n)), fillColor("yellow"), size(0), gap(8));
-		case start(_,_) : return box(text(formatNode(n)), vis::Figure::id(getId(n)), fillColor("orange"), size(0), gap(4));
+		case choice(_,_) : return ellipse(text(formatNode(n),cl), vis::Figure::id(getId(n)), fillColor("yellow"), size(0), gap(8), cl);
+		case start(_,_) : return box(text(formatNode(n),cl), vis::Figure::id(getId(n)), fillColor("orange"), size(0), gap(4), cl);
 		case end() : return box(text(formatNode(n)), vis::Figure::id(getId(n)), fillColor("grey"), size(0), gap(4));
-		default: return box(text(formatNode(n)), vis::Figure::id(getId(n)), fillColor("white"), size(0), gap(4));
+		default: return box(text(formatNode(n),cl), vis::Figure::id(getId(n)), fillColor("white"), size(0), gap(4), cl);
 	}
 }
 
