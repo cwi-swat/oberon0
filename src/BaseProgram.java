@@ -1,8 +1,5 @@
-import java.util.Scanner;
-
-import javax.swing.JOptionPane;
+import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.IValueFactory;
-import org.eclipse.imp.pdb.facts;
 import org.eclipse.imp.pdb.facts.impl.fast.ValueFactory;
 import org.rascalmpl.eclipse.library.util.scripting.Prompt;
 
@@ -11,10 +8,11 @@ class BaseProgram {
     static int[] stack = new int[STACK_SIZE];
     static int sp = 0;
     static String buffer = "";
-    static Prompt prompt = new Prompt(new ValueFactory());
+    static IValueFactory vf = ValueFactory.getInstance();
+    static Prompt prompt = new Prompt(vf);
     
     static void Read(int[] stack,int index) {
-        IString val = prompt.prompt("Oberon0 wants you! to type in some number");
+        IString val = prompt.prompt(vf.string("Oberon0 wants you! to type in some number"));
     	stack[index] = Integer.parseInt(val.getValue());
         return;
     }
