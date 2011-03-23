@@ -10,7 +10,7 @@ import lang::oberon0::l1::syntax::Expressions;
 syntax Statement 
 	= forDo: "FOR" Ident name ":=" Expression from "TO" Expression to "DO" {Statement ";"}* body "END"
 	| repeatUntil: "REPEAT" {Statement ";"}* body "UNTIL" Expression cond
-	| caseOf: "CASE" Expression exp "OF" Case* cases ElsePart? elsePart "END"
+	| caseOf: "CASE" Expression exp "OF" {Case "|"}* cases ElsePart? elsePart "END"
 	;
 
 syntax Case

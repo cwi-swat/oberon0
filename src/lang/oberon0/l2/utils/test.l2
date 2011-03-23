@@ -22,7 +22,7 @@ BEGIN
 
 	CASE i OF
 	1: 
-		x := i + 1
+		x := i + 1 |
 	2: x := i * y; y := 2 * x
 	ELSE x := 1 + 2
 	END;
