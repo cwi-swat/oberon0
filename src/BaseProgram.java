@@ -1,20 +1,22 @@
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
+import org.eclipse.imp.pdb.facts.IValueFactory;
+import org.eclipse.imp.pdb.facts;
+import org.eclipse.imp.pdb.facts.impl.fast.ValueFactory;
+import org.rascalmpl.eclipse.library.util.scripting.Prompt;
 
 class BaseProgram {
 	static int STACK_SIZE = 1000000;
     static int[] stack = new int[STACK_SIZE];
     static int sp = 0;
     static String buffer = "";
+    static Prompt prompt = new Prompt(new ValueFactory());
     
     static void Read(int[] stack,int index) {
-      while(true){
-          try{
-        	stack[index] = new Scanner(JOptionPane.showInputDialog("Oberon0 wants you! to type in some number")).nextInt();
-            return;
-          } catch(Exception e){ JOptionPane.showMessageDialog(null, "Didn't catch that, come again?\n");}
-      }
+        IString val = prompt.prompt("Oberon0 wants you! to type in some number");
+    	stack[index] = Integer.parseInt(val.getValue());
+        return;
     }
     
     static void Write(int arg){
@@ -23,7 +25,7 @@ class BaseProgram {
     }
     
     static void WriteLn(){
-      JOptionPane.showMessageDialog(null, buffer);
+      System.out.println(buffer);
       buffer = "";
     }
 }
