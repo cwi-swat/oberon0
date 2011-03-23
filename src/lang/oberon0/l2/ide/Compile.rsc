@@ -11,6 +11,6 @@ public void compileModuleToC(Module x, loc l) {
 	m = implode(x);
 	m = desugar(m);
 	s = compile2c(m);
-	cfile = |<l.scheme>://<l.host><l.path>.c|;
+	cfile = |project://oberon0/src/test/output/<m.name.name>.c|;
 	writeFile(cfile, s);
 }

@@ -10,6 +10,7 @@ import lang::oberon0::l3::normalize::Normalize;
 import IO;
 
 public void compileModuleToC(Module x, loc l) {
-	cfile = |<l.scheme>://<l.host><l.path>.c|;
-	writeFile(cfile, compileL3toC(annotateByRefs(normalize(desugar(implode(x))))));
+	m = implode(x);
+	cfile = |project://oberon0/src/test/output/<m.name.name>.c|;
+	writeFile(cfile, compileL3toC(annotateByRefs(normalize(desugar(m)))));
 }

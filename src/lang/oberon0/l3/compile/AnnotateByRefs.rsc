@@ -9,11 +9,11 @@ anno bool Expression@passByRef;
 
 alias Env = map[Ident, list[Formal]];
 
-Env TOPLEVEL = (id("Write"): [formal(false, [id("x")], user(id("INTEGER")))],
-				id("WriteLn"): [],
-				id("Read"): [formal(true, [id("x")], user(id("INTEGER")))]); 
 
 public Module annotateByRefs(Module m) {
+	Env TOPLEVEL = (id("Write"): [formal(false, [id("x")], user(id("INTEGER")))],
+				id("WriteLn"): [],
+				id("Read"): [formal(true, [id("x")], user(id("INTEGER")))]); 
 	env = TOPLEVEL + ( p.name: p.formals | p <- m.decls.procs );
 	m.decls.procs = [ annotateByRefs(p, env) | p <- m.decls.procs ];
 	m.body = annotateByRefsInBody(m.body, env, {});

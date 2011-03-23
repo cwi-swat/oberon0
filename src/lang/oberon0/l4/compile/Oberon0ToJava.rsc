@@ -1,7 +1,5 @@
 module lang::oberon0::l4::compile::Oberon0ToJava
 
-import lang::oberon0::l1::ast::Oberon0;
-import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l4::ast::Oberon0;
 import String;
 import List;

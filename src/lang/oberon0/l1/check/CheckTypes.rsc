@@ -180,34 +180,25 @@ public Expression checkExp(e:geq(lop,rop), SymbolTable st) 	= e[@otype = bII2B(l
 
 
 public void checkStat(s:assign(v, e), SymbolTable st) {
-	// Make sure the target, v, is not a constant. If it is not, make sure the type
-	// of variable v with selectors ss is the same as the type of e. Both types
-	// should be unwound, so we can just do an equality check.
 	Item vItem = v@item;
-	if (Constant(_,_,_) := vItem) {
+	if (Constant(_,_,_) := vItem) 
 		errors += error(s@location, "A constant cannot be an assignment target");
-	} else {
+	else {
 		OType ot = getTypeFor(v, s@location, st);
-		if (Invalid() != ot && Invalid() != e@otype && ot != e@otype) {
+		if (Invalid() != ot && Invalid() != e@otype && ot != e@otype) 
 			errors += error(s@location, "Cannot assign value of type <prettyPrint(e@otype)>, expected type <prettyPrint(ot)>"); 
-		}
 	}		
 }
 		
 public void checkStat(s:ifThen(c,bs,elifs,ep), SymbolTable st) {
-	// Make sure any conditional guards are booleans
-	if (Boolean() != c@otype && Invalid() != c@otype) {
+	if (Boolean() != c@otype && Invalid() != c@otype) 
 		errors += error(c@location, "The guard of a conditional must have type BOOLEAN, not <prettyPrint(c@otype)>");
-	}
-	for (<ec,ebs> <- elifs, Boolean() != ec@otype && Invalid() != ec@otype) {
+	for (<ec,ebs> <- elifs, Boolean() != ec@otype && Invalid() != ec@otype) 
 		errors += error(ec@location, "The guard of a conditional must have type BOOLEAN, not <prettyPrint(ec@otype)>");
-	}
 }
 		
 public void checkStat(s:whileDo(c,bs), SymbolTable st) {
-	// Make sure the while guard is a boolean
-	if (Boolean() != c@otype && Invalid() != c@otype) {
+	if (Boolean() != c@otype && Invalid() != c@otype) 
 		errors += error(c@location, "The guard of a while loop must have type BOOLEAN, not <prettyPrint(c@otype)>");
-	}
 }
 

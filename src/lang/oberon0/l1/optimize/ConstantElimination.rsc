@@ -10,6 +10,7 @@ import Map;
 
 alias ConstantMap = map[Ident,int];
 
+
 public Module eliminateConstants(Module m) {
 	constantMap = getConstants(m.decls.consts,());
 	m.decls.consts = [];

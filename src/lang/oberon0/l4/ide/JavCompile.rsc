@@ -16,14 +16,14 @@ import IO;
 
 public void compileToJavaBytecodeAndRun(lang::oberon0::l1::syntax::Modules::Module x,loc l) {
 	lang::oberon0::l4::ast::Oberon0::Module mod = desugar(implode(x));
-	loc classFile = |project://oberon0/src/<mod.name.name>.class|;
+	loc classFile = |project://oberon0/src/test/output/<mod.name.name>.class|;
 	serialize(compile2JavaBytecode(toMinimalOberon0(mod)),classFile);
-	runClassFile(classFile,|project://oberon0/src/BaseProgram.class|);
+	runClassFile(classFile,|project://oberon0/src/test/output/BaseProgram.class|);
 	
 }
 
 public void compileModuleToJava(lang::oberon0::l1::syntax::Modules::Module x, loc l) {
 	lang::oberon0::l4::ast::Oberon0::Module mod = desugar(implode(x));
-	jfile = |project://oberon0/src/<mod.name.name>.java|;
+	jfile = |project://oberon0/src/test/output/<mod.name.name>.java|;
 	writeFile(jfile, compile2Java(toMinimalOberon0(mod)));
 }

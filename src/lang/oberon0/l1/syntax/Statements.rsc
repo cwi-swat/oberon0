@@ -7,8 +7,16 @@ import lang::oberon0::l1::syntax::Expressions;
 
 syntax Statement 
 	= assign: Ident var ":=" Expression exp
-	| ifThen: "IF" Expression condition "THEN" {Statement ";"}+ body ElsIfPart* ElsePart? "END"
-	| whileDo: "WHILE" Expression condition "DO" {Statement ";"}+ body "END"
+	
+	| ifThen: "IF" Expression condition "THEN" 
+					{Statement ";"}+ body 
+					ElsIfPart* 
+					ElsePart? 
+	          "END"
+	          
+	| whileDo: "WHILE" Expression condition "DO" 
+					{Statement ";"}+ body 
+	           "END"
 	;
 
 

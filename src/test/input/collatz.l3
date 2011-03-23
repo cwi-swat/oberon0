@@ -9,22 +9,25 @@ PROCEDURE doCollatz();
   PROCEDURE computeEven();
     BEGIN 
       IF current MOD 2 = 0 THEN
-	 currentEven := even
-      ELSE currentEven := odd
+	 	currentEven := even
+      ELSE 
+      	currentEven := odd
       END 
     END computeEven;
 
 
   PROCEDURE printSequence();
     BEGIN
-      WHILE current # 1 DO
-	computeEven;
-	Write(current);
-	IF currentEven = even
-	  THEN current := current DIV 2
-	  ELSE current := (current * 3) + 1
-	END
-      END
+      WHILE(current # 1) DO
+		computeEven;
+		Write(current);
+		IF currentEven = even THEN 
+			current := current DIV 2
+	  	ELSE 
+	  		current := (current * 3) + 1
+		END
+     END;
+     WriteLn
     END printSequence;
 
   BEGIN

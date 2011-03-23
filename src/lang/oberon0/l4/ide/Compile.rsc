@@ -11,6 +11,7 @@ import lang::oberon0::l4::ast::Oberon0;
 import IO;
 
 public void compileModuleToC(lang::oberon0::l1::syntax::Modules::Module x, loc l) {
-	cfile = |<l.scheme>://<l.host><l.path>.c|;
-	writeFile(cfile, compileL4toC(annotateByRefs(normalizeL4(desugar(implode(x))))));
+	m = implode(x);
+	cfile = |project://oberon0/src/test/output/<m.name.name>.c|;
+	writeFile(cfile, compileL4toC(annotateByRefs(normalizeL4(desugar(m)))));
 }

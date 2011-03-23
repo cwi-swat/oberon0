@@ -35,7 +35,7 @@ public list[Box] types2boxes(list[TypeDecl] types) {
 
 public list[Box] vars2boxes(list[VarDecl] vars) {
    	if (vars != []) {     
-		return [KW(L("VAR")), I([A([varDecl2box(x) | x <- vars])])];
+		return [KW(L("VAR")), I([A([varDecl2box(x) | x <- vars])[@vs=1]])];
    	}
    	return [];
 }

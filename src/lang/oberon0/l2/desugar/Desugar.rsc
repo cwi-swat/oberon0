@@ -36,8 +36,6 @@ public list[Statement] repeat2while(list[Statement] stats) {
 	}
 }
 
-
-
 public list[Statement] for2while(list[Statement] stats) {
 	return visit (stats) {
 		case forDo(n, f, t, b) => 
