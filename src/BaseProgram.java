@@ -23,7 +23,7 @@ class BaseProgram {
     }
     
     static void WriteLn(){
-      System.out.println(buffer);
+      prompt.alert(vf.string(buffer));
       buffer = "";
     }
 }
