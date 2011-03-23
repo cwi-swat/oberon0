@@ -13,4 +13,4 @@ BEGIN
   IF (i > j) THEN
   	f()
   END
-END Test.
+END VerySmall.

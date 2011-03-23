@@ -1,4 +1,4 @@
-MODULE VerySmall;
+MODULE VerySmall2;
 
 VAR i,j,z :INTEGER;
 
@@ -15,4 +15,4 @@ BEGIN
   	f();
   	i := i - 1
   END
-END Test.
+END VerySmall2.

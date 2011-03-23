@@ -6,12 +6,10 @@ import lang::oberon0::l4::utils::Implode;
 import lang::oberon0::l4::compile::Oberon0ToC;
 import lang::oberon0::l4::compile::AnnotateByRefs;
 import lang::oberon0::l4::normalize::Normalize;
-import lang::oberon0::l4::ast::Oberon0;
 
 import IO;
 
-public void compileModuleToC(lang::oberon0::l1::syntax::Modules::Module x, loc l) {
-	m = implode(x);
-	cfile = |project://oberon0/src/test/output/<m.name.name>.c|;
-	writeFile(cfile, compileL4toC(annotateByRefs(normalizeL4(desugar(m)))));
+public void compileModuleToC(Module x, loc l) {
+	cfile = |project://oberon0/src/test/output/<x.name>.c|;
+	writeFile(cfile, compileL4toC(annotateByRefs(normalizeL4(desugar(implode(x))))));
 }

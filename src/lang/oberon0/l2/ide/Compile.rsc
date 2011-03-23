@@ -8,9 +8,6 @@ import lang::oberon0::l1::compile::Oberon0ToC;
 import IO;
 
 public void compileModuleToC(Module x, loc l) {
-	m = implode(x);
-	m = desugar(m);
-	s = compile2c(m);
-	cfile = |project://oberon0/src/test/output/<m.name.name>.c|;
-	writeFile(cfile, s);
+	cfile = |project://oberon0/src/test/output/<x.name>.c|;
+	writeFile(cfile, compile2c(desugar(implode(x))));
 }

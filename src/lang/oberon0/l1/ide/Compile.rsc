@@ -6,9 +6,7 @@ import lang::oberon0::l1::utils::Implode;
 
 import IO;
 
-public void compileModuleToC(Module x, loc l) {
-	m = implode(x);
-	s = compile2c(m);
-	cfile = |project://oberon0/src/test/output/<m.name.name>.c|;
-	writeFile(cfile, s);
+public void compileModuleToC(lang::oberon0::l1::syntax::Modules::Module x, loc l) {
+	cfile = |project://oberon0/src/test/output/<x.name>.c|;
+	writeFile(cfile, compile2c(implode(x)));
 }

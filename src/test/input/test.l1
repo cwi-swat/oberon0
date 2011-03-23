@@ -1,4 +1,4 @@
-MODULE test;
+MODULE testL1;
 
 (* skadjklasjdlkasjd *)
 CONST
@@ -25,4 +25,4 @@ BEGIN
 	END
 
 	
-END test.
+END testL1.

@@ -1,4 +1,4 @@
-MODULE test;
+MODULE testL2;
 
 CONST
 	c = 20;
@@ -34,4 +34,4 @@ BEGIN
 		x := x
 	UNTIL x = x
 		
-END test.
+END testL2.

@@ -19,7 +19,7 @@ private str L3_EXT = "l3";
 public set[Contribution] L3_CONTRIBS = {
 	popup(
 		menu("Oberon",[
-    		action("Compile", compileModuleToC),
+    		action("Compile to C", compileModuleToC),
     		edit("Format", formatModule), 
     		edit("Normalize", normalizeModule), 
 	   		action("CFlow", visualizeCFG) 
