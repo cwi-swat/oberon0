@@ -52,14 +52,18 @@ OType getTypeFor(Ident v, loc l, SymbolTable st) = getTypeFor(v@item, l, st);
 public OType getTypeFor(item:Variable(_, ot, _), loc l, SymbolTable st) = getTypeFor(ot, l, item, st);
 public OType getTypeFor(Constant(_, _, _), loc l, SymbolTable st) = Integer();
 
+public OType default getTypeFor(Item x, loc l, SymbolTable st) {
+  println("WTF? <x> @ <l>");
+  return Invalid();
+}
 //
 // Given the type, resolve any type declarations used inside.
 //
-OType getTypeFor(Integer(), loc l, Item ctx, SymbolTable st) = Integer();
-OType getTypeFor(Boolean(), loc l, Item ctx, SymbolTable st) = Boolean();
-OType getTypeFor(Invalid(), loc l, Item ctx, SymbolTable st) = Invalid();
+public OType getTypeFor(Integer(), loc l, Item ctx, SymbolTable st) = Integer();
+public OType getTypeFor(Boolean(), loc l, Item ctx, SymbolTable st) = Boolean();
+public OType getTypeFor(Invalid(), loc l, Item ctx, SymbolTable st) = Invalid();
 
-OType getTypeFor(User(tid), loc l, Item ctx, SymbolTable st) {
+public OType getTypeFor(User(tid), loc l, Item ctx, SymbolTable st) {
 	OType unwound = unwind(ot, ctx, st);
 	if (Invalid() := unwound) {
 		errors += error(l, "Named type <tid.name> cannot be resolved to a valid Oberon type");
@@ -151,9 +155,8 @@ OType bII2B(OType left, OType right, loc l) {
 //
 bool expIsWritable(lookup(v)) = isWritableKind(v@item);
 
-// to be extended for formal params.
 bool isWritableKind(Variable(_, _, _)) = true;
-
+bool default isWritableKind(_) = false;
 //
 // Actually check the various forms of expression
 //

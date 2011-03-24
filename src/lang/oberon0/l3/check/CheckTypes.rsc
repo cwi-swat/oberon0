@@ -51,4 +51,8 @@ public void checkStat(s:call(p, args), SymbolTable st) {
 		}
 	}
 }
-		
+
+public OType getTypeFor(item:FormalParameter(_, ot, _, _), loc l, SymbolTable st) 
+  = getTypeFor(ot, l, item, st);	
+  
+bool isWritableKind(FormalParameter(_, _, _, _)) = true;
