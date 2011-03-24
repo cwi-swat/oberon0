@@ -19,6 +19,13 @@ Node outlineDecls(Declarations decls) {
 	cds = outline([ constDecl()[@label="<cd.name>"][@\loc=cd@\loc] | /ConstDecl cd := decls.consts ])[@label="Constants"];
 	tds = outline([ typeDecl()[@label="<td.name>"][@\loc=td@\loc] | /TypeDecl td := decls.types ])[@label="Types"];
 	vds = outline([ varDecl()[@label="<vd.names>"][@\loc=vd@\loc] | /VarDecl vd := decls.vars ])[@label="Variables"];
-	pds = outline([ procDecls( outlineDecls(p.decls).nodes )[@label="<p.name>"] |  p <- decls.procs])[@label="Procedures"];
- 	return outline([cds, tds, vds, pds]);
+	if (decls has procs) {
+		pds = outline([])[@label="Procedures"];
+		top-down-break visit (decls.procs) {
+			case ProcedureDecl p: pds.nodes += 
+					[procDecls(outlineDecls(p.decls).nodes)[@label="<p.name>"][@\loc=p@\loc]]; 
+		}
+	 	return outline([cds, tds, vds, pds]);
+	 }
+	 return outline([cds, tds, vds]);
 }
