@@ -52,16 +52,15 @@ OType getTypeFor(Ident v, loc l, SymbolTable st) = getTypeFor(v@item, l, st);
 public OType getTypeFor(item:Variable(_, ot, _), loc l, SymbolTable st) = getTypeFor(ot, l, item, st);
 public OType getTypeFor(Constant(_, _, _), loc l, SymbolTable st) = Integer();
 
-public OType default getTypeFor(Item x, loc l, SymbolTable st) {
-  println("WTF? <x> @ <l>");
-  return Invalid();
-}
+public OType default getTypeFor(Item x, loc l, SymbolTable st) = Invalid();
 //
 // Given the type, resolve any type declarations used inside.
 //
-public OType getTypeFor(Integer(), loc l, Item ctx, SymbolTable st) = Integer();
-public OType getTypeFor(Boolean(), loc l, Item ctx, SymbolTable st) = Boolean();
-public OType getTypeFor(Invalid(), loc l, Item ctx, SymbolTable st) = Invalid();
+//public OType getTypeFor(Integer(), loc l, Item ctx, SymbolTable st) = Integer();
+//public OType getTypeFor(Boolean(), loc l, Item ctx, SymbolTable st) = Boolean();
+//public OType getTypeFor(Invalid(), loc l, Item ctx, SymbolTable st) = Invalid();
+
+public OType default getTypeFor(OType t, _, _, _) = t;
 
 public OType getTypeFor(User(tid), loc l, Item ctx, SymbolTable st) {
 	OType unwound = unwind(ot, ctx, st);

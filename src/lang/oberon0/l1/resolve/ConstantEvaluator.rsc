@@ -41,7 +41,9 @@ public tuple[SymbolTableBuilder st, bool res, int val] evaluateConstantExp(Symbo
 	switch(exp) {
 		case nat(nval) : return <stBuilder, true, nval>;
 		
-		case lookup(cid,[]) : {
+		// TODO: how to extend this to lookup(id, sels)?
+		// is that needed?
+		case lookup(cid) : {
 			set[Item] items = getConstants(stBuilder, cid);
 			if (size(items) == 1) {
 				Item item = getOneFrom(items);
@@ -55,10 +57,10 @@ public tuple[SymbolTableBuilder st, bool res, int val] evaluateConstantExp(Symbo
 			return <stBuilder, false, 0>;
 		}
 
-		case lookup(cid,sels) : {
-			stBuilder = addScopeError(stBuilder,exp@location,"Names used in constant expressions must represent integer constants, not arrays or records");
-			return <stBuilder, false, 0>;
-		}
+		//case lookup(cid,sels) : {
+		//	stBuilder = addScopeError(stBuilder,exp@location,"Names used in constant expressions must represent integer constants, not arrays or records");
+		//	return <stBuilder, false, 0>;
+		//}
 		
 		case neg(e) : return evaluateUnaryOp(stBuilder,e,int(int n) { return (-1) * n; });
 		
