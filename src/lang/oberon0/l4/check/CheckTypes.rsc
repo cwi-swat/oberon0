@@ -44,12 +44,12 @@ OType getTypeFor(Ident v, list[Selector] selectors, loc l) {
 			if (selectors == []) {
 				return Integer();
 			}
-			errors = errors + < l, "<v.name> is a constant INTEGER, no selectors should be used" >;
+			errors += {error(l, "<v.name> is a constant INTEGER, no selectors should be used")};
 			return Invalid();
 		}
 		case FormalParameter(_,ot,_,_): return getTypeFor(ot,selectors,l,item);
 		default: { 
-			errors = errors + < l, "<v.name> is not a variable, constant, or formal parameter, and cannot be used in this context: <item>" >;
+			errors += {error(l, "<v.name> is not a variable, constant, or formal parameter, and cannot be used in this context: <item>")};
 			return Invalid();
 		}
 	}
@@ -62,7 +62,7 @@ OType getTypeFor(OType ot, list[Selector] selectors, loc l, Item ctx) {
 			if (size(selectors) == 0) {
 				return ot;
 			}
-			errors = errors + < l, "You cannot use subscripts or fields with values of type integer" >;
+			errors += {error(l, "You cannot use subscripts or fields with values of type integer")};
 			return Invalid();
 		}
 		case Array(ota,n): {
@@ -79,11 +79,11 @@ OType getTypeFor(OType ot, list[Selector] selectors, loc l, Item ctx) {
 						return getTypeFor(ota,tail(selectors),l,ctx);
 					}
 					else {
-						errors = errors + < l, "You cannot use a non-INTEGER subscript to access an array" >;
+						errors +=  {error(l, "You cannot use a non-INTEGER subscript to access an array")};
 						return Invalid();
 					}
 				default: {
-					errors = errors + < l, "You cannot use fields on values of array type" >;
+					errors += {error(l, "You cannot use fields on values of array type")};
 					return Invalid();
 				}
 			}
@@ -99,22 +99,22 @@ OType getTypeFor(OType ot, list[Selector] selectors, loc l, Item ctx) {
 			if (size(selectors) > 0 && field(fid) := head(selectors)) {
 				list[OType] flds = { f.fieldType | f <- fs, f.fieldName == fid };
 				if (size(flds) == 0) {
-					errors = errors + < l, "Field <fid.name> not defined in record type" >;
+					errors += {error(l, "Field <fid.name> not defined in record type")};
 					return Invalid();
 				} 
 				if (size(flds) == 1) {
 					return getTypeFor(flds[0], tail(selectors), l, ctx);
 				}		
-				errors = errors + < l, "Multiple fields with name <fid.name> defined in record type" >;
+				errors += {error(l, "Multiple fields with name <fid.name> defined in record type")};
 				return Invalid();
 			} 
-			errors = errors + < l, "You cannot use subscripts on values of record type" >;
+			errors += {error(l, "You cannot use subscripts on values of record type")};
 			return Invalid();
 		}
 		case User(tid): {
 			OType unwound = unwind(ot);
 			if (Invalid() := unwound) {
-				errors = errors + < l, "Named type <tid.name> cannot be resolved to a valid Oberon type" >;
+				errors += {error(l, "Named type <tid.name> cannot be resolved to a valid Oberon type")};
 				return Invalid();
 			}
 			return unwound;
@@ -123,7 +123,7 @@ OType getTypeFor(OType ot, list[Selector] selectors, loc l, Item ctx) {
 			if (size(selectors) == 0) {
 				return ot;
 			}
-			errors = errors + < l, "You cannot use subscripts or fields with values of type integer" >;
+			errors += {error(l, "You cannot use subscripts or fields with values of type integer")};
 			return Invalid();
 		}
 		case Invalid(): return ot;

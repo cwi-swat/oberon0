@@ -4,6 +4,7 @@ import IO;
 import List;
 import Set;
 import Node;
+import Message;
 
 import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l1::resolve::Types;
@@ -12,6 +13,7 @@ import lang::oberon0::l1::resolve::NameAnnotator;
 import lang::oberon0::l3::resolve::Resolver;
 
 extend lang::oberon0::l2::check::CheckTypes;
+
 
 public void checkStat(s:call(p, args), SymbolTable st) {
 	Item procItem = p@item;
@@ -26,7 +28,7 @@ public void checkStat(s:call(p, args), SymbolTable st) {
 		params = [ < unwind(pOtype, procItem), pIsVar > | <pOtype,pIsVar> <- pargs ];
 	} 
 	else {
-		errors = errors + < s@location, "<p.name> is not a procedure" >;
+		errors += {error(s@location, "<p.name> is not a procedure")};
 		isProc = false;
 	}
 	
@@ -38,16 +40,16 @@ public void checkStat(s:call(p, args), SymbolTable st) {
 				OType paramType = params[n].paramType;
 				OType argType = args[n]@otype;
 				if (paramType != argType) {
-					errors = errors + < (args[n])@location, "Actual parameter has type <prettyPrint(argType)>, but the formal parameter is of type <prettyPrint(paramType)>" >;
+					errors += {error((args[n])@location, "Actual parameter has type <prettyPrint(argType)>, but the formal parameter is of type <prettyPrint(paramType)>")};
 				} else {
 					// Fourth check -- if the param is VAR, the actual is assignable
 					if (params[n].isVar && !expIsWritable(args[n])) {
-						errors = errors + < (args[n])@location, "Actual parameter must be a variable, array element, or record field, since the formal parameter is a VAR parameter" >;
+						errors += {error((args[n])@location, "Actual parameter must be a variable, array element, or record field, since the formal parameter is a VAR parameter")};
 					}	
 				}
 			}
 		} else if (size(args) != size(params)) {
-			errors = errors + < s@location, "Procedure <p.name> expects <size(params)> actuals, but was given <size(args)>" >;
+			errors += {error(s@location, "Procedure <p.name> expects <size(params)> actuals, but was given <size(args)>")};
 		}
 	}
 }
