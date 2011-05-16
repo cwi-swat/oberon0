@@ -46,15 +46,16 @@ private Figure node2figure(CFNode n) {
 }
 
 public Figure default node2figure(CFNode n) = 
-	box(text(formatNode(n)), vis::Figure::id(getId(n)), fillColor("white"), size(0), gap(4));
+	box(text(formatNode(n)), vis::Figure::id(getId(n)), fillColor("white"), gap(4));
 
 private str getId(end()) = "end";
 private str default getId(CFNode n) = "<n.location>";
 
 public Figure cfg2figure(ControlFlowGraph cfg) {
 	_nodes = [ node2figure(n) | n <- carrier(cfg.graph) + cfg.start ];
-    _edges = [ edge(getId(n1), getId(n2), shape([vertex(0,0), vertex(4,8), vertex(8, 0)], shapeClosed(true), fillColor("black"))) | <n1, n2> <- cfg.graph ];
+//    _edges = [ edge(getId(n1), getId(n2), shape([vertex(0,0), vertex(4,8), vertex(8, 0)], shapeClosed(true), fillColor("black"))) | <n1, n2> <- cfg.graph ];
+    _edges = [ edge(getId(n1), getId(n2), shapeClosed(true), fillColor("black"), toArrow(shape([vertex(0,0), vertex(4,8), vertex(8, 0)]))) | <n1, n2> <- cfg.graph ];
 
-    return graph(_nodes, _edges, hint("layered"), size(800));
+    return graph(_nodes, _edges, /*hint("layered"),*/ size(800));
 }
 
