@@ -9,7 +9,7 @@ import lang::oberon0::l3::resolve::SymbolTable;
 
 bool expIsWritable(lookup(v, _)) = isWritableKind(v@item);
 
-public Expression checkExp(e:lookup(v, sels), SymbolTable st) 	= e[@otype = getTypeFor(v, sels, e@location)];
+public Expression checkExp(e:lookup(v, sels), SymbolTable st) 	= e[@otype = getTypeFor(v, sels, e@location, st)];
 
 public void checkStat(s:assign(v, sels, e), SymbolTable st) {
 	Item vItem = v@item;
@@ -22,8 +22,8 @@ public void checkStat(s:assign(v, sels, e), SymbolTable st) {
 	}		
 }
 
-public OType unwind(Array(et, n), Item ctx, SymbolTable st) = Array(unwind(et,ctx),n);
-public OType unwind(Record(fs), Item ctx, SymbolTable st) = Record([<unwind(ft,ctx),fn> | <ft,fn> <- fs]);
+public OType unwind(Array(et, n), Item ctx, SymbolTable st) = Array(unwind(et,ctx,st),n);
+public OType unwind(Record(fs), Item ctx, SymbolTable st) = Record([<unwind(ft,ctx,st),fn> | <ft,fn> <- fs]);
 
 
 //OType getTypeFor(t:Array(_, _), loc l, Item ctx, SymbolTable st) = t; 
@@ -36,10 +36,10 @@ public OType unwind(Record(fs), Item ctx, SymbolTable st) = Record([<unwind(ft,c
 // constants cannot, so we check here to make sure the selectors for a constant are
 // empty (and give an error if they are not).
 //
-OType getTypeFor(Ident v, list[Selector] selectors, loc l) {
+OType getTypeFor(Ident v, list[Selector] selectors, loc l, SymbolTable st) {
 	Item item = v@item;
 	switch (item) {
-		case Variable(_,ot,_): return getTypeFor(ot,selectors,l,item);
+		case Variable(_,ot,_): return getTypeFor(ot,selectors,l,item,st);
 		case Constant(_,_,_): {
 			if (selectors == []) {
 				return Integer();
@@ -47,7 +47,7 @@ OType getTypeFor(Ident v, list[Selector] selectors, loc l) {
 			errors += {error(l, "<v.name> is a constant INTEGER, no selectors should be used")};
 			return Invalid();
 		}
-		case FormalParameter(_,ot,_,_): return getTypeFor(ot,selectors,l,item);
+		case FormalParameter(_,ot,_,_): return getTypeFor(ot,selectors,l,item,st);
 		default: { 
 			errors += {error(l, "<v.name> is not a variable, constant, or formal parameter, and cannot be used in this context: <item>")};
 			return Invalid();
@@ -55,7 +55,7 @@ OType getTypeFor(Ident v, list[Selector] selectors, loc l) {
 	}
 }
 
-OType getTypeFor(OType ot, list[Selector] selectors, loc l, Item ctx) {
+OType getTypeFor(OType ot, list[Selector] selectors, loc l, Item ctx, SymbolTable st) {
 	switch (ot) {
 		case Integer(): {
 		// INTEGER: There should be no selectors.
@@ -71,12 +71,12 @@ OType getTypeFor(OType ot, list[Selector] selectors, loc l, Item ctx) {
 			// in which case we recurse on the array element type and the remaining
 			// selectors.
 			if (size(selectors) == 0) {
-				return unwind(ot,ctx);
+				return unwind(ot,ctx,st);
 			}
 			switch (head(selectors)) {
 				case subscript(se): 
 					if (se@otype == Integer()) {
-						return getTypeFor(ota,tail(selectors),l,ctx);
+						return getTypeFor(ota,tail(selectors),l,ctx,st);
 					}
 					else {
 						errors +=  {error(l, "You cannot use a non-INTEGER subscript to access an array")};
@@ -94,7 +94,7 @@ OType getTypeFor(OType ot, list[Selector] selectors, loc l, Item ctx) {
 			// fields for the record, in which case we will recurse on the type
 			// of the field and the remaining selectors.
 			if (size(selectors) == 0) {
-				return unwind(ot,ctx);
+				return unwind(ot,ctx,st);
 			} 
 			if (size(selectors) > 0 && field(fid) := head(selectors)) {
 				list[OType] flds = { f.fieldType | f <- fs, f.fieldName == fid };
@@ -103,7 +103,7 @@ OType getTypeFor(OType ot, list[Selector] selectors, loc l, Item ctx) {
 					return Invalid();
 				} 
 				if (size(flds) == 1) {
-					return getTypeFor(flds[0], tail(selectors), l, ctx);
+					return getTypeFor(flds[0], tail(selectors), l, ctx, st);
 				}		
 				errors += {error(l, "Multiple fields with name <fid.name> defined in record type")};
 				return Invalid();
@@ -112,7 +112,7 @@ OType getTypeFor(OType ot, list[Selector] selectors, loc l, Item ctx) {
 			return Invalid();
 		}
 		case User(tid): {
-			OType unwound = unwind(ot);
+			OType unwound = unwind(ot,ctx,st);
 			if (Invalid() := unwound) {
 				errors += {error(l, "Named type <tid.name> cannot be resolved to a valid Oberon type")};
 				return Invalid();

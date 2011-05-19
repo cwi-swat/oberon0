@@ -85,7 +85,7 @@ OType unwind(User(n), Item ctx, SymbolTable st) {
 	return Invalid();
 }
 
-OType default unwind(OType t, Item ctx) = t;
+OType default unwind(OType t, Item ctx, SymbolTable st) = t;
 
 //
 // Check lists of expected types against lists of given types, returning

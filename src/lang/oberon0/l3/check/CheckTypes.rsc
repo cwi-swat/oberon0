@@ -22,10 +22,10 @@ public void checkStat(s:call(p, args), SymbolTable st) {
 	
 	// First check: we have a procedure or built-in procedure
 	if (Procedure(pn,pargs,_) := procItem) {
-		params = [ < unwind(pOtype, procItem), pIsVar > | FormalParameter(_,pOtype,pIsVar,_) <- pargs ];
+		params = [ < unwind(pOtype, procItem, st), pIsVar > | FormalParameter(_,pOtype,pIsVar,_) <- pargs ];
 	} 
 	else if (BuiltInProcedure(pn,pargs) := procItem) {
-		params = [ < unwind(pOtype, procItem), pIsVar > | <pOtype,pIsVar> <- pargs ];
+		params = [ < unwind(pOtype, procItem, st), pIsVar > | <pOtype,pIsVar> <- pargs ];
 	} 
 	else {
 		errors += {error(s@location, "<p.name> is not a procedure")};

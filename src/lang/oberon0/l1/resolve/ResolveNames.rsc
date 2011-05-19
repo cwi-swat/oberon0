@@ -156,7 +156,7 @@ public SymbolTableBuilder resolveTypeDeclNames(SymbolTableBuilder stBuilder, typ
 		stBuilder = addScopeError(stBuilder, tid@location, "A variable, constant, parameter, or procedure with name <tid.name> is already defined in the current scope");
 	}
 	else {
-		stBuilder = addType(stBuilder,tid,ot,td@location);
+		stBuilder = addType(stBuilder,tid,ot,tid@location);
 	}
 	
 	return stBuilder;
