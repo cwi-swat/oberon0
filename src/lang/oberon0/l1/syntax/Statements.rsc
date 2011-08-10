@@ -28,7 +28,7 @@ syntax ElsePart
 	= "ELSE" {Statement ";"}+ body
 	;
 
-syntax Keywords 
+keyword Keywords 
 	= "IF" 
 	| "THEN" 
 	| "ELSE" 
@@ -36,33 +36,5 @@ syntax Keywords
 	| "DO" 
 	| "WHILE" 
 	| "END" 
-	;
-	
-syntax "IF" 
-	= ... # [A-Za-z0-9] 
-	;
-	
-syntax "THEN" 
-	= ... # [A-Za-z0-9] 
-	;
-	
-syntax "ELSE" 
-	= ... # [A-Za-z0-9] 
-	;
-	
-syntax "ELSIF" 
-	= ... # [A-Za-z0-9] 
-	;
-	
-syntax "DO" 
-	= ... # [A-Za-z0-9] 
-	;
-	
-syntax "WHILE" 
-	= ... # [A-Za-z0-9] 
-	;
-	
-syntax "END" 
-	= ... # [A-Za-z0-9] 
 	;
 	

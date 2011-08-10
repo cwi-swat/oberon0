@@ -8,4 +8,3 @@ import lang::oberon0::l1::syntax::Lexical;
 syntax Type 
 	= user: Ident name
 	;
-

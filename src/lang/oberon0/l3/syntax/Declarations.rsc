@@ -1,10 +1,6 @@
 module lang::oberon0::l3::syntax::Declarations
 
-import lang::oberon0::l1::syntax::Declarations;
-import lang::oberon0::l2::syntax::Statements;
-import lang::oberon0::l1::syntax::Lexical;
-import lang::oberon0::l1::syntax::Types;
-import lang::oberon0::l1::syntax::Layout;
+extend lang::oberon0::l1::syntax::Declarations;
 
 syntax Declarations 
        // NB: procs is + so as not to be ambiguous with earlier decls.
@@ -25,13 +21,10 @@ syntax Formals
 	;
 
 
-syntax Keywords
+keywords Keywords
        = "PROCEDURE" 
        ;
 
-syntax "PROCEDURE" 
-       = ... # [A-Za-z0-9] 
-       ;
 	
 
 

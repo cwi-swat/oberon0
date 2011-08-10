@@ -1,10 +1,7 @@
 module lang::oberon0::l4::syntax::Types
 
-import lang::oberon0::l1::syntax::Expressions;
-import lang::oberon0::l1::syntax::Layout;
-import lang::oberon0::l1::syntax::Lexical;
-import lang::oberon0::l1::syntax::Types;
-
+extend lang::oberon0::l1::syntax::Types;
+extend lang::oberon0::l1::syntax::Layout;
 
 syntax Type 
 	= array: "ARRAY" Expression exp "OF" Type type
@@ -15,21 +12,8 @@ syntax Field
 	= field: {Ident ","}+ names ":" Type type
 	;
 
-syntax Keywords
+keyword Keywords
        = "ARRAY" 
        | "RECORD"
        | "OF"
        ;
-
-syntax "ARRAY" 
-	= ... # [A-Za-z0-9] 
-	;
-	
-syntax "RECORD" 
-	= ... # [A-Za-z0-9]
-	;
-
-syntax "OF"
-	= ... # [A-Za-z0-9] 
-	;
-	

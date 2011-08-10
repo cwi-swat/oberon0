@@ -1,14 +1,11 @@
 module lang::oberon0::l1::syntax::Lexical
 
-syntax Ident 
-	= lex id: [a-zA-Z][a-zA-Z0-9]* 
-	- Keywords
-	# [A-Za-z0-9] 
+lexical Ident 
+	= id: ([A-Za-z] !<< [a-zA-Z][a-zA-Z0-9]* !>> [A-Za-z0-9]) \ Keywords 
 	;
-
-syntax Natural 
-	= lex [0-9]+ 
-	# [0-9]
+	
+lexical Natural 
+	= [0-9]+  !>> [0-9]
 	;
 
 

@@ -36,7 +36,7 @@ syntax Expression
 	)
 	;
 
-syntax Keywords 
+keyword Keywords 
 	= "DIV" 
 	| "MOD" 
 	| "OR" 
@@ -44,23 +44,5 @@ syntax Keywords
 	| "FALSE"
 	; 
 	
-syntax "DIV" 
-	= ... # [A-Za-z0-9] 
-	;
-	
-syntax "MOD" 
-	= ... # [A-Za-z0-9] 
-	;
-	
-syntax "OR" 
-	= ... # [A-Za-z0-9] 
-	;
 
-syntax "TRUE" 
-	= ... # [A-Za-z0-9] 
-	;
-
-syntax "FALSE" 
-	= ... # [A-Za-z0-9] 
-	;
 	
