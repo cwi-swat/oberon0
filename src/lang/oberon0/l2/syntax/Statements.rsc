@@ -1,10 +1,12 @@
-module lang::oberon0::l2::syntax::Statements
+module ldta::oberon0::l2::syntax::Statements
 
-extend lang::oberon0::l1::syntax::Statements;
+extend ldta::oberon0::l1::syntax::Statements;
+
+// TODO: BY clause in For loops
 
 syntax Statement 
-	= forDo: "FOR" Ident name ":=" Expression from "TO" Expression to "DO" {Statement ";"}* body "END"
-	| repeatUntil: "REPEAT" {Statement ";"}* body "UNTIL" Expression cond
+	= forDo: "FOR" Ident name ":=" Expression from "TO" Expression to
+	            ("BY" Expression)? "DO" {Statement ";"}* body "END"
 	| caseOf: "CASE" Expression exp "OF" {Case "|"}* cases ElsePart? elsePart "END"
 	;
 

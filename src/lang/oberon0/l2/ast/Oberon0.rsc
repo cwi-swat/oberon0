@@ -1,10 +1,9 @@
-module lang::oberon0::l2::ast::Oberon0
+module ldta::oberon0::l2::ast::Oberon0
 
-extend lang::oberon0::l1::ast::Oberon0;
+extend ldta::oberon0::l1::ast::Oberon0;
 
 data Statement 
-	= forDo(Ident name, Expression from, Expression to, list[Statement] body)
-	| repeatUntil(list[Statement] body, Expression cond)
+	= forDo(Ident name, Expression from, Expression to, list[Expression] by, list[Statement] body)
 	| caseOf(Expression exp, list[Case] cases, list[Statement] elsePart)
 	;
 

@@ -1,8 +1,8 @@
-module lang::oberon0::l2::desugar::Desugar
+module ldta::oberon0::l2::desugar::Desugar
 
-import lang::oberon0::l2::ast::Oberon0;
-
+import ldta::oberon0::l2::ast::Oberon0;
 import IO;
+
 import List;
 
 data Statement 
@@ -12,7 +12,7 @@ data Statement
 alias DeclsBody = tuple[Declarations decls, list[Statement] body];
 
 public Module desugar(Module mod) {
-	mod.body = (for2while o repeat2while o case2ifs o flattenBegin)(mod.body);
+	mod.body = (for2while o case2ifs o flattenBegin)(mod.body);
 	return mod;
 }
 
@@ -29,23 +29,16 @@ public list[Statement] case2ifs(list[Statement] stats) {
 	}
 }
 
-
-public list[Statement] repeat2while(list[Statement] stats) {
-	return visit (stats) {
-		case repeatUntil(b, c) => begin([b, whileDo(not(c), b)]) 
-	}
-}
-
 public list[Statement] for2while(list[Statement] stats) {
 	return visit (stats) {
-		case forDo(n, f, t, b) => 
+		case forDo(n, f, t, [by], b) => 
+			begin([assign(n, f), whileDo(geq(lookup(n), t), 
+					[b, assign(n, add(lookup(n), by))])]) 
+		case forDo(n, f, t, [], b) => 
 			begin([assign(n, f), whileDo(geq(lookup(n), t), 
 					[b, assign(n, add(lookup(n), nat(1)))])]) 
 	}
 }
-
-
-
 
 public list[Statement] flattenBegin(list[Statement] stats) {
 	return innermost visit (stats) {
