@@ -1,6 +1,6 @@
-module lang::oberon0::l1::compile::Oberon0ToC
+module ldta::oberon0::l1::compile::Oberon0ToC
 
-import lang::oberon0::l1::ast::Oberon0;
+import ldta::oberon0::l1::ast::Oberon0;
 import String;
 import List;
 
@@ -85,10 +85,11 @@ public str consts2c(list[ConstDecl] cds) {
 	return ("" | it + "#define <cd.name.name> <exp2c(cd.\value)>\n" | cd <- cds );
 }
 
-public str default varType2c(str v, Type t) = "<type2c(t)> <v>";
+public default str varType2c(str v, Type t) = "<type2c(t)> <v>";
 
 public str type2c(user(id("INTEGER"))) = "int";
 public str type2c(user(id("BOOLEAN"))) = "int";
+public default str type2c(user(x)) = x.name;
 
 
 
