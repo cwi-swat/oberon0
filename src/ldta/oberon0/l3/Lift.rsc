@@ -38,7 +38,7 @@ public Module liftDecls(Module mod) {
       insert user(n); 
     }
   }
-  mod.decls.types += atypes;
+  mod.decls.types = atypes + mod.decls.types;
   return mod;
 }
 
