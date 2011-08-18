@@ -2,18 +2,20 @@ MODULE testL2;
 
 CONST
 	c = 20;
+	z = 30;
 
 VAR
   x : INTEGER;
   y : INTEGER;
   i : INTEGER;
+  
 
 BEGIN
 	x := c;
 	WHILE x = c DO
 		x := 5;
 		IF x > 3 THEN
-			y := x * c
+			y := x = c
 		ELSE
 			y := x DIV c
 		END
@@ -27,11 +29,8 @@ BEGIN
 	ELSE x := 1 + 2
 	END;
 	
-	FOR i := 1 TO 50 DO
+	FOR i := 1 TO 50 BY -1 DO
 		x := i
-	END;
-	REPEAT
-		x := x
-	UNTIL x = x
+	END
 		
 END testL2.

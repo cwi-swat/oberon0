@@ -4,23 +4,12 @@ VAR even,odd : INTEGER;
 
 PROCEDURE doCollatz();
   VAR current : INTEGER;
-      currentEven : INTEGR;
-
-  PROCEDURE computeEven();
-    VAR current: BOOL;
-    BEGIN 
-      IF current MOD 2 = 0 THEN
-	 	currentEven2 := even
-      ELSE 
-      	currientEven := odd
-      END 
-    END computeEven;
+      currentEven : INTEGER;
 
 
   PROCEDURE printSequence();
     BEGIN
       WHILE(current # 1) DO
-		computeEven(x);
 		Write(current);
 		IF currentEven = even THEN 
 			current := current DIV 2
