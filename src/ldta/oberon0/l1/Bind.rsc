@@ -26,7 +26,7 @@ public default bool isReadable(Decl _) = false;
 
 
 
-public tuple[Module, set[Message]] bind(m:Module::mod(n1, ds, b, n2), NEnv nenv) {
+public tuple[Module, set[Message]] bind(m:Module::mod(n1, ds, list[Statement] b, n2), NEnv nenv) {
   <m.decls, nenv, errs> = bind(ds, nenv, {});
   <m.body, errs> = bind(b, nenv, errs);
   errs += { idMismatchErr(n2@location) | n1 != n2 };
