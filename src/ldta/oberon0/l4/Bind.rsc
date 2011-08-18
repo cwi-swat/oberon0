@@ -75,5 +75,5 @@ public Type evalType(array(e, t), NEnv nenv) =
 
 // Flatten field lists.
 public Type evalType(record(fs), NEnv nenv) =
-  record([ field(n, evalType(t, nenv)) | field(ns, t) <- fs, n <- ns ]);  
+  record([ field([n], evalType(t, nenv)) | field(ns, t) <- fs, n <- ns ]);  
   

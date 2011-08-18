@@ -3,10 +3,10 @@ module ldta::oberon0::l2::Bind
 import ldta::oberon0::l2::AST;
 extend ldta::oberon0::l1::Bind;
 
-// TODO: must the variable in for be declared? Or does it shadow?
-// or is it a newly introduced?
-
+// page 29 of Wirth's book shows an example where i is a declared variable used by For.
+// We deduce from this that for-variables should be declared.
 public tuple[Statement, set[Message]] bind(s:forDo(i, f, t, b, ss), NEnv nenv, set[Message] errs) {
+  <s.name, errs> = bindVar(i, nenv, errs);
   <s.from, errs> = bind(f, nenv, errs);
   <s.to, errs> = bind(t, nenv, errs);
   if (e <- b) {

@@ -36,7 +36,7 @@ public tuple[list[Procedure], NEnv, set[Message]] bind(list[Procedure] ps, NEnv 
 public list[Formal] flatten(list[Formal] fs, NEnv nenv) = 
   [ formal(hv, [n], evalType(t, nenv)) | formal(hv, ns, t) <- fs, n <- ns ]; 
 
-public tuple[Procedure, NEnv, set[Message]] bind(p:Procedure::proc(f, fs, ds, b, f1), NEnv nenv, set[Message] errs) {
+public tuple[Procedure, NEnv, set[Message]] bind(p:Procedure::proc(f, list[Formal] fs, ds, b, f1), NEnv nenv, set[Message] errs) {
   outer = define(nenv, f, proc(f@location, flatten(fs, nenv)));
   inner = nest((), outer);
   <p.formals, inner, errs> = bind(fs, inner, errs);
