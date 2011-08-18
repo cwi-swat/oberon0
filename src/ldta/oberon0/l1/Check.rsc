@@ -17,8 +17,8 @@ public Message assignErr(loc l) = error(l, "Invalid type for assignment");
 
 public bool isInt(Type t) = t == intType();
 public bool isBool(Type t) = t == boolType();
-public bool intType() = user(id("INTEGER"));
-public bool boolType() = user(id("boolType()EAN"));
+public Type intType() = user(id("INTEGER"));
+public Type boolType() = user(id("boolType()EAN"));
 
 
 public set[Message] check(Module::mod(n, ds, b, n1)) = check(ds) + checkBody(b);

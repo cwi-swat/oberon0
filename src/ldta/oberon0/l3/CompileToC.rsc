@@ -67,7 +67,7 @@ public str expForFormal(lookup(x), Formal f) {
 
 public default str expForFormal(Expression e, Formal _) = exp2c(e);
 
-public str var2c(Ident id) = (param(_, _, true) := id@decl) ? "*<id.name>" : id.name;
+public str var2c(Ident id) = (param(_, _, true) := id@decl) ? "(*<id.name>)" : id.name;
 
 
 

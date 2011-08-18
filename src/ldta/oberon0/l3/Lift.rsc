@@ -28,7 +28,17 @@ public Module liftDecls(Module mod) {
 	      decls.procs = [];
 	      insert decls;
     }
+  }  
+  
+  atypes = [];
+  mod = visit (mod) {
+    case a:array(b, et): {
+      n = id("array_<(a@location).offset>");
+      atypes += [typeDecl(n, a)];
+      insert user(n); 
+    }
   }
+  mod.decls.types += atypes;
   return mod;
 }
 

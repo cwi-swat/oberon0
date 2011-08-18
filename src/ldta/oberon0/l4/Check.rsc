@@ -38,7 +38,7 @@ public default set[Message] check(Type _, Selector s) = { selectorErr(s@location
 
 public set[Message] check(Selector::field(_)) = {}; 
 
-public set[Message] check(s:subscript(e)) = check(e) + { intErr(e@location) | typeOf(e) != INT };
+public set[Message] check(s:subscript(e)) = check(e) + { intErr(e@location) | !isInt(typeOf(e)) };
 
 public Type typeOf(lookup(x, ss)) = ( typeOf(lookup(x)) | typeOf(it, s) | s <- ss );
 
