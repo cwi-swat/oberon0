@@ -37,6 +37,10 @@ public list[Formal] flatten(list[Formal] fs, NEnv nenv) =
   [ formal(hv, [n], evalType(t, nenv)) | formal(hv, ns, t) <- fs, n <- ns ]; 
 
 public tuple[Procedure, NEnv, set[Message]] bind(p:Procedure::proc(f, list[Formal] fs, ds, b, f1), NEnv nenv, set[Message] errs) {
+  // TODO: what is the semantics of nested procs with the same name, shadowing or error?
+  //if (isDefined(nenv, f)) {
+  //  return <p, errs + { dupErr(f@location) }>;
+  //}
   outer = define(nenv, f, proc(f@location, flatten(fs, nenv)));
   inner = nest((), outer);
   <p.formals, inner, errs> = bind(fs, inner, errs);

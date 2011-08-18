@@ -19,7 +19,7 @@ import lang::box::util::Box2Text;
 public NEnv GLOBAL = scope((
   id("Write"): proc(|file://-|,[formal(false, [id("x")], user(id("INTEGER")))]),
   id("Read"): proc(|file://-|,[formal(true, [id("x")], user(id("INTEGER")))]),
-  id("WriteLn"): proc(|file://-|,[])
+  id("WriteLn"): proc(|file://-|,[formal(false, [id("x")], user(id("INTEGER")))])
 ));
   
 

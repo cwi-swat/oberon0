@@ -44,7 +44,7 @@ public Type typeOf(lookup(x, ss)) = ( typeOf(lookup(x)) | typeOf(it, s) | s <- s
 
 public Type typeOf(record(fs), s:Selector::field(x)) {
   if (f <- fs, x in f.names) 
-     return typeOf(f.\type);
+     return f.\type;
   return INVALID();
 }
 

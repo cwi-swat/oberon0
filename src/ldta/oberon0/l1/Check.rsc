@@ -7,9 +7,6 @@ import Message;
 
 // presupposes name binding to have occurred.
 
-private Type INT = user(id("INTEGER"));
-private Type BOOL = user(id("BOOLEAN"));
-
 data Type = INVALID();
 
 public Message intErr(loc l) = error(l, "Expected int");
@@ -17,12 +14,19 @@ public Message boolErr(loc l) = error(l, "Expected bool");
 public Message incompErr(loc l) = error(l, "Incompatible types");
 public Message assignErr(loc l) = error(l, "Invalid type for assignment");
 
+
+public bool isInt(Type t) = t == intType();
+public bool isBool(Type t) = t == boolType();
+public bool intType() = user(id("INTEGER"));
+public bool boolType() = user(id("boolType()EAN"));
+
+
 public set[Message] check(Module::mod(n, ds, b, n1)) = check(ds) + checkBody(b);
 
 // Declarations
 public set[Message] check(decls(cds, _, _)) = ( {} | it + check(cd) | cd <- cds );
   
-public set[Message] check(cd:constDecl(n, e)) = { intErr(cd@location) | typeOf(e) != INT }; 
+public set[Message] check(cd:constDecl(n, e)) = { intErr(cd@location) | !isInt(typeOf(e)) }; 
 
 // Statements
 public set[Message] check(assign(v, e)) =
@@ -34,37 +38,37 @@ public set[Message] check(ifThen(c, b, eis, e)) =
 
 public set[Message] check(whileDo(c, b)) = checkCond(c) + check(c) + checkBody(b);
 
-public set[Message] checkCond(Expression c) = { boolErr(c@location) | typeOf(c) != BOOL };
+public set[Message] checkCond(Expression c) = { boolErr(c@location) | typeOf(c) != boolType() };
   
 public set[Message] checkBody(list[Statement] b) = ({} | it + check(s) | s <- b );
 
 // Expressions
-public set[Message] check(neg(e)) = check(e) + { intErr(e@location)| typeOf(e) != INT };  
+public set[Message] check(neg(e)) = check(e) + { intErr(e@location)| !isInt(typeOf(e)) };  
 
-public set[Message] check(pos(e)) = check(e) + { intErr(e@location)| typeOf(e) != INT };  
+public set[Message] check(pos(e)) = check(e) + { intErr(e@location)| !isInt(typeOf(e)) };  
          
-public set[Message] check(not(e)) = check(e) + {boolErr(e@location) | typeOf(e) != BOOL };
+public set[Message] check(not(e)) = check(e) + {boolErr(e@location) | !isBool(typeOf(e)) };
    
 public set[Message] check(mul(e1, e2)) = check(e1) + check(e2) + 
-    {intErr(e1@location) | typeOf(e1) != INT } + {intErr(e2@location) | typeOf(e2) != INT };
+    {intErr(e1@location) | !isInt(typeOf(e1)) } + {intErr(e2@location) | !isInt(typeOf(e2)) };
    
 public set[Message] check(div(e1, e2)) = check(e1) + check(e2) + 
-    {intErr(e1@location) | typeOf(e1) != INT } + {intErr(e2@location) | typeOf(e2) != INT };
+    {intErr(e1@location) | !isInt(typeOf(e1)) } + {intErr(e2@location) | !isInt(typeOf(e2)) };
  
 public set[Message] check(Expression::mod(e1, e2)) = check(e1) + check(e2) + 
-    {intErr(e1@location) | typeOf(e1) != INT } + {intErr(e2@location) | typeOf(e2) != INT };
+    {intErr(e1@location) | !isInt(typeOf(e1)) } + {intErr(e2@location) | !isInt(typeOf(e2)) };
 
 public set[Message] check(add(e1, e2)) = check(e1) + check(e2) + 
-    {intErr(e1@location) | typeOf(e1) != INT } + {intErr(e2@location) | typeOf(e2) != INT };
+    {intErr(e1@location) | !isInt(typeOf(e1)) } + {intErr(e2@location) | !isInt(typeOf(e2)) };
 
 public set[Message] check(sub(e1, e2)) = check(e1) + check(e2) + 
-    {intErr(e1@location) | typeOf(e1) != INT } + {intErr(e2@location) | typeOf(e2) != INT };
+    {intErr(e1@location) | !isInt(typeOf(e1)) } + {intErr(e2@location) | !isInt(typeOf(e2)) };
 
 public set[Message] check(amp(e1, e2)) = check(e1) + check(e2) + 
-    {boolErr(e1@location) | typeOf(e1) != BOOL } + {boolErr(e2@location) | typeOf(e2) != BOOL };
+    {boolErr(e1@location) | !isBool(typeOf(e1)) } + {boolErr(e2@location) | !isBool(typeOf(e2)) };
 
 public set[Message] check(or(e1, e2)) = check(e1) + check(e2) + 
-    {boolErr(e1@location) | typeOf(e1) != BOOL } + {boolErr(e2@location) | typeOf(e2) != BOOL };
+    {boolErr(e1@location) | !isBool(typeOf(e1)) } + {boolErr(e2@location) | !isBool(typeOf(e2)) };
  
 public set[Message] check(o:eq(e1, e2)) = check(e1) + check(e2) + 
     {incompErr(o@location) | typeOf(e1) != typeOf(e2) };
@@ -73,48 +77,48 @@ public set[Message] check(o:neq(e1, e2)) = check(e1) + check(e2) +
     {incompErr(o@location) | typeOf(e1) != typeOf(e2) };
 
 public set[Message] check(gt(e1, e2)) = check(e1) + check(e2) + 
-    {intErr(e1@location) | typeOf(e1) != INT } + {intErr(e2@location) | typeOf(e2) != INT };
+    {intErr(e1@location) | !isInt(typeOf(e1)) } + {intErr(e2@location) | !isInt(typeOf(e2)) };
 
  
 public set[Message] check(lt(e1, e2)) = check(e1) + check(e2) + 
-  {intErr(e1@location) | typeOf(e1) != INT } + {intErr(e2@location) | typeOf(e2) != INT };
+  {intErr(e1@location) | !isInt(typeOf(e1)) } + {intErr(e2@location) | !isInt(typeOf(e2)) };
 
 public set[Message] check(geq(e1, e2)) = check(e1) + check(e2) + 
-    {intErr(e1@location) | typeOf(e1) != INT } + {intErr(e2@location) | typeOf(e2) != INT };
+    {intErr(e1@location) | !isInt(typeOf(e1)) } + {intErr(e2@location) | !isInt(typeOf(e2)) };
 
 public set[Message] check(leq(e1, e2)) = check(e1) + check(e2) + 
-    {intErr(e1@location) | typeOf(e1) != INT } + {intErr(e2@location) | typeOf(e2) != INT };
+    {intErr(e1@location) | !isInt(typeOf(e1)) } + {intErr(e2@location) | !isInt(typeOf(e2)) };
     
 // otherwise: no errors
 public default set[Message] check(Expression e) = {};
 
 
 // Obtain the type of an expression
-public Type typeOf(nat(_)) = INT;
-public Type typeOf(\true()) = BOOL;
-public Type typeOf(\false()) = BOOL;
-public Type typeOf(neg(e)) = INT;
-public Type typeOf(pos(e)) = INT;
-public Type typeOf(not(e)) = BOOL;
-public Type typeOf(mul(e1, e2)) = INT;
-public Type typeOf(div(e1, e2)) = INT;
-public Type typeOf(Expression::mod(e1, e2)) = INT; 
-public Type typeOf(add(e1, e2)) = INT;
-public Type typeOf(sub(e1, e2)) = INT;
-public Type typeOf(amp(e1, e2)) = BOOL;
-public Type typeOf(or(e1, e2)) = BOOL;
-public Type typeOf(eq(e1, e2)) = BOOL;
-public Type typeOf(neq(e1, e2)) = BOOL;
-public Type typeOf(gt(e1, e2)) = BOOL;
-public Type typeOf(lt(e1, e2)) = BOOL;
-public Type typeOf(geq(e1, e2)) = BOOL;
-public Type typeOf(leq(e1, e2)) = BOOL;
+public Type typeOf(nat(_)) = intType();
+public Type typeOf(\true()) = boolType();
+public Type typeOf(\false()) = boolType();
+public Type typeOf(neg(e)) = intType();
+public Type typeOf(pos(e)) = intType();
+public Type typeOf(not(e)) = boolType();
+public Type typeOf(mul(e1, e2)) = intType();
+public Type typeOf(div(e1, e2)) = intType();
+public Type typeOf(Expression::mod(e1, e2)) = intType(); 
+public Type typeOf(add(e1, e2)) = intType();
+public Type typeOf(sub(e1, e2)) = intType();
+public Type typeOf(amp(e1, e2)) = boolType();
+public Type typeOf(or(e1, e2)) = boolType();
+public Type typeOf(eq(e1, e2)) = boolType();
+public Type typeOf(neq(e1, e2)) = boolType();
+public Type typeOf(gt(e1, e2)) = boolType();
+public Type typeOf(lt(e1, e2)) = boolType();
+public Type typeOf(geq(e1, e2)) = boolType();
+public Type typeOf(leq(e1, e2)) = boolType();
 
 public Type typeOf(lookup(x)) {
   if ((x@decl)?) {
     d = x@decl;
     if (d is const) {
-      return INT;
+      return intType();
     }
     return d.\type;
   }

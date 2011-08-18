@@ -79,14 +79,14 @@ public list[Procedure] liftProc(Procedure proc) {
 
 public Module rename(Module m, NEnv global) {
   return visit (m) {
-    case c:call(x:id(s), as) => call(id("<s><(x@decl).location.offset>")[@decl=x@decl][@location=x@location], as)
+    case c:call(x:id(s), as) => call(id("<s>_<(x@decl).location.offset>")[@decl=x@decl][@location=x@location], as)
        when !isDefined(global, x)
-    case p:proc(x:id(s), fs, ds, b, f2) => proc(id("<s><(x@location).offset>")[@location=x@location], fs, ds, b, f2)[@scope=p@scope]
-    case constDecl(x:id(s), e) => constDecl(id("<s><(x@location).offset>")[@location=x@location], e)
-    case typeDecl(x:id(s), t) => typeDecl(id("<s><(x@location).offset>")[@location=x@location], t)
-    case user(x:id(s)) => user(id("<s><l.offset>")[@decl=x@decl])
+    case p:proc(x:id(s), fs, ds, b, f2) => proc(id("<s>_<(x@location).offset>")[@location=x@location], fs, ds, b, f2)[@scope=p@scope]
+    case constDecl(x:id(s), e) => constDecl(id("<s>_<(x@location).offset>")[@location=x@location], e)
+    case typeDecl(x:id(s), t) => typeDecl(id("<s>_<(x@location).offset>")[@location=x@location], t)
+    case user(x:id(s)) => user(id("<s>_<l.offset>")[@decl=x@decl])
       when (x@decl)?, \type(l, _) := x@decl
-    case lookup(x:id(s)) => lookup(id("<s><l.offset>")[@decl=x@decl])
+    case lookup(x:id(s)) => lookup(id("<s>_<l.offset>")[@decl=x@decl])
       when const(l, _) := x@decl
   };
 }
