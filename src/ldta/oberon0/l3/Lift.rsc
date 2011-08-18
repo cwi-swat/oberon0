@@ -46,7 +46,9 @@ public rel[loc, Ident] freeVars(Module m) {
   }
   
   set[Ident] freeVars(Procedure p) {
-    fv = freeVarsDecls(p.decls) + { e.var | /Expression e <- p.body, e is lookup } + { s.var | /Statement s <- p.body, s is assign };
+    fv = freeVarsDecls(p.decls) + { e.var | /Expression e <- p.body, e is lookup, !(((e.var)@decl) is const) }
+       // assignments can never be consts (is caught by binding)
+       + { s.var | /Statement s <- p.body, s is assign };
     return { x | x <- fv, !isDefined(p@scope, x) };
   }
   

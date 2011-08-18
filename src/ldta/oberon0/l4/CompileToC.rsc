@@ -5,7 +5,6 @@ extend ldta::oberon0::l3::CompileToC;
 
 import String;
 import List;
-import IO;
 
 public str compileL4toC(Module m) = compileL3toC(m);
 
@@ -47,8 +46,6 @@ public str type2c(record(fs)) = "struct { <fields2c(fs)> }";
 public str fields2c(list[Field] fs) = ("" | it + "<varType2c(n.name, f.\type)>;\n" | f <- fs, n <- f.names );
 
 public str expForFormal(e:lookup(x, ss), Formal f) {
-  // TODO: fix this
-   println("E = <e>, f = <f>");
    if (!f.hasVar) {
      return exp2c(e);
    }

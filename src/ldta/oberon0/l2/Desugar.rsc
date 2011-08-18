@@ -30,10 +30,10 @@ public list[Statement] case2ifs(list[Statement] stats) {
 public list[Statement] for2while(list[Statement] stats) {
   return visit (stats) {
 	case forDo(n, f, t, [by], b) => 
-		             begin([assign(n, f), whileDo(geq(lookup(n), t), 
+		             begin([assign(n, f), whileDo(leq(lookup(n), t), 
 				                 [b, assign(n, add(lookup(n), by))])]) 
 	case forDo(n, f, t, [], b) => 
-		             begin([assign(n, f), whileDo(geq(lookup(n), t), 
+		             begin([assign(n, f), whileDo(leq(lookup(n), t), 
 				                 [b, assign(n, add(lookup(n), nat(1)))])]) 
   }
 }

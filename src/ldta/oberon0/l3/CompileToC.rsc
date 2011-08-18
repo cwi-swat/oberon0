@@ -12,6 +12,7 @@ public str compileL3toC(Module m) {
 	  return "
 #include \<builtins.h\>
 <decls2c(m.decls)>
+<procs2cdecls(m.decls.procs)>
 <procs2c(m.decls.procs)>
 <body2c(m.body)>
 ";

@@ -131,7 +131,7 @@ public tuple[Statement, set[Message]] bind(s:assign(x, e), NEnv nenv, set[Messag
   return <s, errs + { undefVarErr(x@location) }>;
 }
 
-public tuple[Statement, set[Message]] bind(s:ifThen(c, b, eis, list[Statement] e), NEnv nenv, set[Message] errs) {
+public tuple[Statement, set[Message]] bind(s:ifThen(c, b, list[tuple[Expression condition, list[Statement] body]] eis, list[Statement] e), NEnv nenv, set[Message] errs) {
   <s.condition, errs> = bind(c, nenv, errs);
   <s.body, errs> = bind(b, nenv, errs);
   s.elseIfs = for (ei <- eis) {
