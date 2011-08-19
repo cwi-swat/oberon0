@@ -6,19 +6,23 @@ import ldta::oberon0::l2::Desugar;
 
 import List;
 import Set;
+import Graph;
+import IO;
+import Relation;
 
 public Module lift(Module m, NEnv global, Module(Module) bind) {
   m = normalizeDecls(m);
   m = bind(extendSigs(desugar(m), freeVars(m)));
-  return liftDecls(rename(m, global));
+  return liftArrayTypes(liftDecls(rename(m, global)));
 }
 
 public Module normalizeDecls(Module m) = visit (m) {
     case decls(cds, tds, vds) => decls(cds, tds, vds, [])
   };
 
+
 public Module liftDecls(Module mod) {
-  visit (mod.decls.procs) {
+  mod.decls.procs = visit (mod.decls.procs) {
     case Declarations decls: {
 	      mod.decls.consts = decls.consts + mod.decls.consts;
 	      mod.decls.types = decls.types + mod.decls.types;
@@ -28,17 +32,23 @@ public Module liftDecls(Module mod) {
 	      decls.procs = [];
 	      insert decls;
     }
-  }  
-  
+  }
+  return mod;
+}
+
+public Module liftArrayTypes(Module mod) {  
   atypes = [];
   mod = visit (mod) {
     case a:array(b, et): {
       n = id("array_<(a@location).offset>");
       atypes += [typeDecl(n, a)];
-      insert user(n); 
+      insert user(n);
     }
   }
-  mod.decls.types = atypes + mod.decls.types;
+  atypes += mod.decls.types;
+  deps = { <t1, t2> | t1:typeDecl(x, _) <- atypes, t2 <- atypes , x in { y | /user(Ident y) <- t2.\type } };
+  nodeps = toList(toSet(atypes) - carrier(deps));
+  mod.decls.types = order(deps) + nodeps;
   return mod;
 }
 

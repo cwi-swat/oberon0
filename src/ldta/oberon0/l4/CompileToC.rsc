@@ -53,11 +53,13 @@ public tuple[str, str] baseBounds(Type t, Expression bound) {
   }
 }
 
-public str type2c(record(fs)) = "struct { <fields2c(fs)> }";
+public str type2c(record(fs)) = "struct {
+                                '  <fields2c(fs)>
+                                '}";
 
 public str type2c(t:array(b, et)) = "struct { <varType2c("_", t)>; }";
 
-public str fields2c(list[Field] fs) = ("" | it + "<varType2c(n.name, f.\type)>;\n" | f <- fs, n <- f.names );
+public str fields2c(list[Field] fs) = intercalate("\n", [ "<varType2c(n.name, f.\type)>;" | f <- fs, n <- f.names ]);
 
 public str expForFormal(e:lookup(x, ss), Formal f) {
    if (!f.hasVar) {
