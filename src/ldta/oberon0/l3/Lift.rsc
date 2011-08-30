@@ -22,17 +22,23 @@ public Module normalizeDecls(Module m) = visit (m) {
 
 
 public Module liftDecls(Module mod) {
-  mod.decls.procs = visit (mod.decls.procs) {
+  gcs = [];
+  gts = [];
+  gps = [];
+  mod = visit (mod) {
     case Declarations decls: {
-	      mod.decls.consts = decls.consts + mod.decls.consts;
-	      mod.decls.types = decls.types + mod.decls.types;
-	      mod.decls.procs += ( [] | it + liftProc(p) | p <- decls.procs );
+	      gcs += decls.consts;
+	      gts += decls.types;
+	      gps = ( gps | it + liftProc(p) | p <- decls.procs );
 	      decls.consts = [];
 	      decls.types = [];
 	      decls.procs = [];
 	      insert decls;
     }
   }
+  mod.decls.consts = gcs;
+  mod.decls.types = gts;
+  mod.decls.procs = gps;
   return mod;
 }
 

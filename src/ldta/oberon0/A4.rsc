@@ -48,6 +48,11 @@ public void check(loc l) {
     println("Type error: <e.msg> at line <e.at.begin.line>");
 }
 
+public void transform(loc l) {
+  Module myBind(Module m) = bind(m, GLOBAL)[0];
+  println(format(mod2box(lift(myBind(implode(parse(l))), GLOBAL, myBind))));
+}
+
 public void compile(loc l) {
   Module myBind(Module m) = bind(m, GLOBAL)[0];
   println(compileL4toC(lift(myBind(implode(parse(l))), GLOBAL, myBind)));
