@@ -7,6 +7,8 @@ import IO;
 
 public Message boundErr(loc l) = error(l, "Invalid bound");
 
+anno Type Type@ntype;
+
 //public Statement assign(x, e) = assign(x, [], e);
 //public Expression lookup(x) = lookup(x, []);
 
@@ -15,7 +17,7 @@ public tuple[Type, set[Message]] bind(t:array(e, t2), NEnv nenv, set[Message] er
   <t.\type, errs> = bind(t2, nenv, errs);
   errs += { notAConstErr(e@location) | nat(_) !:= evalConst(e, nenv) }
     + { boundErr(e@location) | nat(n) := evalConst(e, nenv), n < 0 };
-  return <t, errs>; 
+  return <t[@ntype=evalType(t, nenv)], errs>; 
 }
 
 public tuple[Type, set[Message]] bind(t:record(fs), NEnv nenv, set[Message] errs) {
@@ -29,7 +31,7 @@ public tuple[Type, set[Message]] bind(t:record(fs), NEnv nenv, set[Message] errs
     <f.\type, errs> = bind(f.\type, nenv, errs);
     append f;
   }
-  return <t, errs>;
+  return <t[@ntype=evalType(t, nenv)], errs>;
 }
 
 
@@ -75,5 +77,5 @@ public Type evalType(a:array(e, t), NEnv nenv) =
 
 // Flatten field lists.
 public Type evalType(r:record(fs), NEnv nenv) =
-  record([ field([n], evalType(t, nenv)) | field(ns, t) <- fs, n <- ns ])[@location=e@location];  
+  record([ field([n], evalType(t, nenv)) | field(ns, t) <- fs, n <- ns ])[@location=r@location];  
   

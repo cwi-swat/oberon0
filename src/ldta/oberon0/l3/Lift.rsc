@@ -4,11 +4,15 @@ import ldta::oberon0::l3::AST;
 import ldta::oberon0::l3::Scope;
 import ldta::oberon0::l2::Desugar;
 
+
 import List;
 import Set;
 import Graph;
 import IO;
 import Relation;
+
+// TODO remove this
+anno Type Type@ntype;
 
 public Module lift(Module m, NEnv global, Module(Module) bind) {
   m = normalizeDecls(m);
@@ -43,14 +47,21 @@ public Module liftDecls(Module mod) {
 }
 
 public Module liftArrayTypes(Module mod) {  
-  atypes = [];
+  atypesMap = ();
   mod = visit (mod) {
     case a:array(b, et): {
-      n = id("array_<(a@location).offset>");
-      atypes += [typeDecl(n, a)];
-      insert user(n)[@location=a@location];
+      if (k <- atypesMap, typeDecl(n2, a2) := atypesMap[k], a2 == a@ntype) {
+        insert user(n2)[@location=a@location];
+      }
+      else {  
+        n = id("array_<(a@location).offset>");
+        atypesMap[a@location] = typeDecl(n, a@ntype);
+        insert user(n)[@location=a@location];
+      }
+      
     }
   }
+  atypes = [ atypesMap[l] | l <- atypesMap ];
   atypes += mod.decls.types;
   deps = { <t1, t2> | t1:typeDecl(x, _) <- atypes, t2 <- atypes , x in { y | /user(Ident y) <- t2.\type } };
   nodeps = toList(toSet(atypes) - carrier(deps));
@@ -86,7 +97,7 @@ public rel[loc, Ident] freeVars(Module m) {
 public Module extendSigs(Module m, rel[loc, Ident] fv) {
   return top-down visit (m) {
     case p:proc(f, fs, _, _, _): {
-      p.formals += [ formal(true, [x], (x@decl).\type) | x <- sort(toList(fv[f@location])) ];
+      p.formals += [ formal(true, [x], ((x@decl).\type)) | x <- sort(toList(fv[f@location])) ];
       insert p;
     }
     case c:call(f, as): {
