@@ -48,7 +48,7 @@ public Module liftArrayTypes(Module mod) {
     case a:array(b, et): {
       n = id("array_<(a@location).offset>");
       atypes += [typeDecl(n, a)];
-      insert user(n);
+      insert user(n)[@location=a@location];
     }
   }
   atypes += mod.decls.types;

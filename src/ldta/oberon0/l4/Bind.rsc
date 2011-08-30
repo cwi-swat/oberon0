@@ -70,10 +70,10 @@ public tuple[Selector, set[Message]] bind(s:subscript(e), NEnv nenv, set[Message
   return <s, errs>;
 }
 
-public Type evalType(array(e, t), NEnv nenv) = 
-  array(evalConst(e, nenv), evalType(t, nenv));
+public Type evalType(a:array(e, t), NEnv nenv) = 
+  array(evalConst(e, nenv), evalType(t, nenv))[@location=a@location];
 
 // Flatten field lists.
-public Type evalType(record(fs), NEnv nenv) =
-  record([ field([n], evalType(t, nenv)) | field(ns, t) <- fs, n <- ns ]);  
+public Type evalType(r:record(fs), NEnv nenv) =
+  record([ field([n], evalType(t, nenv)) | field(ns, t) <- fs, n <- ns ])[@location=e@location];  
   
