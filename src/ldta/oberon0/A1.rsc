@@ -8,32 +8,21 @@ import ldta::oberon0::l2::Format;
 
 import lang::box::util::Box2Text;
 import Message;
-import IO;
+import ParseTree;
 
-import ldta::oberon0::Result;
-
-
-public void runA1(loc l) {
-  m = implode(parse(l));
-  <m2, errs> = bind(m, scope(()));
-  if (errs != {}) {
-    e = firstError(errs);
-    println(e.at.begin.line);
-    return;
-  }
-  println(format(mod2box(m)));
+public str formatL2(loc l) {
+  return format(mod2box(implode(parse(l))));
 }
 
-public void formatA1(loc l) {
- println(format(mod2box(implode(parse(l)))));
-}
+public Tree parseL1(loc l) = parse(l);
+public Tree parseL2(loc l) = parse(l);
 
-public void bindA1(loc l) {
+
+public set[Message] bindL1(loc l) = bindL2(l);
+
+public set[Message] bindL2(loc l) {
   m = implode(parse(l));
   <m2, errs> = bind(m, scope(()));
-  if (errs != {}) {
-    e = firstError(errs);
-    println(e.at.begin.line);
-  }
+  return errs;
 }
 

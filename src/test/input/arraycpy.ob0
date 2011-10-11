@@ -1,0 +1,12 @@
+MODULE BLA;
+
+CONST
+  A = 10;
+  B = 3;
+
+VAR
+  x, y: ARRAY A OF ARRAY B OF INTEGER;
+
+BEGIN
+  x := y
+END BLA.

@@ -4,8 +4,8 @@ import ldta::oberon0::l3::Syntax;
 
 import ParseTree;
 
-public Module parse(loc l) = parse(#Module, l);
-public Module parse(str s, loc l) = parse(#Module, s, l);
+public start[Module] parse(loc l) = parse(#start[Module], l);
+public start[Module] parse(str s, loc l) = parse(#start[Module], s, l);
 
 
 

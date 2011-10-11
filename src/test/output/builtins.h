@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define WriteLn() printf("\n")
+#define WriteLn(n) printf("%d\n", (n))
 #define Write(n) printf("%d", (n))
 #define Read(n) scanf("%d", (n))
 

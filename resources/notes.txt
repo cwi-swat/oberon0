@@ -1,0 +1,9 @@
+
+Syntax
+
+- Bodies of if,else,elsif and while cannot be empty
+  (StatementSequence = statement {";" statement})
+- Semi-colons are separators, not (optional) terminators
+- Can vars/const/types shadow builtin procs in L4?
+
+  

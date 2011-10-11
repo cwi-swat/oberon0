@@ -7,8 +7,8 @@ import lang::oberon0::l4::ide::L4;
 import util::IDE;
 
 public void main() {
-  registerL1();
-  registerL2();
-  registerL3();
+//  registerL1();
+//  registerL2();
+//  registerL3();
   registerL4();
 }   
