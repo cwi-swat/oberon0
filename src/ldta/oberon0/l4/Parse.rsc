@@ -1,3 +1,4 @@
+@cachedParser{"ldta.oberon0.l4.Parse"}
 module ldta::oberon0::l4::Parse
 
 import ldta::oberon0::l4::Syntax;

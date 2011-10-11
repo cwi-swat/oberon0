@@ -12,36 +12,48 @@ import Message;
 import IO;
 import lang::box::util::Box2Text;
 
-public NEnv GLOBAL = scope((
+import ldta::oberon0::Result;
+
+public NEnv GLOBAL_A3 = scope((
   id("Write"): proc(|file://-|,[formal(false, [id("x")], user(id("INTEGER")))]),
   id("Read"): proc(|file://-|,[formal(true, [id("x")], user(id("INTEGER")))]),
   id("WriteLn"): proc(|file://-|,[])
 ));
   
 
-
-public void format(loc l) {
- println(format(mod2box(implode(parse(l)))));
-}
-
-public void bind(loc l) {
+public void runA3(loc l) {
   m = implode(parse(l));
-  <m2, errs> = bind(m, GLOBAL);
-  for (e <- errs) {
-    println("Name error: <e.msg> at line <e.at.begin.line>");
-  }
-}
-
-public void check(loc l) {  
-  m = implode(parse(l));
-  <m2, errs> = bind(m, GLOBAL);
+  <m2, errs> = bind(m, GLOBAL_A3);
   if (errs != {}) {
-    for (e <- errs) 
-      println("Name error: <e.msg> at line <e.at.begin.line>");
+    e = firstError(errs);
+    println(e.at.begin.line);
     return;
   }
   errs = check(m2);
-  for (e <- errs) 
-    println("Type error: <e.msg> at line <e.at.begin.line>");
+  if (errs != {}) {
+    e = firstError(errs);
+    println(e.at.begin.line);
+    return;
+  }
+  println(format(mod2box(m2)));
+}
+
+public void formatA3(loc l) {
+ println(format(mod2box(implode(parse(l)))));
+}
+
+public void bindA3(loc l) {
+  m = implode(parse(l));
+  <m2, errs> = bind(m, GLOBAL_A3);
+  report(errs);
+}
+
+public void checkA3(loc l) {  
+  m = implode(parse(l));
+  <m2, errs> = bind(m, GLOBAL_A3);
+  if (errs != {}) {
+    throw "Name error(s) before type checking: <errs>";
+  }
+  report(check(m2));
 }
 

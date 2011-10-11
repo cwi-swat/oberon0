@@ -1,5 +1,6 @@
 module ldta::oberon0::A1
 
+import ldta::oberon0::l1::Scope;
 import ldta::oberon0::l2::Bind;
 import ldta::oberon0::l2::Parse;
 import ldta::oberon0::l2::Implode;
@@ -9,15 +10,30 @@ import lang::box::util::Box2Text;
 import Message;
 import IO;
 
-public void format(loc l) {
+import ldta::oberon0::Result;
+
+
+public void runA1(loc l) {
+  m = implode(parse(l));
+  <m2, errs> = bind(m, scope(()));
+  if (errs != {}) {
+    e = firstError(errs);
+    println(e.at.begin.line);
+    return;
+  }
+  println(format(mod2box(m)));
+}
+
+public void formatA1(loc l) {
  println(format(mod2box(implode(parse(l)))));
 }
 
-public void bind(loc l) {
+public void bindA1(loc l) {
   m = implode(parse(l));
   <m2, errs> = bind(m, scope(()));
-  for (e <- errs) {
-    println("Name error: <e.msg> at line <e.at.begin.line>");
+  if (errs != {}) {
+    e = firstError(errs);
+    println(e.at.begin.line);
   }
 }
 
