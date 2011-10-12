@@ -123,15 +123,21 @@ lexical Natural = [0-9]+ !>> [0-9] ;
 
 lexical Layout 
 	= whitespace: [\t-\n\r\ ] 
-	| Comment 
+	| @category="Comment" Comment 
 	;
 
 layout Layouts = Layout* !>> [\t-\n \r \ ] !>> "(*" ;
 
-lexical Comment = @category="Comment"  "(*" CommentChar* "*)" ;
+lexical Comment =  "(*" CommentElt* "*)" ;
+
+lexical CommentElt
+   = CommentChar+
+   | Comment
+   ;
 
 lexical CommentChar 
-	= ![*] 
-	| [*] !>> [)] 
+	= ![*(] 
+	| [*] !>> [)]
+	| [(] !>> [*] 
 	;
 
