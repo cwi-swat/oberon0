@@ -19,4 +19,5 @@ keyword Keywords
 	| "UNTIL"
 	| "CASE"
 	| "OF"
+	| "BY"
 	;
