@@ -28,12 +28,12 @@ private int report(set[Message] errs) {
 }
 
 private Message firstError(set[Message] errs) {
-  int n = -1;
-  int c = -1;
+  b = true;
   Message cur;
   for (e <- errs) {
-    if (n == -1) {
+    if (b) {
       cur = e;
+      b = false;
     }
     else {
       if (e.at.begin.line < cur.at.begin.line) {

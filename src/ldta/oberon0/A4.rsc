@@ -18,7 +18,7 @@ import lang::box::util::Box2Text;
 public NEnv GLOBAL_A4 = scope((
   id("Write"): proc(|file://-|,[formal(false, [id("x")], user(id("INTEGER")))]),
   id("Read"): proc(|file://-|,[formal(true, [id("x")], user(id("INTEGER")))]),
-  id("WriteLn"): proc(|file://-|,[formal(false, [id("x")], user(id("INTEGER")))])
+  id("WriteLn"): proc(|file://-|,[])
 ));
 
 public Tree parseL4(loc l) = parse(l);

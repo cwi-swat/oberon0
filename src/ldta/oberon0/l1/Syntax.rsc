@@ -4,7 +4,7 @@ start syntax Module = mod: "MODULE" Ident name ";" Declarations decls Body? body
 
 syntax Body = @Foldable "BEGIN" {Statement ";"}*;
 
-syntax Keywords 
+keyword Keywords 
 	= "MODULE"
 	| "BEGIN"
 	;
