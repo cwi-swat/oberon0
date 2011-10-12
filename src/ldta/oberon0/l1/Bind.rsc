@@ -188,12 +188,12 @@ public tuple[Expression, set[Message]] bindConst(Expression e, NEnv nenv, set[Me
 
 public tuple[Expression, set[Message]] bindOperator(Expression e, NEnv nenv, set[Message] errs) {
   if (e has exp) {
-    <e.exp, errs> = bind(e.exp, nenv, errs);
+    <e.exp, errs> = bindConst(e.exp, nenv, errs);
     return <e, errs>;
   }
   if (e has lhs && e has rhs) {
-    <e.lhs, errs> = bind(e.lhs, nenv, errs);
-    <e.rhs, errs> = bind(e.rhs, nenv, errs);
+    <e.lhs, errs> = bindConst(e.lhs, nenv, errs);
+    <e.rhs, errs> = bindConst(e.rhs, nenv, errs);
     return <e, errs>;
   }
   return <e, errs>;
