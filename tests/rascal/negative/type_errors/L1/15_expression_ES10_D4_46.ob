@@ -1,0 +1,21 @@
+MODULE Test15;
+VAR
+  y: INTEGER;
+  q: BOOLEAN;
+  x: INTEGER;
+  p: BOOLEAN;
+  z: INTEGER;
+  r: BOOLEAN;
+
+BEGIN
+               q := p;
+               q := (y >= (1 * 0));
+               z := 2;
+               r := q;
+  (* error *)  z := (2 + (200 + ((- p) + 1)));
+               x := 2;
+               q := r;
+               r := r;
+               x := 2;
+               z := (2 - 1223)
+END Test15.

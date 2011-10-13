@@ -1,0 +1,21 @@
+MODULE Test17;
+VAR
+  y: INTEGER;
+  q: BOOLEAN;
+  x: INTEGER;
+  p: BOOLEAN;
+  z: INTEGER;
+  r: BOOLEAN;
+
+BEGIN
+               p := q;
+               x := ((x * 2) - ((- 1223) MOD (- 200)));
+               x := 1;
+               r := q;
+               q := q;
+               r := (~ (((1223 - z) <= 0) & ((- 1) # (+ z))));
+  (* error *)  x := y;
+               r := r;
+               r := (2 # 1223);
+               z := 200
+END Test17.

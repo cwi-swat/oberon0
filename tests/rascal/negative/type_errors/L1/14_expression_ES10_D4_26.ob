@@ -1,0 +1,21 @@
+MODULE Test14;
+VAR
+  y: INTEGER;
+  q: BOOLEAN;
+  x: INTEGER;
+  p: BOOLEAN;
+  z: INTEGER;
+  r: BOOLEAN;
+
+BEGIN
+               r := p;
+               y := y;
+               q := (0 <= 0);
+  (* error *)  y := ((0 - ((p MOD 0) MOD (y - y))) + (+ 0));
+               z := 2;
+               y := z;
+               z := x;
+               x := 0;
+               r := (0 <= (+ 1223));
+               r := p
+END Test14.

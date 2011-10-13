@@ -1,0 +1,21 @@
+MODULE Test18;
+VAR
+  y: INTEGER;
+  q: BOOLEAN;
+  x: INTEGER;
+  p: BOOLEAN;
+  z: INTEGER;
+  r: BOOLEAN;
+
+BEGIN
+               p := (((x + x) * ((1 - x) + (- 0))) # (- (- 2)));
+               x := z;
+               p := (2 > 1);
+               r := ((+ (+ (0 MOD 200))) = 0);
+               r := q;
+               q := ((((x - 1) >= (1223 + 0)) OR ((q & p) & r)) OR r);
+               p := ((0 MOD 1) < ((z - (x + 200)) * (0 MOD (z - 1))));
+  (* error *)  p := (200 >= (x + (- x)));
+               q := q;
+               p := (0 > (z * y))
+END Test18.

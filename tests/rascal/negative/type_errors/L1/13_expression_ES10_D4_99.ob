@@ -1,0 +1,21 @@
+MODULE Test13;
+VAR
+  y: INTEGER;
+  q: BOOLEAN;
+  x: INTEGER;
+  p: BOOLEAN;
+  z: INTEGER;
+  r: BOOLEAN;
+
+BEGIN
+               x := 200;
+               x := 1223;
+  (* error *)  y := ((((p + y) DIV (0 DIV y)) * ((+ 2) DIV 200)) * y);
+               p := r;
+               x := x;
+               z := 200;
+               q := ((((- z) DIV z) * 200) < (- y));
+               p := (0 <= 2);
+               r := (0 >= 2);
+               z := (x + 1223)
+END Test13.

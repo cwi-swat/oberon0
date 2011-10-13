@@ -1,0 +1,21 @@
+MODULE Test20;
+VAR
+  y: INTEGER;
+  q: BOOLEAN;
+  x: INTEGER;
+  p: BOOLEAN;
+  z: INTEGER;
+  r: BOOLEAN;
+
+BEGIN
+               z := (- 1223);
+               z := y;
+               r := (y > (1223 + 1223));
+               z := (2 MOD 2);
+               z := 0;
+               p := ((2 > ((+ y) * 0)) & (1223 <= 0));
+               z := z;
+               x := 0;
+               y := 0;
+  (* error *)  x := 0
+END Test20.

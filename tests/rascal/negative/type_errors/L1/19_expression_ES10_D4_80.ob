@@ -1,0 +1,21 @@
+MODULE Test19;
+VAR
+  y: INTEGER;
+  q: BOOLEAN;
+  x: INTEGER;
+  p: BOOLEAN;
+  z: INTEGER;
+  r: BOOLEAN;
+
+BEGIN
+               q := (((z MOD 0) + ((- 0) - (+ 1223))) < (- (0 MOD 1223)));
+               q := (((+ (1223 DIV 1223)) * (+ 1223)) = (((+ 200) - (200 + 200)) + (2 * 1)));
+               p := ((+ ((0 MOD y) * 200)) >= (+ ((1223 * 1) MOD z)));
+               q := (2 > ((y DIV 1223) * (- 1)));
+               z := (+ 200);
+               p := (2 # z);
+               r := p;
+               z := 1;
+  (* error *)  y := 0;
+               x := (z DIV 1223)
+END Test19.

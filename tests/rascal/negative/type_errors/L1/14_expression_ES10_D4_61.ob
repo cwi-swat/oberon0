@@ -1,0 +1,21 @@
+MODULE Test14;
+VAR
+  y: INTEGER;
+  q: BOOLEAN;
+  x: INTEGER;
+  p: BOOLEAN;
+  z: INTEGER;
+  r: BOOLEAN;
+
+BEGIN
+               z := ((((- z) * (1223 * 0)) DIV ((+ x) + (x MOD x))) MOD (((200 + z) - (- y)) DIV (- (- 200))));
+               z := (((+ (z + z)) DIV ((2 * y) MOD (x - 1223))) - (((+ x) - (0 MOD 1)) + ((- 2) * (1 - x))));
+               q := ((((1223 MOD x) # (+ 1223)) & ((1 MOD 1) < (z * z))) & ((+ (1223 * 0)) <= ((+ 1223) DIV (2 + 1))));
+  (* error *)  r := ((((q - 200) - (200 MOD 200)) MOD ((200 - z) + (y DIV z))) # (((x DIV 200) DIV (200 - 0)) MOD ((+ 1) + (1 DIV 0))));
+               r := ((((z + 1223) * (1223 + y)) - ((+ z) MOD (2 DIV 1))) # (+ ((0 * 1223) * (x + y))));
+               r := ((((x * z) DIV (- z)) MOD (+ (2 MOD 2))) < (((+ 2) MOD (- y)) MOD ((x * 1) MOD (z - 1))));
+               r := ((((z - 1223) - (0 - y)) DIV ((0 DIV 200) MOD (1 + z))) > (((- 1223) * (- x)) MOD ((1 + z) + (z MOD z))));
+               z := ((- ((- 1223) DIV (1223 * 1223))) DIV (((- x) DIV (0 - 2)) MOD (+ (+ y))));
+               z := (- (((2 * y) MOD (z - x)) + ((1 DIV 1223) * (1 MOD 1))));
+               x := (+ (((+ 1) * (+ 1223)) MOD ((1 DIV 0) MOD (- x))))
+END Test14.

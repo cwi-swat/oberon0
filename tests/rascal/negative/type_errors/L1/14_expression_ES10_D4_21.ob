@@ -1,0 +1,21 @@
+MODULE Test14;
+VAR
+  y: INTEGER;
+  q: BOOLEAN;
+  x: INTEGER;
+  p: BOOLEAN;
+  z: INTEGER;
+  r: BOOLEAN;
+
+BEGIN
+               r := (p & ((2 * 1) = (200 + y)));
+               z := z;
+               r := (r OR (200 = z));
+  (* error *)  p := (2 > (2 DIV 2));
+               x := (y DIV 1223);
+               z := x;
+               y := (+ 1);
+               p := ((1223 # ((- 0) * (+ x))) OR (((+ 0) # x) OR (~ (~ q))));
+               x := 0;
+               y := (1223 + ((2 DIV (2 * 1223)) - z))
+END Test14.
