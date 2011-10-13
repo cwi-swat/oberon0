@@ -9,7 +9,7 @@ import List;
 public Message lvalueErr(loc l) = error(l, "Not an lvalue");
 public Message argNumErr(loc l) = error(l, "Wrong number of arguments");
 
-public bool isLValue(lookup(_)) = true;
+public bool isLValue(lookup(x)) = !((x@decl) is const);
 public default bool isLValue(Expression _) = false;
 
 

@@ -13,7 +13,7 @@ import IO;
 public Message selectorErr(loc l) = error(l, "Invalid selector");
 public Message undefFieldErr(loc l) = error(l, "Undefined field");
 
-public bool isLValue(lookup(_, _)) = true;
+public bool isLValue(lookup(x, _)) = !((x@decl) is const);
 
 public set[Message] check(assign(x, ss, e)) = check(e) + check(lookup(x,ss)) +
   { assignErr(x@location) | typeOf(lookup(x, ss)) != typeOf(e) };
