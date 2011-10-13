@@ -15,6 +15,7 @@ public Message notAVarErr(loc l) = error(l, "Not a variable");
 public Message notAVarOrConstErr(loc l) = error(l, "Not a variable/constant");
 public Message notAConstErr(loc l) = error(l, "Not a constant");
 public Message idMismatchErr(loc l) = error(l, "Identifier mismatch");
+public Message divZeroErr(loc l) = error(l, "Division by zero");
 
 public bool isWritable(var(_, _)) = true;
 public default bool isWritable(Decl _) = false;
@@ -74,7 +75,8 @@ public tuple[NEnv, set[Message]] declare(Ident n, Decl b, NEnv nenv, set[Message
 
 public tuple[ConstDecl, NEnv, set[Message]] bind(cd:constDecl(n, e), NEnv nenv, set[Message] errs) {
   <cd.\value, errs> = bindConst(e, nenv, errs);
-  <nenv, errs> = declare(n, const(cd@location, evalConst(e, nenv)), nenv, errs);
+  <evc, errs> = evalConst(e, nenv, errs);
+  <nenv, errs> = declare(n, const(cd@location, evc), nenv, errs);
   return <cd, nenv, errs>;
 }
 
@@ -216,17 +218,19 @@ public tuple[Expression, set[Message]] bindConstOperator(Expression e, NEnv nenv
 }
 
 // Partially evaluate const exp
-public Expression evalConst(Expression e, NEnv nenv) {
-  return innermost visit (e) {
+public tuple[Expression,set[Message]] evalConst(Expression e, NEnv nenv, set[Message] errs) {
+  e = innermost visit (e) {
     case pos(nat(a)) => nat(a)
     case neg(nat(a)) => nat(- a)
     case add(nat(a), nat(b)) => nat(a + b)
     case sub(nat(a), nat(b)) => nat(a - b)
     case mul(nat(a), nat(b)) => nat(a * b)
+    case div(nat(a), nat(0)): return <e, errs + {divZeroErr(e@location)}>;
     case div(nat(a), nat(b)) => nat(a / b)
     case mod(nat(a), nat(b)) => nat(a % b)
     case a:lookup(x) => xe when isVisible(nenv, x), const(_, xe) := getDef(nenv, x)
   }
+  return <e, errs>;
 }
 
 // partially evaluate a type.

@@ -18,8 +18,10 @@ public tuple[Statement, set[Message]] bind(s:forDo(i, f, t, b, ss), NEnv nenv, s
   return <s, errs>;
 }
 
-public set[Message] checkConst(Expression e, NEnv nenv) = 
-  { notAConstErr(e@location) | nat(_) !:= evalConst(e, nenv) };
+public set[Message] checkConst(Expression e, NEnv nenv) {
+  <c, errs> = evalConst(e, nenv, {}); 
+  return errs + { notAConstErr(e@location) | nat(_) !:= c };
+}
 
 public tuple[Statement, set[Message]] bind(s:caseOf(e, cs, es), NEnv nenv, set[Message] errs) {
   <s.exp, errs> = bind(e, nenv, errs);

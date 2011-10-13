@@ -108,7 +108,7 @@ import IO;
   	}
 	
 		  public str makeBody(int depth) {
-		    n = getOneFrom({1,2,3,4,5,6,7,8,9,10});
+		    n = getOneFrom({1,2,3,4});
 	    bs = for (i <- [1..n]) {
 	      append make(find(depth), depth);
 	    }

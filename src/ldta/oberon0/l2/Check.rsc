@@ -11,6 +11,7 @@ public set[Message] check(forDo(n, f, t, by, b)) = check(f) + check(t) + checkBo
 
 private set[Message] checkBy(list[Expression] es) {
   if (e <- es) {
+    // todo: check for constness
     return check(e) + { intErr(e@location) | !isInt(typeOf(e)) };
   }
   return {};
@@ -26,6 +27,7 @@ public Type typeOf(expression(e)) = typeOf(e);
 public Type typeOf(range(e1, e2)) = intType();
 
 
+// TODO check for constness.
 public set[Message] check(list[Label] ls) =
   ( {} | check(l) | l <- ls );
   

@@ -17,6 +17,9 @@ public str formatL2(loc l) {
 public Tree parseL1(loc l) = parse(l);
 public Tree parseL2(loc l) = parse(l);
 
+public Tree implodeL1(loc l) = implode(parse(l));
+public Tree implodeL2(loc l) = implode(parse(l));
+
 
 public set[Message] bindL1(loc l) = bindL2(l);
 

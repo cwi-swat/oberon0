@@ -36,18 +36,23 @@ public tuple[list[Procedure], NEnv, set[Message]] bind(list[Procedure] ps, NEnv 
 public list[Formal] flatten(list[Formal] fs, NEnv nenv) = 
   [ formal(hv, [n], evalType(t, nenv)) | formal(hv, ns, t) <- fs, n <- ns ]; 
 
+public NEnv outermost(s:scope(_)) = s;
+public NEnv outermost(nest(_, p)) = outermost(p); 
+
 public tuple[Procedure, NEnv, set[Message]] bind(p:Procedure::proc(f, list[Formal] fs, ds, b, f1), NEnv nenv, set[Message] errs) {
   // TODO: what is the semantics of nested procs with the same name, shadowing or error?
   if (isDefined(nenv, f)) {
     return <p, nenv, errs + { dupErr(f@location) }>;
   }
-  outer = define(nenv, f, proc(f@location, flatten(fs, nenv)));
-  inner = nest((), outer);
+  
+  //nenv = define(nenv, f, proc(f@location, flatten(fs, nenv)));
+  NEnv inner = nest((), outermost(nenv));
   <p.formals, inner, errs> = bind(fs, inner, errs);
   <p.decls, inner, errs> = bind(ds, inner, errs);
+  inner = define(inner, f, proc(f@location, flatten(fs, nenv)));
   <p.body, errs> = bind(b, inner, errs);
-  errs += { idMismatchErr(f1@location) | f1 != f };
-  return <p[@scope=inner], outer, errs>;
+  errs += { idMismatchErr(f@location) | f1 != f };
+  return <p[@scope=inner], inner, errs>;
 }
 
 public tuple[list[Formal], NEnv, set[Message]] bind(list[Formal] fs, NEnv nenv, set[Message] errs) {

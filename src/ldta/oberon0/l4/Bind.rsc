@@ -15,8 +15,9 @@ anno Type Type@ntype;
 public tuple[Type, set[Message]] bind(t:array(e, t2), NEnv nenv, set[Message] errs) {
   <t.exp, errs> = bind(e, nenv, errs);
   <t.\type, errs> = bind(t2, nenv, errs);
-  errs += { notAConstErr(e@location) | nat(_) !:= evalConst(e, nenv) }
-    + { boundErr(e@location) | nat(n) := evalConst(e, nenv), n < 0 };
+  <c, errs> = evalConst(e, nenv, errs);
+  errs += { notAConstErr(e@location) | nat(_) !:= c }
+    + { boundErr(e@location) | nat(n) := c, n < 0 };
   return <t[@ntype=evalType(t, nenv)], errs>; 
 }
 
@@ -72,8 +73,10 @@ public tuple[Selector, set[Message]] bind(s:subscript(e), NEnv nenv, set[Message
   return <s, errs>;
 }
 
-public Type evalType(a:array(e, t), NEnv nenv) = 
-  array(evalConst(e, nenv), evalType(t, nenv))[@location=a@location];
+public Type evalType(a:array(e, t), NEnv nenv) {
+  <c, _> = evalConst(e, nenv, {}); 
+  return array(c, evalType(t, nenv))[@location=a@location];
+}
 
 // Flatten field lists.
 public Type evalType(r:record(fs), NEnv nenv) =
