@@ -185,10 +185,24 @@ public tuple[Expression, set[Message]] bindConst(Expression e, NEnv nenv, set[Me
     }
     return <e, errs + { undefConstErr(e@location) }>;
   }
-  return bindOperator(e, nenv, errs);
+  return bindConstOperator(e, nenv, errs);
 }
 
+// TODO: factor bind vs. bindConst out of here...
 public tuple[Expression, set[Message]] bindOperator(Expression e, NEnv nenv, set[Message] errs) {
+  if (e has exp) {
+    <e.exp, errs> = bind(e.exp, nenv, errs);
+    return <e, errs>;
+  }
+  if (e has lhs && e has rhs) {
+    <e.lhs, errs> = bind(e.lhs, nenv, errs);
+    <e.rhs, errs> = bind(e.rhs, nenv, errs);
+    return <e, errs>;
+  }
+  return <e, errs>;
+}
+
+public tuple[Expression, set[Message]] bindConstOperator(Expression e, NEnv nenv, set[Message] errs) {
   if (e has exp) {
     <e.exp, errs> = bindConst(e.exp, nenv, errs);
     return <e, errs>;

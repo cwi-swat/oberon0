@@ -16,7 +16,7 @@ public Message undefFieldErr(loc l) = error(l, "Undefined field");
 public bool isLValue(lookup(_, _)) = true;
 
 public set[Message] check(assign(x, ss, e)) = check(e) + check(lookup(x,ss)) +
-  { assignErr(x@location) | bprint(typeOf(e)), typeOf(lookup(x, ss)) != typeOf(e) };
+  { assignErr(x@location) | typeOf(lookup(x, ss)) != typeOf(e) };
   
 
 public set[Message] check(lookup(x, ss)) = check(typeOf(lookup(x)), ss);

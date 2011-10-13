@@ -16,7 +16,13 @@ private set[Message] checkBy(list[Expression] es) {
 
 // assume case only on ints
 public set[Message] check(caseOf(e, cs, o)) = check(e) + checkBody(o) +
-  ( {} | it + check(ge) + checkBody(gb) | guard(ge, gb) <- cs ) +
+  ( {} | it + check(ls) + checkBody(gb) | guard(ls, gb) <- cs ) +
   { intErr(e@location) | !isInt(typeOf(e)) } +
   { intErr(ge@location) | guard(ge, _) <- cs, !isInt(typeOf(ge)) };
+
+public set[Message] check(list[Label] ls) =
+  ( {} | check(l) | l <- ls );
   
+public set[Message] check(expression(e)) = check(e);
+
+public set[Message] check(range(e1, e2)) = check(e1) + check(e2);
