@@ -18,11 +18,19 @@ private set[Message] checkBy(list[Expression] es) {
 public set[Message] check(caseOf(e, cs, o)) = check(e) + checkBody(o) +
   ( {} | it + check(ls) + checkBody(gb) | guard(ls, gb) <- cs ) +
   { intErr(e@location) | !isInt(typeOf(e)) } +
-  { intErr(ge@location) | guard(ge, _) <- cs, !isInt(typeOf(ge)) };
+  { intErr(l@location) | guard(ls, _) <- cs, l <- ls,  !isInt(typeOf(l)) };
+
+public Type typeOf(expression(e)) = typeOf(e);
+public Type typeOf(range(e1, e2)) = intType();
+
 
 public set[Message] check(list[Label] ls) =
   ( {} | check(l) | l <- ls );
   
 public set[Message] check(expression(e)) = check(e);
 
-public set[Message] check(range(e1, e2)) = check(e1) + check(e2);
+public set[Message] check(range(e1, e2)) = 
+   check(e1) + check(e2) +
+   { intErr(e1@location) | !isInt(typeOf(e1)) } +
+   { intErr(e2@location) | !isInt(typeOf(e2)) };
+   
