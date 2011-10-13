@@ -8,5 +8,11 @@ data Statement
 	  ;
 
 data Case
-	  = guard(Expression guard, list[Statement] body)
+	  = guard(list[Label] labels, list[Statement] body)
+	  ;
+	  
+	  
+	data Label
+	  = expression(Expression exp)
+	  | range(Expression from, Expression to)
 	  ;
