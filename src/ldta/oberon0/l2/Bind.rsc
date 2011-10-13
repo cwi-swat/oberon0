@@ -31,8 +31,29 @@ public tuple[Statement, set[Message]] bind(s:caseOf(e, cs, es), NEnv nenv, set[M
   return <s, errs>;
 }
 
-private tuple[Case, set[Message]] bind(g:guard(e, b), NEnv nenv, set[Message] errs) {
-  <g.guard, errs> = bind(e, nenv, errs);
+public tuple[Case, set[Message]] bind(g:guard(ls, b), NEnv nenv, set[Message] errs) {
+  <g.labels, errs> = bind(ls, nenv, errs);
   <g.body, errs> = bind(b, nenv, errs);
   return <g, errs>;
 }
+
+
+public tuple[list[Label], set[Message]] bind(list[Label] ls, NEnv nenv, set[Message] errs) {
+  ls = for (l <- ls) {
+    <l, errs> = bind(l, nenv, errs);
+    append l;
+  }
+  return <ls, errs>;
+}
+
+public tuple[Label, set[Message]] bind(l:expression(e), NEnv nenv, set[Message] errs) {
+  <l.exp, errs> = bind(e, nenv, errs);
+  return <l, errs>;
+}
+
+public tuple[Label, set[Message]] bind(l:range(e1, e2), NEnv nenv, set[Message] errs) {
+  <l.from, errs> = bind(e1, nenv, errs);
+  <l.to, errs> = bind(e2, nenv, errs);
+  return <l, errs>;  
+}
+
