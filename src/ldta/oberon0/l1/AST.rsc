@@ -16,6 +16,7 @@ data Statement
 	= assign(Ident var, Expression exp)
 	| ifThen(Expression condition, list[Statement] body, list[tuple[Expression condition, list[Statement] body]] elseIfs, list[Statement] elsePart)
 	| whileDo(Expression condition, list[Statement] body)
+	| skip()
 	;
 
 data Expression 

@@ -38,6 +38,8 @@ public set[Message] check(ifThen(c, b, eis, e)) =
 
 public set[Message] check(whileDo(c, b)) = checkCond(c) + check(c) + checkBody(b);
 
+public set[Message] check(skip()) = {};
+
 public set[Message] checkCond(Expression c) = { boolErr(c@location) | typeOf(c) != boolType() };
   
 public set[Message] checkBody(list[Statement] b) = ({} | it + check(s) | s <- b );

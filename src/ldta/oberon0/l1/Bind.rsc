@@ -153,6 +153,8 @@ public tuple[Statement, set[Message]] bind(s:whileDo(c, b), NEnv nenv, set[Messa
   return <s, errs>;
 }
 
+public tuple[Statement, set[Message]] bind(s:skip(), NEnv nenv, set[Message] errs) = <s, errs>;
+
 // Expressions (note the default :-(
 public default tuple[Expression, set[Message]] bind(Expression e, NEnv nenv, set[Message] errs) {
   if (e has var) {

@@ -34,6 +34,8 @@ public str stat2c(whileDo(c, b)) = "while (<exp2c(c)>) {
                                    '    <stats2c(b)>
                                    '}";
 
+public str stat2c(skip()) = ";";
+
 public str exp2c(nat(int val)) = "<val>";
 public str exp2c(\true()) = "1";
 public str exp2c(\false()) = "0";

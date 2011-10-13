@@ -70,6 +70,8 @@ public Box stat2box(ifThen(Expression condition, list[Statement] body, list[tupl
     return V([ift] + elifs + [els] + [KW(L("END"))]);
     
 }
+
+public Box stat2box(skip()) = L("");
     
 public Box stat2box(whileDo(Expression condition, list[Statement] body)) = V([
             H([KW(L("WHILE")), exp2box(condition), KW(L("DO"))])[@hs=1],
