@@ -1,0 +1,10 @@
+MODULE Bla;
+
+
+
+
+BEGIN
+  FOR x := 1 TO 2 DO
+    x := 1
+  END
+END Bla.

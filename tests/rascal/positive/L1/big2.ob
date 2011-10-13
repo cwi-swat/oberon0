@@ -1,0 +1,1203 @@
+MODULE Test;
+
+VAR
+  y  :  INTEGER; 
+  q  :  BOOLEAN; 
+  x  :  INTEGER; 
+  p  :  BOOLEAN; 
+  z  :  INTEGER; 
+  r  :  BOOLEAN; 
+
+BEGIN
+  WHILE (((2 = 0) OR (200 # 0)) OR (0 <= x)) DO
+    IF (((x - 2) <= 2) OR (x > (-y))) THEN
+      IF ((x * (x MOD x)) <= 1) THEN
+        y := z;
+        q := (1 < (+(-(2 * 2))));
+        WHILE q DO
+          IF p THEN
+            IF ((z * (-1)) >= 200) THEN
+              q := ((((+(+y)) - ((((2 MOD y) + 2) MOD ((x + (-1)) - 1223)) - 1223)) - (200 + 2)) = 2);
+              r := (~((2 + (+y)) >= (-1223)));
+              q := (x # (-0));
+              p := ((r & (200 = x)) OR ((1 MOD y) = (1 - 1)))
+            ELSE
+              x := 1
+            END
+          ELSE
+            IF ((-(1223 MOD y)) <= ((-y) MOD 0)) THEN
+              q := ((1 <= ((-(0 MOD x)) + ((2 + (1223 - 1)) + 1223))) & p);
+              y := z
+            ELSE
+              y := (1223 * 1223);  r := (((1 + (1 * (200 * y))) >= (((((1 + 1) + 1) - 1223) + (0 MOD (-0))) DIV (+((0 MOD 1) MOD (2 - (200 - (1223 + 0))))))) OR (~(~((z * (-1223)) >= ((-x) DIV (y - 2))))));  x := 200;  z := 0
+            END;  WHILE (z = y) DO
+                    r := (2 < (1223 * z));
+                    x := (y - 2);
+                    p := ((((+z) DIV x) # y) & (x < y))
+                  END
+          END;
+          r := ((1223 * (1 MOD (+1223))) # 1);
+          IF q THEN
+            WHILE (p OR (~(1 <= x))) DO
+              z := z;
+              x := 1223;
+              r := (1 <= (-y));
+              x := (y MOD (+(-y)))
+            END;
+            WHILE p DO
+              x := z;
+              x := (z MOD (+z));
+              p := (z <= 0);
+              q := ((200 DIV ((-(-(-y))) DIV x)) = ((200 - (-x)) MOD (1223 DIV 200)))
+            END;
+            WHILE (200 <= (1223 + (z MOD 2))) DO
+              x := y;
+              z := (+((x DIV (+2)) + (1 DIV 2)));
+              r := (0 # ((-((((-2) DIV (0 + (((200 DIV 2) * 2) - z))) - (-y)) * (200 + 1))) MOD 1));
+              z := x
+            END
+          END;
+          WHILE p DO
+            WHILE (((200 >= 1223) OR p) OR ((-0) <= 0)) DO
+              r := (~(~(200 >= (200 - ((200 * 0) DIV ((-(+x)) * x))))));
+              q := ((x * 2) >= (+(((z + (200 MOD 0)) * z) MOD ((200 * (+y)) + (-x)))))
+            END;
+            y := 1
+          END
+        END;
+        q := (~(((y - ((-(-x)) * (z * 2))) + (200 - 0)) = y))
+      END;
+      WHILE (2 >= y) DO
+        IF (x = 1223) THEN
+          y := (x + 200);
+          r := ((((z DIV 200) + (1223 DIV 1)) * z) > 0);
+          IF (((+y) * (200 + z)) <= x) THEN
+            z := 1223
+          ELSE
+            r := (p & ((+200) < ((-200) DIV 200)));  IF ((x - y) >= 1223) THEN
+                                                       z := 1;
+                                                       p := (0 < (y DIV y));
+                                                       z := x;
+                                                       y := 2
+                                                     ELSE
+                                                       y := 200;  p := p
+                                                     END
+          END;
+          WHILE r DO
+            IF r THEN
+              x := y;
+              z := (((200 DIV (1 - 0)) DIV x) * 0);
+              y := ((z MOD 200) * x)
+            ELSE
+              y := y
+            END;
+            IF (q OR ((2 DIV 0) < (1 * 2))) THEN
+              z := (+z);
+              x := 200;
+              r := ((2 = ((1223 * y) + y)) & ((200 - (200 DIV 200)) >= (+(-(((+z) * (+(+((+1223) - 1223)))) * ((+(-1)) + x))))));
+              r := r
+            END
+          END
+        ELSE
+          IF (~q) THEN
+            r := (~(200 = (2 * 200)));
+            x := (0 - (((0 DIV ((y - y) DIV (((1223 MOD 200) - 200) - 1))) DIV (((((0 + (-(-2))) - 1223) - z) - y) MOD (((2 * (y MOD (+(1 * 2)))) MOD z) + (1 DIV 1)))) - (1 MOD 200)))
+          ELSE
+            r := (2 <= 1223);  IF r THEN
+                                 y := 200;
+                                 p := ((+0) >= ((1223 + 1223) * (1 * 200)))
+                               END;  r := ((1223 = (1223 * 0)) OR (p OR (p & (200 < ((2 - z) - x)))))
+          END;  WHILE (0 = (1223 MOD 200)) DO
+                  y := y;
+                  IF ((2 * (x + z)) < ((1223 - 0) MOD 1223)) THEN
+                    x := 2;
+                    x := ((-(((200 + 200) + (200 MOD 1)) + 0)) DIV (2 DIV 2));
+                    r := (~(((-x) - (200 + ((y * ((+((y + x) * y)) * 0)) MOD y))) = (x * 1223)));
+                    p := ((0 > (-1)) OR (2 # (((1 DIV y) * ((+0) * (+(-x)))) MOD (2 - x))))
+                  ELSE
+                    q := ((-y) = (y DIV 1));  z := (-(+1));  p := (((0 # ((-(0 MOD 0)) * (2 MOD 1223))) OR ((~((-(+y)) = (((-x) - ((0 MOD (0 - 1223)) MOD (2 + (-1223)))) * 1223))) OR r)) OR q)
+                  END;
+                  WHILE (r OR ((p & q) & p)) DO
+                    z := 200;
+                    r := (x = 1223)
+                  END
+                END
+        END;
+        IF (~((-z) # y)) THEN
+          IF (p & r) THEN
+            IF ((x - z) < (x + 1)) THEN
+              q := p
+            END;
+            WHILE (1 # ((-x) + 1)) DO
+              x := (+((-z) DIV 1));
+              p := (y <= (+(z DIV (((-(-(0 DIV z))) MOD (0 DIV (+x))) - 0))));
+              z := 200;
+              p := (r OR (z = x))
+            END
+          ELSE
+            IF r THEN
+              z := (-y)
+            ELSE
+              y := 200;  r := ((0 + 1) # (+(y - (+2))));  y := z;  q := (z # (-x))
+            END;  IF (((1 + y) DIV (y * y)) = 2) THEN
+                    r := (z > 2)
+                  ELSE
+                    y := (200 + ((y * 1223) + (y MOD (y MOD 0))));  z := 1;  x := 2;  y := 0
+                  END
+          END;
+          IF ((z * z) > (+1)) THEN
+            IF ((z DIV (1223 DIV 1223)) < 1) THEN
+              z := (x DIV 200);
+              q := (200 <= (+(1223 MOD y)));
+              q := (2 = z)
+            ELSE
+              r := (((200 = 0) OR (1 <= ((y DIV 2) - ((-(+(+((0 MOD z) DIV (-200))))) + 0)))) OR (~(z = (2 - x))))
+            END;
+            WHILE (z > 0) DO
+              y := x;
+              x := 200
+            END;
+            WHILE (2 <= (2 - z)) DO
+              x := x;
+              r := q
+            END;
+            WHILE ((p & (2 > x)) OR ((+y) < (0 * 2))) DO
+              p := ((+1) < z);
+              q := q;
+              y := (200 - (+(y MOD (z + 200))));
+              z := 0
+            END
+          ELSE
+            WHILE (z < (x - 1)) DO
+              q := ((200 >= 200) OR (((z + (-((-z) * z))) + ((-x) MOD 0)) <= 1));
+              q := ((+y) # (0 - 1223));
+              r := (q OR (200 > z));
+              q := ((1 * (y MOD (+x))) >= (x DIV y))
+            END;  WHILE (x < 1223) DO
+                    r := q;
+                    y := x;
+                    p := ((0 - (-z)) # (((+((+2) * (((-1223) * y) MOD 1))) * z) + 200));
+                    y := x
+                  END;  WHILE q DO
+                          r := ((200 MOD x) <= 1)
+                        END;  IF (q & r) THEN
+                                x := 2;
+                                z := 0;
+                                p := ((200 MOD ((1223 * (1223 + 1223)) - z)) > 200)
+                              ELSE
+                                z := 1223;  p := (0 = (+2));  y := 2;  p := (1223 # z)
+                              END
+          END;
+          IF (((2 MOD x) DIV 2) # ((0 MOD 1223) * x)) THEN
+            WHILE p DO
+              r := (((2 * 200) MOD ((-1223) + x)) < 1223);
+              r := ((p OR q) & (r OR (200 # ((x + y) MOD (-z)))));
+              z := 0;
+              x := 2
+            END
+          ELSE
+            IF r THEN
+              r := ((0 <= x) OR (r & p));
+              y := (((+(((((((0 - 2) * (1 * x)) DIV 1223) + 0) + 1) MOD (-y)) MOD (+(+(x DIV z))))) * x) - 0)
+            ELSE
+              x := y;  p := r;  p := ((((200 < y) & (~(x < 1))) OR ((-1) = (200 DIV (0 + (x * (-1223)))))) & (y # ((2 + ((((z DIV z) + (-(-(y - 200)))) MOD y) - (-1223))) MOD 200)));  q := (x <= (-(+x)))
+            END;  IF (1 <= 200) THEN
+                    p := (1 > y);
+                    p := (((1 MOD (+x)) - 1) > (0 - (x DIV 200)));
+                    q := r;
+                    q := (1223 > (((-x) * z) MOD ((0 DIV (1223 MOD ((1223 MOD z) DIV 2))) + (+1))))
+                  END;  WHILE ((y DIV 2) > ((-z) + (z * 2))) DO
+                          z := x;
+                          z := z;
+                          z := 0;
+                          z := (+0)
+                        END;  IF (x = (2 * (0 MOD y))) THEN
+                                r := (y > ((-2) + x));
+                                q := ((((0 * (x * z)) - 200) > 2) & ((0 + z) = (y * (1 DIV 200))))
+                              END
+          END;
+          IF ((1 > 0) & r) THEN
+            WHILE ((1 * 2) < y) DO
+              p := (~(2 > 1));
+              y := (x + (1 + z))
+            END;
+            IF (1223 = 1223) THEN
+              q := (z = 0);
+              q := (r OR ((((-1223) - y) >= 0) OR (z < (1223 MOD (200 DIV (((0 - y) * (-y)) - (200 - (1 - (1 MOD 200)))))))));
+              z := (+z);
+              z := 0
+            END;
+            WHILE (200 = y) DO
+              x := x
+            END;
+            IF ((y - 1223) # (0 - (1 DIV 200))) THEN
+              z := ((-(1223 MOD ((y DIV ((1223 - (-(1 - 1223))) DIV 2)) DIV z))) * 200);
+              q := (1223 # 200)
+            ELSE
+              y := z;  r := r;  p := (1223 < (200 MOD (-(+(-1223)))));  y := 2
+            END
+          END
+        END;
+        IF (((y + y) < (2 DIV 1223)) OR ((y > 1) OR (1223 # 200))) THEN
+          IF (((-z) MOD (y DIV y)) < z) THEN
+            z := (((+(z DIV (+(-2)))) + 0) + 1223)
+          END
+        ELSE
+          IF (x = (1223 * (1 MOD 2))) THEN
+            z := ((-1223) + (-200));
+            IF (((+y) + z) <= y) THEN
+              p := (1 = 2);
+              r := ((-2) >= 0);
+              z := (+(200 DIV (1 MOD (0 - (y DIV y)))));
+              r := (x < 0)
+            ELSE
+              r := (p OR (x <= (1 + 200)));  x := (+1);  z := ((0 * (2 MOD (2 + (-200)))) DIV (1223 - (-((1223 - 200) * x))))
+            END;
+            WHILE r DO
+              x := x;
+              y := (-1223);
+              x := 200
+            END
+          ELSE
+            IF p THEN
+              x := 1;
+              y := (2 DIV (z + (+y)));
+              q := q;
+              p := (((200 - z) >= (-(x + 1223))) & (0 > (-((x MOD x) + 1223))))
+            ELSE
+              x := 1223;  p := (y # 1)
+            END;  WHILE q DO
+                    x := (+200)
+                  END
+          END;  r := q;  IF (1 # z) THEN
+                           WHILE (z <= ((+0) DIV 200)) DO
+                             q := (q & (((-z) DIV 1) >= (+0)));
+                             x := 1223;
+                             q := (q OR (((+1) > (1223 * (y + y))) & p));
+                             p := (y < 1223)
+                           END;
+                           x := ((200 * ((y DIV ((+(+0)) * 0)) MOD x)) DIV 0);
+                           r := p;
+                           WHILE q DO
+                             r := (z <= ((+2) * (1223 * x)));
+                             z := (x DIV (-(1 + ((0 + x) - (-(-(+(y - x))))))))
+                           END
+                         ELSE
+                           WHILE (200 <= 1) DO
+                             p := (2 <= y);
+                             y := 1;
+                             r := q;
+                             z := (1223 DIV (+y))
+                           END;  IF (((0 = 2) & (0 = 2)) OR (y > (0 * z))) THEN
+                                   q := p
+                                 ELSE
+                                   x := 2;  p := ((x - 2) = 2);  x := y
+                                 END;  x := (-0)
+                         END;  p := p
+        END
+      END;
+      IF ((x + (+2)) > (-(2 - 200))) THEN
+        IF (200 > 2) THEN
+          r := (~(((200 MOD (200 MOD 2)) MOD (((1223 - 200) MOD x) MOD ((+2) MOD (((0 DIV 1) MOD (-x)) + ((1 DIV (+(1223 * 0))) MOD (-2)))))) > (z - (-z))));
+          IF r THEN
+            z := (+1);
+            q := ((0 > y) OR ((-((z MOD 0) DIV 1)) >= 1))
+          ELSE
+            IF r THEN
+              x := (-200);
+              y := 200;
+              z := 0
+            END
+          END
+        END
+      ELSE
+        IF (~r) THEN
+          IF ((z # (z MOD 1)) OR ((~r) & (1 <= z))) THEN
+            WHILE r DO
+              x := (1223 MOD z);
+              p := r;
+              z := 1223;
+              p := (1223 # ((((+2) - (-1)) - 2) DIV ((((y DIV 200) DIV 1) + x) * 200)))
+            END
+          END;
+          q := r;
+          y := ((-(-z)) MOD 2);
+          IF (((2 MOD z) > (z - z)) OR ((200 * y) > y)) THEN
+            IF (x < 2) THEN
+              q := ((-((+y) * (+2))) < z);
+              y := z
+            END
+          END
+        ELSE
+          x := (1223 * (200 + 200));  WHILE p DO
+                                        IF q THEN
+                                          z := z;
+                                          x := z
+                                        ELSE
+                                          r := ((+(((-z) - 0) MOD 2)) >= 1);  r := ((200 + ((-x) - (+(+(((1223 MOD 2) + (200 + (200 DIV 1223))) - (2 * (+(200 * 0)))))))) > (+(+z)));  z := (2 DIV 0);  q := (y < 0)
+                                        END;
+                                        WHILE ((-(0 * y)) <= 200) DO
+                                          z := 0
+                                        END
+                                      END;  WHILE ((1 > x) OR p) DO
+                                              IF (x < z) THEN
+                                                q := ((0 DIV z) = x)
+                                              ELSE
+                                                y := (-((-(-(200 DIV (+z)))) + (x DIV 0)));  z := z;  p := ((r OR q) & r)
+                                              END;
+                                              q := (1223 # (1 - 200));
+                                              IF (~((0 + 2) > x)) THEN
+                                                z := (y + 2);
+                                                p := p;
+                                                x := ((200 * (+((-1223) - ((0 * (-0)) * 0)))) * 1)
+                                              ELSE
+                                                r := ((-(-(-(x - 0)))) >= (-2));  x := 1223
+                                              END;
+                                              IF (p & (~(200 <= x))) THEN
+                                                x := (z MOD y);
+                                                y := 1;
+                                                z := 200
+                                              ELSE
+                                                z := (-200);  x := z;  q := r
+                                              END
+                                            END;  WHILE r DO
+                                                    IF p THEN
+                                                      y := (2 + z)
+                                                    ELSE
+                                                      y := 2;  r := ((+2) < 0);  z := (x * (200 MOD ((((1223 + 2) MOD 200) DIV 1) - (((-(-z)) + ((1 * ((y - z) DIV x)) DIV 200)) MOD z))))
+                                                    END;
+                                                    IF ((-(+x)) # z) THEN
+                                                      q := r;
+                                                      x := (((1223 * x) - y) MOD 0);
+                                                      x := z
+                                                    ELSE
+                                                      p := r;  z := (+((((0 + 1) + (2 + (200 + (y MOD z)))) + (200 * (-(+(-(((y - 1223) DIV x) * x)))))) + (0 DIV 1)));  y := 1
+                                                    END
+                                                  END
+        END
+      END;
+      WHILE (r & ((y DIV 0) < (1223 + 1223))) DO
+        IF (1223 <= 1) THEN
+          x := (-1223)
+        END;
+        WHILE r DO
+          WHILE (((+1223) > 200) & q) DO
+            WHILE (((x MOD 1223) + 1) < (-y)) DO
+              q := p;
+              r := (~q);
+              y := ((+x) - 1)
+            END;
+            IF p THEN
+              x := (-((200 + (y MOD 0)) + y))
+            END
+          END
+        END
+      END
+    END;
+    IF (2 < y) THEN
+      WHILE p DO
+        IF (2 = 1) THEN
+          IF ((+(+200)) > 1) THEN
+            WHILE q DO
+              y := (0 - ((x * (+0)) * (-(200 MOD (+(x * z))))));
+              r := (~(z = (+y)))
+            END;
+            z := (+(+200))
+          ELSE
+            IF r THEN
+              x := 0;
+              q := (z > 200);
+              p := r
+            ELSE
+              y := 0;  x := 200;  q := r
+            END;  IF q THEN
+                    p := (y # ((0 DIV 2) - 1));
+                    y := (2 DIV 2);
+                    y := x
+                  END;  z := x
+          END;
+          IF (((2 MOD 200) < (-0)) & (~(p & p))) THEN
+            IF (((y MOD 0) * 1) <= (0 DIV (1 - 1223))) THEN
+              q := (~r);
+              x := (1223 - 2)
+            END;
+            IF (~q) THEN
+              q := ((y <= z) OR p);
+              r := (((1 * ((z + 1223) * 0)) * (((200 * (0 MOD x)) MOD z) DIV (-(-(-x))))) < (-2))
+            END
+          ELSE
+            IF (((+1223) <= 200) & (2 # z)) THEN
+              z := 1;
+              y := 1223;
+              x := ((0 DIV (-z)) + (((-1) - 200) + 1223))
+            ELSE
+              p := (z >= ((z + y) DIV (0 * x)));  q := q
+            END
+          END
+        ELSE
+          IF ((+(z * 1223)) <= y) THEN
+            IF ((x MOD 0) < (-(1223 - 1223))) THEN
+              q := (~r);
+              x := 1223
+            ELSE
+              r := (1 = x)
+            END
+          ELSE
+            WHILE (200 # ((-2) + (200 DIV 1))) DO
+              q := (((0 + 0) + 200) <= (0 + x));
+              x := 0;
+              q := q
+            END;  WHILE q DO
+                    q := (~(r OR (((200 * (2 MOD (+(2 + (x + 200))))) <= (z MOD (2 - (200 DIV 2)))) OR p)));
+                    q := (z > x)
+                  END
+          END;  IF ((1 + (1223 * 1223)) # x) THEN
+                  WHILE ((z + (-1)) # (-(200 + z))) DO
+                    z := (x MOD 1);
+                    q := ((0 # (z * x)) & q);
+                    q := (1 = ((1 DIV 1) DIV (-x)));
+                    x := y
+                  END
+                END;  IF (200 < 1223) THEN
+                        x := (0 - (-200))
+                      ELSE
+                        WHILE ((-2) <= 0) DO
+                          y := (2 DIV (+1223));
+                          p := (1223 < ((0 DIV 2) DIV (-y)));
+                          y := y;
+                          p := q
+                        END;  IF ((y >= (+x)) OR ((x DIV 2) > 200)) THEN
+                                y := 0
+                              END
+                      END;  IF (((y MOD y) > (-0)) OR ((z <= x) OR q)) THEN
+                              IF ((2 - 200) > y) THEN
+                                p := ((1223 >= (2 MOD (1223 MOD (((-z) + 1) MOD x)))) & q)
+                              ELSE
+                                z := ((1 - 2) + 1);  x := 2;  q := ((200 = 0) OR (y > (x MOD (1 - x))));  x := z
+                              END;
+                              IF (~(z # 1)) THEN
+                                p := (((z + (((+(+1223)) - (200 * 1223)) * 1223)) # y) OR r);
+                                z := 200
+                              END;
+                              WHILE (((-1) MOD (1223 + 0)) = (z MOD (x + 1223))) DO
+                                z := 1;
+                                y := (0 DIV 2)
+                              END
+                            ELSE
+                              WHILE (1223 <= 1) DO
+                                r := (z <= 1223);
+                                y := z
+                              END
+                            END
+        END
+      END
+    ELSE
+      WHILE (y <= y) DO
+        p := (z < 1);
+        IF (~((z < x) & (1 # y))) THEN
+          z := (0 * 1223);
+          IF q THEN
+            IF (((z - x) - x) <= ((200 - 1223) MOD 0)) THEN
+              q := (((x + z) DIV 0) >= z);
+              r := q
+            ELSE
+              x := (-(-200))
+            END;
+            IF ((0 - x) <= z) THEN
+              y := (-2);
+              p := (y = ((2 MOD ((-(0 + (+1))) + 0)) DIV 0));
+              p := ((+(2 DIV ((-2) MOD (-((((-y) MOD 200) * ((x * 200) DIV 1)) MOD 1))))) >= 0)
+            ELSE
+              x := (1223 * 2)
+            END
+          END;
+          IF r THEN
+            q := (~(200 # x))
+          ELSE
+            WHILE (z >= ((+1223) MOD y)) DO
+              x := x;
+              x := ((((x + (+(-(0 DIV 1)))) DIV y) - (z * (200 MOD 2))) * (x + (+(-y))));
+              x := (((-((-x) - (z - x))) MOD (((((x - (((0 DIV 0) * (x MOD 2)) + ((+2) + (1 * 200)))) - (-0)) * ((200 - 1) MOD ((+((200 MOD z) MOD (1223 - x))) - ((0 MOD z) - (+(-1223)))))) DIV z) + y)) MOD 200);
+              r := q
+            END
+          END;
+          x := (+2)
+        ELSE
+          IF r THEN
+            IF ((~(1 >= z)) & ((+1223) >= (y MOD 0))) THEN
+              p := ((z >= ((+z) * ((x DIV 0) * ((-1) * 1223)))) OR (((200 - ((x - 0) * ((z * 2) + (-x)))) * (1 MOD (2 * 1))) # 1));
+              q := ((~(0 <= (2 * ((1 DIV (+1)) - 0)))) OR q);
+              q := (2 # 1223);
+              y := (2 MOD (((z - (y * ((y MOD ((0 - (z MOD 0)) MOD ((+y) * (y MOD 1)))) MOD 2))) DIV z) + (-z)))
+            END;
+            z := 1223;
+            IF q THEN
+              p := (200 = (x DIV (+1223)))
+            ELSE
+              y := 0
+            END;
+            WHILE ((-x) = 1223) DO
+              r := (((-0) + ((((y MOD z) - (+(-1223))) DIV (1223 - (((z MOD ((x + 1) + 0)) * (x - 1)) DIV x))) + 200)) # z);
+              z := x;
+              z := (y * 0);
+              y := 1
+            END
+          ELSE
+            IF (~(y # (-200))) THEN
+              r := (((2 DIV (-(y - x))) DIV z) > (2 MOD x));
+              z := (x * z)
+            ELSE
+              r := (r OR (~(0 = 0)));  p := (2 <= (((1223 + (1223 * 2)) MOD 1) + (((+1) + (x MOD 2)) MOD z)))
+            END;  IF (200 # x) THEN
+                    z := y;
+                    r := ((((((0 + ((+(-(1 DIV 1))) * 0)) DIV (1 MOD ((-200) DIV (200 + y)))) - (+y)) MOD (0 * (2 * (-1)))) + (+1223)) <= 2);
+                    r := (200 = 0)
+                  ELSE
+                    y := (+y);  y := (x - 200);  x := y;  q := q
+                  END;  WHILE (2 >= x) DO
+                          q := (p OR r);
+                          y := 1223
+                        END;  IF p THEN
+                                r := ((y > x) & ((-(1223 + (-((2 * (x - (+(-200)))) + x)))) > ((((z * (z MOD z)) + (1 + ((y DIV (1 DIV (x + 1))) * (x * (+(0 * z)))))) * ((2 MOD (+(-(200 + (z MOD 1))))) MOD (-(x - (((0 - 0) + 200) * ((-x) DIV (+1))))))) DIV ((+(((y MOD (200 - (-z))) - 1223) * ((200 DIV y) * (+2)))) * ((-(2 - 1)) DIV 1)))));
+                                y := 1223
+                              ELSE
+                                p := (1 > (200 * z));  p := ((0 < 200) OR ((z DIV (-1223)) > 200));  y := 0
+                              END
+          END;  y := y;  WHILE ((+0) = ((1223 MOD 1) - y)) DO
+                           q := ((x DIV (-((0 DIV (2 + x)) MOD x))) < 200)
+                         END
+        END;
+        IF (((200 + 0) <= 200) OR ((-z) = (2 - z))) THEN
+          IF (1223 = ((-1223) + 200)) THEN
+            WHILE (1223 = z) DO
+              r := (((1 DIV 200) * 1) = z);
+              r := (1 >= ((0 + z) * (1 MOD 200)))
+            END;
+            q := (200 > y);
+            IF (1 > (+2)) THEN
+              q := ((-1223) # (+2))
+            ELSE
+              y := x
+            END;
+            WHILE ((-(1223 MOD 2)) > (+y)) DO
+              r := p
+            END
+          END;
+          WHILE p DO
+            WHILE ((1 <= (0 DIV y)) & ((z > x) OR q)) DO
+              p := r;
+              r := (2 >= z);
+              r := q;
+              x := y
+            END;
+            IF (((x DIV x) + (0 MOD 1223)) >= ((y * x) MOD 200)) THEN
+              p := (2 > ((+200) + x));
+              p := (0 # ((1 MOD (1223 MOD (1 * ((200 + (-x)) DIV (0 DIV (+((-1223) DIV (-y)))))))) * 2))
+            ELSE
+              y := z
+            END
+          END
+        ELSE
+          WHILE (~((x - y) <= 200)) DO
+            IF p THEN
+              z := (y - y);
+              r := q;
+              z := y;
+              r := (0 < (y MOD 2))
+            END;
+            IF (~(q & r)) THEN
+              x := (1223 MOD 1)
+            ELSE
+              x := (y DIV (-y));  p := ((0 * (1223 + x)) = x);  q := (1 # ((2 - 1223) - (200 - ((0 + ((2 MOD (((y * 1223) - 2) DIV ((z MOD 2) + (y DIV 2)))) * ((200 + x) + y))) MOD (z MOD (1223 - ((-((y + 2) - (-0))) DIV 0)))))))
+            END;
+            WHILE (((-1223) = (x + z)) OR (x < 0)) DO
+              p := q
+            END;
+            WHILE (((+y) # (2 + z)) & (1223 >= 200)) DO
+              x := 2;
+              z := ((y * 0) MOD 2)
+            END
+          END;  IF (y = y) THEN
+                  IF (0 >= 1223) THEN
+                    p := ((((~(~(z <= 1223))) & (~((+((((-1223) + 0) * ((1223 - 200) - (0 * 2))) DIV 200)) > (x MOD z)))) OR ((((-(2 + (((200 * 2) - y) - ((y DIV x) - (y DIV y))))) * 2) * 0) > (0 - (z - 200)))) & ((200 + ((+(z + 0)) * (z * ((1223 DIV y) DIV x)))) >= ((-1) + (+(0 - 1223)))));
+                    z := 0
+                  END;
+                  q := r
+                ELSE
+                  IF ((y DIV (200 - 200)) <= 200) THEN
+                    y := 200
+                  ELSE
+                    q := ((y DIV 1223) > (-2));  x := (y MOD (+(((+200) MOD 0) * (+((((200 * (200 * (1 + 1223))) DIV 1223) * x) * (+(1223 - 1223)))))));  p := (y <= 1);  x := 1223
+                  END;  IF (~(200 = 200)) THEN
+                          x := z;
+                          q := (200 <= x)
+                        END;  WHILE p DO
+                                z := 1;
+                                r := r;
+                                r := q
+                              END;  IF q THEN
+                                      p := q
+                                    ELSE
+                                      q := (((-(((+((0 DIV (+2)) MOD (+200))) * (200 MOD (-1))) + y)) # 0) & ((+0) # (-(-2))));  y := 200;  q := (~((((+z) + 0) DIV z) <= 0))
+                                    END
+                END
+        END
+      END;  WHILE ((1 >= y) & r) DO
+              z := (-x);
+              WHILE (((y <= 1) OR (0 >= 200)) OR (z = (0 + 1223))) DO
+                IF ((z * (-1223)) = y) THEN
+                  WHILE (~(1223 <= y)) DO
+                    r := ((~(200 = ((+1) MOD 1))) & (r OR (y <= 1)));
+                    z := 1223;
+                    x := ((-z) * ((-0) DIV (+(y * (-(((0 DIV 1223) - (y * y)) * y))))));
+                    y := (((x MOD ((x + (((1 + y) DIV (+(+(z DIV 1)))) + (y MOD (200 * ((y - 200) - (+x)))))) + (y MOD y))) - 1) + y)
+                  END;
+                  WHILE p DO
+                    r := q;
+                    q := (((q OR (y <= z)) OR q) & (y > 2))
+                  END;
+                  WHILE (x > 1) DO
+                    p := q;
+                    r := (0 < 1);
+                    x := 2;
+                    y := 1223
+                  END;
+                  r := ((200 <= z) OR (q OR (~((x + ((1223 - (200 DIV (y DIV 2))) DIV 2)) = 1223))))
+                END
+              END;
+              WHILE ((~r) & (~(1223 = 0))) DO
+                z := ((+0) DIV 2)
+              END;
+              IF (p OR ((+x) <= (-y))) THEN
+                IF (((y - x) DIV (2 - 2)) >= 2) THEN
+                  p := ((0 * y) # (((z DIV 1223) MOD ((+z) MOD 1)) + z));
+                  IF p THEN
+                    x := (200 MOD 200);
+                    x := ((((((1 MOD 1) + 2) DIV 1223) * ((+1) - ((+200) - 1))) + (((((y + 0) + 2) + (-200)) + (-(((y DIV ((1223 - y) MOD (1223 * 200))) + 2) - ((z DIV (z - (x + z))) + 200)))) DIV 0)) MOD 2);
+                    z := 200
+                  END;
+                  IF r THEN
+                    q := (((-y) - y) >= 1)
+                  END
+                END;
+                z := (0 MOD (200 MOD 1));
+                p := ((+((((1 * (((0 + (y + 1)) + (-z)) + (2 * y))) DIV (-1)) MOD 1223) + ((+2) * (1 + 1)))) > 1223)
+              END
+            END
+    END;
+    IF ((y = (2 + y)) & ((x MOD x) <= (x + z))) THEN
+      IF r THEN
+        WHILE (2 >= x) DO
+          IF (0 < ((x - x) MOD 2)) THEN
+            q := p;
+            WHILE (((-0) + (x - y)) <= (-1)) DO
+              p := ((x # (y + (((x MOD x) * 1) * ((-200) * (0 * 1223))))) OR ((1223 * (-(((+x) + 200) - 1))) > 0));
+              p := p;
+              r := (0 >= ((z * z) DIV (((-(x - 1223)) MOD (1223 DIV 1)) + (0 * 0))))
+            END;
+            IF p THEN
+              y := (+1223);
+              z := 1223;
+              y := ((+(-(1 - x))) * 200);
+              y := 1
+            END;
+            IF (q & p) THEN
+              x := 0
+            ELSE
+              r := (1 >= 0);  p := (200 < z)
+            END
+          ELSE
+            WHILE r DO
+              r := (x < x)
+            END;  IF ((200 * (200 * 1)) <= x) THEN
+                    z := 1;
+                    p := ((200 DIV 2) <= ((0 * 2) * x))
+                  END
+          END
+        END;
+        r := q;
+        IF r THEN
+          IF (z # 1) THEN
+            WHILE (~(z # (+1))) DO
+              x := (2 + 200)
+            END
+          ELSE
+            IF q THEN
+              z := (-x);
+              q := ((1223 + (1223 MOD 2)) < (z - (z MOD 1)));
+              x := z
+            END;  IF (z <= 1) THEN
+                    y := 0
+                  ELSE
+                    z := ((+(+((+0) DIV x))) - 1);  y := ((x DIV 0) - (-(+(-(+z)))));  q := ((x DIV 200) > (-200))
+                  END;  y := 200
+          END;
+          q := ((~(((+200) - 200) <= 1)) & (~(1223 >= (-z))));
+          IF r THEN
+            IF p THEN
+              r := (~((((z - 1) DIV (x + 1)) - z) = (-(-z))));
+              r := q;
+              x := y;
+              x := y
+            ELSE
+              p := (((((1223 MOD 0) MOD (x * (200 MOD 0))) < 1) & (z > 2)) OR q);  r := ((0 = z) & q)
+            END;
+            y := x;
+            WHILE (1223 < (-(2 + 1))) DO
+              r := (x <= (+z));
+              p := q;
+              y := (((y - (((y - ((((200 MOD 1223) DIV 2) + (y MOD (0 MOD 200))) DIV (-z))) DIV 200) MOD z)) DIV x) + 1223)
+            END;
+            IF ((x = 0) OR (2 = (z DIV 1))) THEN
+              z := 1223
+            ELSE
+              q := ((+2) >= 2)
+            END
+          END;
+          z := 1223
+        END
+      ELSE
+        WHILE (y > (+(x DIV 2))) DO
+          x := ((((+(+y)) * x) - 1) * (0 MOD 0));
+          IF (0 >= 0) THEN
+            IF (y < 1223) THEN
+              y := 200;
+              z := y;
+              x := (1223 + 0);
+              z := z
+            ELSE
+              y := 0
+            END
+          END
+        END;  IF ((+1) >= x) THEN
+                IF (200 >= ((1 MOD z) - (x DIV 2))) THEN
+                  IF (1223 <= 1) THEN
+                    q := q;
+                    r := q
+                  ELSE
+                    z := z
+                  END
+                ELSE
+                  WHILE r DO
+                    x := z;
+                    p := (200 >= 200);
+                    r := ((z DIV (-1)) # 1223)
+                  END;  WHILE (((+x) * (-y)) > ((1 DIV z) * 0)) DO
+                          y := 1;
+                          z := (y + (y * 1223))
+                        END;  WHILE (z >= x) DO
+                                y := (200 MOD z)
+                              END
+                END
+              END
+      END
+    ELSE
+      IF ((y * 2) # (-(1 MOD 200))) THEN
+        IF ((-(z * y)) # 200) THEN
+          WHILE ((~(0 >= 2)) & ((-x) > 2)) DO
+            z := (-((+(((0 MOD 200) MOD z) MOD (1 + (2 * 0)))) MOD z));
+            r := r
+          END;
+          IF (2 = (+(0 + 2))) THEN
+            z := 2;
+            y := ((1 MOD z) DIV (-1))
+          ELSE
+            WHILE (2 < y) DO
+              z := z
+            END;  IF ((1 DIV (x DIV z)) > (1223 DIV y)) THEN
+                    r := q;
+                    q := (1223 >= (y + 0));
+                    y := (-1223);
+                    y := (-(+(-1223)))
+                  END;  IF q THEN
+                          r := (x # 1);
+                          x := 1;
+                          p := ((1 - z) >= y)
+                        END;  IF (z > 200) THEN
+                                z := 200
+                              END
+          END;
+          IF p THEN
+            IF (200 > 1) THEN
+              r := ((z >= 200) OR p);
+              p := (((y # z) & ((1 <= (+(((0 DIV 1) + ((1 * (1223 DIV x)) * 200)) DIV (+1223)))) OR (200 >= 200))) & q)
+            END;
+            WHILE (~((0 * z) >= 1)) DO
+              q := (((y + 0) < ((+(-x)) DIV ((-x) MOD (((200 - y) - 1223) - 0)))) OR ((~(1 <= 1223)) & p));
+              q := ((((((1 + ((((y + 1) + 1223) DIV 1223) DIV 200)) * 0) - ((+(((-(-1)) - 200) DIV 200)) DIV 1)) + (x + 1)) + y) < x)
+            END;
+            p := q;
+            WHILE q DO
+              q := ((200 + (-1)) < y);
+              z := y
+            END
+          END
+        ELSE
+          WHILE q DO
+            q := (y >= (+((-0) * 0)));
+            z := 1223;
+            y := ((y * 200) + 200);
+            IF r THEN
+              x := z;
+              z := x;
+              p := (~(q & (200 <= 1)));
+              q := ((x + (200 MOD 1)) >= z)
+            END
+          END;  IF (x <= 1223) THEN
+                  WHILE (((y = 1) & (0 # y)) OR (y < (-200))) DO
+                    x := ((1223 + (0 - 1223)) + 1223);
+                    x := ((-(0 * (0 + 0))) + z);
+                    z := (1223 DIV 0)
+                  END
+                END;  IF (~((z DIV 0) = (0 * y))) THEN
+                        q := (p & (((((-((-z) * y)) DIV (2 - 2)) = (y * ((z - (+((2 - 0) MOD (-z)))) - z))) & r) & (2 <= z)));
+                        q := q;
+                        IF ((-0) < 200) THEN
+                          z := ((((1223 DIV (((-((x + z) MOD (+(1223 + 1)))) * (((+(+y)) MOD 2) DIV y)) DIV ((0 - 1) + 0))) * 0) - ((-(-200)) + 1)) MOD y);
+                          x := (x + 0);
+                          x := 0;
+                          q := (~p)
+                        ELSE
+                          q := (((1223 + (y - 0)) + 200) = (-2));  y := (+1223);  r := ((+(+(1223 + (200 * (+(+((-200) - 1))))))) # (1223 MOD ((y MOD ((+1) + ((+(z DIV (z * (0 MOD z)))) * z))) DIV 1)))
+                        END;
+                        IF ((200 * 2) # 1) THEN
+                          r := (1223 < ((1 + (-1223)) MOD 0));
+                          z := 1223
+                        END
+                      END
+        END;
+        y := 200;
+        WHILE (((x - 200) > (z DIV x)) OR (1 # (-0))) DO
+          WHILE (2 < ((1223 DIV 2) + x)) DO
+            WHILE r DO
+              z := 200;
+              p := ((1223 <= 1223) OR ((z MOD (1223 + (+(-(x * 0))))) < (2 DIV 1)))
+            END;
+            IF ((2 + (200 + 2)) = (1 * (x - 2))) THEN
+              q := (~((+2) >= x));
+              z := ((+(1 * 1223)) - 200);
+              r := (z = (-2))
+            END;
+            IF (2 <= 1223) THEN
+              q := r;
+              p := r
+            ELSE
+              q := p;  r := q;  x := (200 * 0)
+            END
+          END;
+          z := 0;
+          IF ((0 DIV 200) > ((x - z) - 0)) THEN
+            IF (2 > (2 + z)) THEN
+              q := (1223 <= 0);
+              p := ((200 DIV ((+x) - x)) <= 2);
+              x := ((-1) MOD (x * (-(-(-(+1223))))));
+              z := (+(x - 1))
+            END;
+            IF (((+z) DIV (x * 200)) >= 200) THEN
+              q := q;
+              z := (1223 + y);
+              z := ((2 * (((1223 * x) DIV 2) + (+y))) DIV 1)
+            END;
+            q := (~(~(((-x) DIV 200) >= 1)));
+            WHILE p DO
+              p := (1223 < (((1 - (+(x + 1))) DIV 200) MOD (x + (((((-(200 * z)) - (-200)) DIV 0) MOD 0) * (+z)))))
+            END
+          ELSE
+            r := ((0 * 2) # ((z - ((0 MOD 1223) - 200)) DIV 200));  IF q THEN
+                                                                      z := 1;
+                                                                      x := z;
+                                                                      x := (z - z)
+                                                                    ELSE
+                                                                      p := (~(((2 <= 200) & r) OR r))
+                                                                    END;  WHILE p DO
+                                                                            q := ((200 MOD ((2 - y) DIV (+1))) < (0 DIV 200))
+                                                                          END;  WHILE (((0 - x) > y) OR (2 <= (-0))) DO
+                                                                                  z := ((200 * (1223 DIV ((+((z * 0) * 0)) + ((+(+(-0))) + (-(+(-0))))))) - ((x + z) * z));
+                                                                                  q := ((2 * x) > z);
+                                                                                  x := ((2 - (200 MOD (+2))) DIV y)
+                                                                                END
+          END;
+          p := ((-z) >= (((+(+y)) MOD 2) - x))
+        END;
+        y := x
+      ELSE
+        IF q THEN
+          IF (200 < 1223) THEN
+            IF p THEN
+              x := y;
+              r := (((x * 1) DIV y) < (+((0 + ((0 MOD (0 DIV x)) DIV y)) MOD 1)))
+            END;
+            IF ((+200) = 200) THEN
+              p := ((+200) < 200)
+            ELSE
+              x := (-(+2))
+            END
+          ELSE
+            IF (p & (r & (1223 < 200))) THEN
+              p := (200 = 200);
+              r := p;
+              y := ((-0) + 0)
+            ELSE
+              z := y
+            END;  IF (((y * 0) > y) & r) THEN
+                    r := ((1223 * (((x MOD 0) MOD 1223) DIV 200)) = 2);
+                    z := x
+                  END;  IF (((y DIV y) MOD (x MOD 0)) >= 2) THEN
+                          q := p;
+                          z := z
+                        END
+          END;
+          WHILE (200 < (y DIV (+y))) DO
+            z := 0;
+            WHILE r DO
+              x := 0;
+              q := ((0 * x) < 200);
+              q := (z <= (+((z DIV 2) - 1223)))
+            END;
+            IF (z <= (x - 1223)) THEN
+              x := 0;
+              y := (-(((y MOD y) * (1223 + z)) + (x MOD (-x))));
+              q := ((~((+2) < 200)) OR ((~(r & (((((+(1223 DIV 1)) MOD z) DIV y) >= 1) OR p))) & (2 < z)));
+              x := 1223
+            ELSE
+              q := (~(~(~(x <= (y DIV (2 DIV ((+y) DIV 1223)))))));  r := ((y - (+(+(+(+200))))) = 1);  z := 0;  y := (1223 - (z - 200))
+            END
+          END;
+          IF (((x - 1223) DIV (+2)) >= ((1 + z) MOD (2 - x))) THEN
+            WHILE r DO
+              x := (+(1 * x))
+            END;
+            IF (1 >= z) THEN
+              q := (((+(+(200 - (0 MOD (-(0 - (200 MOD (+z)))))))) + 0) = ((0 DIV 1223) + x));
+              y := 0;
+              y := ((1223 * (((-(y MOD ((1 * 1) + 1223))) + z) - (z DIV (+(x + ((+((+z) * (1 + z))) - (x * (-(z MOD 0))))))))) - 1223)
+            END
+          ELSE
+            IF ((-(200 * 2)) < 1) THEN
+              y := 2;
+              z := (1 - (+(0 DIV (2 + ((z - (z + (+(2 + (2 MOD y))))) * (+1223))))));
+              q := p
+            ELSE
+              q := q;  x := (-2)
+            END;  WHILE (1 >= ((y MOD 0) * z)) DO
+                    q := r;
+                    x := (((-y) * (x DIV 0)) MOD ((+200) * (z * 1223)));
+                    q := q
+                  END;  p := (2 >= 2)
+          END
+        END;  IF ((z < 1) & ((z * 1223) >= 200)) THEN
+                IF (((y + y) + x) # (1223 DIV 1)) THEN
+                  WHILE (~((1 MOD 200) = (200 - 2))) DO
+                    r := (~r);
+                    r := (((((~((1223 * (+0)) < ((1 DIV x) - 1223))) OR (z # ((z - (z DIV x)) + x))) & r) OR (z >= 2)) OR q)
+                  END;
+                  WHILE r DO
+                    x := (0 * 1);
+                    z := (2 + z);
+                    r := (x = (-(200 * 200)))
+                  END
+                END;
+                IF (((z DIV x) MOD z) = 2) THEN
+                  z := x;
+                  IF (y >= 1) THEN
+                    p := (0 <= 2)
+                  ELSE
+                    q := ((200 <= 200) OR ((1223 DIV ((+(+x)) - 1223)) = ((+(y DIV 2)) - 1)));  r := ((y > (-(((+y) DIV 200) - 200))) & (((((y MOD 2) + y) MOD x) * y) = (((0 * (((1 + 1) * y) MOD (+200))) + (y + (+((-((1 DIV 1) + 200)) - (-y))))) - y)));  q := ((~(y >= z)) & ((((+(2 * 1)) - (0 - (-1223))) - 0) = 200));  p := (p OR (~(q OR (z < 2))))
+                  END
+                END;
+                IF (((1 MOD 2) # z) & p) THEN
+                  z := (200 DIV ((0 MOD (1223 DIV 2)) DIV (0 MOD y)));
+                  IF q THEN
+                    r := (((z + 200) < ((+(((1 * y) - (1 DIV x)) - 2)) MOD ((2 DIV 1223) - (+((0 - 1223) DIV (-(x DIV z))))))) & p);
+                    x := 0
+                  END
+                END;
+                y := (x * 1223)
+              END;  IF (((+z) # 1223) OR q) THEN
+                      IF p THEN
+                        IF ((z MOD x) > x) THEN
+                          x := ((+(1223 MOD x)) DIV ((0 + (+(y DIV 1223))) - ((x - (-((+(((-x) MOD (0 + 200)) * (-(y + 2)))) - 2))) MOD (1 + 200))));
+                          y := (-1)
+                        END;
+                        WHILE r DO
+                          q := r;
+                          y := (1 * y)
+                        END;
+                        WHILE (((2 MOD z) * z) = 1223) DO
+                          q := p;
+                          x := 1
+                        END;
+                        IF (2 = y) THEN
+                          x := (-(y - 1223));
+                          y := 2;
+                          r := q
+                        ELSE
+                          p := (~((0 - 0) < 200))
+                        END
+                      END;
+                      y := ((-1223) + z);
+                      x := z
+                    ELSE
+                      WHILE (~(q OR (2 <= 200))) DO
+                        IF (((200 + 0) - x) # (z DIV (-0))) THEN
+                          p := ((-1223) <= (+((+z) DIV (((-y) DIV (((0 + 1) MOD (((z DIV z) MOD (y - y)) DIV (1223 MOD z))) - 0)) * y))));
+                          x := (-(((z DIV (+(+((+((1 - 1223) * z)) - 1223)))) DIV 1) * 1));
+                          q := (((((+(1 DIV 200)) MOD 1223) MOD ((1223 MOD ((2 MOD z) MOD z)) DIV 1223)) * x) <= (+((200 * ((1 + ((-1223) - y)) - x)) * (1 DIV 200))));
+                          q := q
+                        END;
+                        p := q;
+                        x := (x - (1223 * (x * 0)));
+                        IF p THEN
+                          x := 0
+                        END
+                      END;  y := (y + z);  IF q THEN
+                                             IF r THEN
+                                               r := ((x MOD ((-2) * 0)) <= y)
+                                             ELSE
+                                               p := ((((1 * (y * 200)) MOD ((2 + (+y)) * 0)) * z) = (-(+((+200) - 2))));  z := (2 MOD z);  z := 1223;  r := q
+                                             END;
+                                             WHILE ((200 - (-1)) = (+2)) DO
+                                               r := r
+                                             END;
+                                             WHILE (x > ((x * 200) + (-1))) DO
+                                               p := (2 >= 2)
+                                             END;
+                                             IF (~q) THEN
+                                               p := ((x - z) < ((1 MOD 200) MOD (((0 + 1223) - 2) + (y MOD y))));
+                                               q := p
+                                             END
+                                           END
+                    END
+      END;  WHILE (q & (0 <= 1223)) DO
+              IF q THEN
+                WHILE (((0 - 0) * 0) <= (-(+y))) DO
+                  IF (200 > ((x - 1) MOD (0 DIV 2))) THEN
+                    y := ((((z + (1 - ((((2 DIV (z + 0)) MOD 2) + (+(200 + (1 * 200)))) - 2))) * (y MOD 1)) - 0) DIV z);
+                    x := y;
+                    z := z
+                  END
+                END;
+                IF (q OR ((1223 DIV y) <= (z DIV 2))) THEN
+                  x := y;
+                  IF ((-(200 MOD 2)) # 1223) THEN
+                    x := 2;
+                    x := x
+                  END;
+                  r := (~(x < 0))
+                END;
+                IF ((1 + 1) >= z) THEN
+                  WHILE r DO
+                    q := (((1 + 200) < 200) OR q);
+                    q := (1 <= 200)
+                  END;
+                  WHILE p DO
+                    r := (((+1) - z) < x);
+                    r := p;
+                    y := y;
+                    r := (200 <= y)
+                  END;
+                  IF q THEN
+                    x := (1223 * (y + y));
+                    z := (1 * y)
+                  END;
+                  r := ((z * (x DIV 0)) > 0)
+                END
+              ELSE
+                IF (((2 MOD z) MOD (z DIV y)) > ((2 + 1223) DIV 0)) THEN
+                  x := (200 MOD x);
+                  WHILE (((x - 1223) MOD 200) > (x + 0)) DO
+                    r := (z <= (+(x MOD 200)));
+                    x := y;
+                    x := (-1);
+                    q := (2 > ((1223 MOD 1) + 0))
+                  END;
+                  IF (x < 1223) THEN
+                    z := (-z);
+                    y := (x * (-0))
+                  ELSE
+                    x := 1223;  q := (z >= 2)
+                  END;
+                  IF ((1223 * (y * 2)) >= (200 MOD 1223)) THEN
+                    x := (-1);
+                    x := 1223;
+                    x := (y * ((-0) * 0))
+                  END
+                END;  WHILE (q OR (~(q & q))) DO
+                        r := p
+                      END;  IF (1 < y) THEN
+                              WHILE ((-(2 - 1)) > ((x + 0) - 2)) DO
+                                z := (1223 - ((200 MOD (y - 1)) DIV x))
+                              END;
+                              IF r THEN
+                                r := (r & ((y - ((1 MOD ((x * (y MOD (x MOD (-1223)))) DIV (-y))) + (-(-y)))) > (1 - ((200 * (+x)) DIV ((((2 + 1) MOD 0) DIV (y + (+y))) DIV ((-x) - 1223))))));
+                                q := r;
+                                x := (200 MOD 0);
+                                x := 0
+                              ELSE
+                                z := 2
+                              END;
+                              z := ((1 MOD z) + 1);
+                              WHILE r DO
+                                p := (((z DIV 1) DIV 200) # 0);
+                                z := 200;
+                                z := (y DIV (((+(+((1 MOD (+x)) MOD z))) MOD (+(+(0 MOD (2 - (0 * x)))))) * x))
+                              END
+                            END
+              END;
+              WHILE (0 # 200) DO
+                IF ((1 + (z * 200)) < (+(1 + z))) THEN
+                  IF ((x - 200) >= 1) THEN
+                    y := x
+                  END;
+                  WHILE ((-2) < ((-1) MOD x)) DO
+                    q := (((+((2 MOD (-(1223 DIV 1223))) DIV (-((-(z MOD (-1))) + 1)))) MOD (+(x DIV (1223 + (((((0 + 1) DIV z) MOD 0) MOD (-2)) DIV 200))))) = (((+(-((2 + (z + z)) DIV (2 DIV x)))) - 200) MOD 1));
+                    z := y;
+                    p := q
+                  END
+                END
+              END;
+              IF (0 > 0) THEN
+                IF (r & (0 > y)) THEN
+                  z := y
+                END
+              ELSE
+                z := z;  WHILE (2 < z) DO
+                           WHILE (q & p) DO
+                             q := (1223 < 1);
+                             r := ((0 + 0) >= ((((x - 2) - ((2 MOD (1223 - 0)) MOD 200)) + (+x)) DIV (-y)))
+                           END;
+                           p := ((1223 * x) <= (((y DIV 1) + z) + 200));
+                           IF (((1223 + 2) - (200 MOD 1223)) > 1) THEN
+                             p := ((-(-0)) <= y);
+                             x := 2;
+                             r := ((x MOD (y * z)) > 1)
+                           ELSE
+                             r := (((z - z) <= 1) OR (z > ((+(1223 + 200)) * (1223 * 1223))));  r := (y > (+(1 * (0 + ((-((((+2) + 1) + 200) - 2)) + x)))));  p := q
+                           END;
+                           IF p THEN
+                             r := ((((2 MOD (z - 2)) * 1223) DIV (1223 - 200)) > 0);
+                             y := 0
+                           ELSE
+                             r := p;  q := r;  q := (~(0 # (0 MOD x)))
+                           END
+                         END;  IF (((-y) - 1223) <= x) THEN
+                                 q := (((1223 MOD (-200)) MOD (-((2 - y) - (-x)))) > ((x MOD (1 * 200)) + 1));
+                                 IF ((y DIV y) <= (+z)) THEN
+                                   p := (~((+200) = ((+200) + z)));
+                                   z := ((+(2 * (y - 1))) DIV y)
+                                 END;
+                                 IF ((+0) <= ((x DIV 1) * z)) THEN
+                                   z := 0;
+                                   y := (1223 - (+z))
+                                 ELSE
+                                   p := (0 = 1223)
+                                 END
+                               END
+              END
+            END
+    END;
+    IF ((+(0 + 200)) # x) THEN
+      q := (((1223 DIV 200) - 0) < y)
+    END
+  END
+END Test.

@@ -1,0 +1,5 @@
+MODULE Bla;
+
+BEGIN
+  x := CASE
+END Bla.

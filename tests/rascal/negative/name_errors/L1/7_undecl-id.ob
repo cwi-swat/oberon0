@@ -1,0 +1,8 @@
+MODULE Bla;
+
+VAR
+  x: INTEGER;
+
+BEGIN
+  x := y
+END Bla.

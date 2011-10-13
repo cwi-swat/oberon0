@@ -1,0 +1,8 @@
+MODULE Bla;
+
+TYPE
+  x = INTEGER;
+
+BEGIN
+  x := 1
+END Bla.

@@ -1,0 +1,10 @@
+MODULE Bla;
+VAR
+  x: INTEGER;
+
+
+BEGIN
+  FOR x := y TO 2 DO
+    x := 1
+  END
+END Bla.

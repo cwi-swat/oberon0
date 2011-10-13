@@ -1,0 +1,7 @@
+MODULE Bla;
+
+BEGIN
+  FOR i := 0 TO 5 BY DO
+    x := 1
+  END
+END Bla.

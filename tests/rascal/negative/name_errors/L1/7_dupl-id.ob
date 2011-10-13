@@ -1,0 +1,11 @@
+MODULE Bla;
+
+CONST
+  x = 4;
+
+VAR
+  x: X;
+
+BEGIN
+  x := 1
+END Bla.

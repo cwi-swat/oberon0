@@ -1,0 +1,10 @@
+MODULE Bla;
+
+
+
+
+BEGIN
+  CASE x OF
+   3: y := 1
+  END
+END Bla.

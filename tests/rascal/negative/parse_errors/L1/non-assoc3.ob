@@ -1,0 +1,5 @@
+MODULE Bla;
+
+BEGIN
+  x := 1 < 1 # 1
+END Bla.

@@ -1,0 +1,5 @@
+MODULE Bla;
+
+BEGIN
+  RECORD := 1
+END Bla.

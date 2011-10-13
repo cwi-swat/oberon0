@@ -1,0 +1,10 @@
+MODULE Bla;
+
+PROCEDURE F(x: X);
+BEGIN
+  x := 1
+END F;
+
+BEGIN
+  F(3)
+END Bla.

@@ -1,0 +1,8 @@
+MODULE Bla;
+
+CONST
+  x = 3;
+
+BEGIN
+  x := 1
+END Bla.

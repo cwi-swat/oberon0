@@ -1,0 +1,10 @@
+MODULE Bla;
+
+VAR x: INTEGER;
+
+BEGIN
+  CASE x OF
+   y: 
+      x := 1
+  END
+END Bla.

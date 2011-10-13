@@ -1,0 +1,10 @@
+MODULE Bla;
+
+PROCEDURE F(VAR x, y : INTEGER, y: INTEGER);
+BEGIN
+  x := 1
+END F;
+
+BEGIN
+  F()
+END Bla.
