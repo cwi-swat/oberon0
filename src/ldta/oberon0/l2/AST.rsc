@@ -16,3 +16,7 @@ data Case
 	  = expression(Expression exp)
 	  | range(Expression from, Expression to)
 	  ;
+
+anno loc Label@location;
+anno loc Case@location;
+	  
