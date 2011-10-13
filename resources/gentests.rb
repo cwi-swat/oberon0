@@ -54,6 +54,7 @@ class TestGen
     end
     gen_tests(:gen_negative, @negatives)
     gen_tests(:gen_positive, @positives)
+    #gen_tests(:gen_format_test, @positives)
   end
 
   def neg_pred(klass, obfile)
@@ -71,6 +72,16 @@ class TestGen
 
   def gen_positive(tool, klass, level, obfile, path)
     gen_test(:POS, klass, pos_pred(klass, obfile), tool, level, obfile, path)
+  end
+
+  def gen_format_test(tool, klass, level, obfile, path)
+    #return if tool != 'rascal'
+    puts <<ENDCAT
+public test bool POS_format_#{level}_#{tool}_#{tag(obfile)}() =
+   implode#{level}(#{loc(path)}) == 
+     implode#{level}(parse#{level}(format#{level}(#{loc(path)})));
+
+ENDCAT
   end
 
 
@@ -92,14 +103,22 @@ class TestGen
   end
 
   def gen_test(kind, klass, pred, tool, level, obfile, path) 
-    tag = obfile.gsub(/\./, '_')
+    #return if tool != 'rascal'
     puts <<ENDCAT
-public test bool #{kind}_#{klass}_#{level}_#{tool}_#{tag}() = 
-  try#{klass.capitalize}(#{klass}#{level}, |project://oberon0/tests/#{path}|) #{pred}; 
+public test bool #{kind}_#{klass}_#{level}_#{tool}_#{tag(obfile)}() = 
+  try#{klass.capitalize}(#{klass}#{level}, #{loc(path)}) #{pred}; 
 
 ENDCAT
-
   end
+
+  def loc(path)
+    "|project://oberon0/tests/#{path}|"
+  end
+
+  def tag(obfile)
+    obfile.gsub(/[.-]/, '_')
+  end
+
 
 end
 

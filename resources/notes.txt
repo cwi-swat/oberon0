@@ -1,9 +1,46 @@
 
+TODO
+
+- field check of records during name analysis (?)
+- syntax: record ; end is allowed (not by me now).
+- Int overflow stuff.
+- No arrays in non-var formal params
+- Nominal typing.
+- out of bounds checks?
+- arrays cannot be assigned (and records?)
+- Case labels should be constants
+- Apparently, this is not allowed: bvar := bvar =/# TRUE 
+- Div by zero check in constants (in check?)
+
+Problems
+- cannot assign to formal params/vars of outer proc in nested proc
+(~/CWI/ldta-2011/tests/jastadd/negative/name_errors/L3/10_VariableAccess2.ob)
+- |project://oberon0/tests/silver/positive/L3/gcd_recursive.ob|
+  (local var n is not found???)
+
 Syntax
 
-- Bodies of if,else,elsif and while cannot be empty
-  (StatementSequence = statement {";" statement})
-- Semi-colons are separators, not (optional) terminators
 - Can vars/const/types shadow builtin procs in L4?
 
+- Can procedures see procs at the same level later (Factorize, Corec)?
+
+- Is this:
+    PROCEDURE f(a : INTEGER);
+		CONST C = 2 * (a + 3);
+	END f;
+  a name or type error?:: NAME
+
+- Is this PROCEDURE g(ar : ARRAY 10 OF INTEGER); allowed
+   --> not allowed, only in VAR position...
+
+- !!! ~/CWI/ldta-2011/tests/jastadd/negative/type_errors/L4/17_CombiningArraysAndRecords2.ob
+   (this does out of bounds checking statically, but this cannot be possible)
+
+ 
+- ~/CWI/ldta-2011/tests/jastadd/negative/type_errors/L4/6_IllegalAssignment3.ob
+  No assignments to complex types???
   
+- Should the parser reject integers bigger than 2^32?
+
+
+
