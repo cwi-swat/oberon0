@@ -91,9 +91,10 @@ syntax Expression
 		| amp: Expression lhs "&" Expression rhs
 	) 
 	>
-	left (
-		pos: "+" Expression exp
-		| neg: "-" Expression exp
+	pos: "+" Expression exp
+    | neg: "-" Expression exp
+    >
+    left (
 		| add: Expression lhs "+" Expression rhs
 		| sub: Expression lhs "-" Expression rhs
 		| or: Expression lhs "OR" Expression rhs
