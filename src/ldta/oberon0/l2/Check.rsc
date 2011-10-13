@@ -5,7 +5,9 @@ import ldta::oberon0::l2::AST;
 
 
 public set[Message] check(forDo(n, f, t, by, b)) = check(f) + check(t) + checkBody(b) + checkBy(by) + 
-  { intErr(f@location) | !isInt(typeOf(f)) } + { intErr(t@location) | !isInt(typeOf(t)) };
+  { intErr(n@location) | (n@decl)?, !isInt((n@decl).\type)  } + 
+  { intErr(f@location) | !isInt(typeOf(f)) } + 
+  { intErr(t@location) | !isInt(typeOf(t)) };
 
 private set[Message] checkBy(list[Expression] es) {
   if (e <- es) {
