@@ -48,7 +48,7 @@ import IO;
 		  var("r", prim("BOOLEAN"))
 	};
 	
-	
+
 	public str chooseVar(set[Conf] confs, T t)  = getOneFrom(resultTyped(vars(confs), t)).name;
 	
 	public set[T] confTypes(set[Conf] confs) = { c.rtype | c <- confs };
@@ -66,7 +66,7 @@ import IO;
 	
 		  public Conf find(T t, int depth) {
 		    if (depth > 0) {
-		      return getOneFrom(resultTyped(nonLeaves(confs), t));
+		      return getOneFrom(resultTyped(confs, t));
 		    }
 	    if (numOfErrs > 0) {
 	      numOfErrs -= 1;
@@ -97,6 +97,61 @@ import IO;
 	
 	}
 	
+		public str buildStat(set[Conf] confs, int xdepth) {
+	  set[str] O0stats = {"ifThen", "ifThenElse", "whileDo", "assign" };
+	
+		  public str find(int depth) {
+		    if (depth > 0) {
+		      return getOneFrom(O0stats);
+		    }
+	    return "assign";
+  	}
+	
+		  public str makeBody(int depth) {
+		    n = getOneFrom({1,2,3,4,5,6,7,8,9,10});
+	    bs = for (i <- [1..n]) {
+	      append make(find(depth), depth);
+	    }
+	    return intercalate(";\n", bs);
+		  }
+	
+	  public str make(str c, int depth) {
+	    depth -= 1;
+	    switch (c) {
+	      case "assign": {
+	        x = getOneFrom(vars(confs));
+	        e = build(confs, x.rtype, 10, 0); 
+		        return "<x.name> := <e>";     
+	      }
+	      case "ifThen": {
+		        c = build(confs, prim("BOOLEAN"), 3, 0);
+	        b = makeBody(depth);
+		        return "IF <c> THEN <b> END";
+		      }     
+	      case "ifThenElse": {
+	        c = build(confs, prim("BOOLEAN"), 3, 0);
+	        b1 = makeBody(depth);
+	        b2 = makeBody(depth);
+		        return "IF <c> THEN <b1> ELSE <b2> END";     
+	      }
+		      case "whileDo": {
+	        c = build(confs, prim("BOOLEAN"), 3, 0);
+	        b = makeBody(depth);
+		        return "WHILE <c> DO <b> END";     
+	      }
+	    }
+	  }
+	  
+	  decl = ( "VAR\n" | it + "  <v.name>: <v.rtype.name>;\n" | v <- vars(O0) );
+	  modb = make(find(xdepth), xdepth);
+	  return "MODULE Test;
+         '<decl>
+         'BEGIN
+         '<modb>
+         'END Test.";
+	}
+	
+	
 	public tuple[str,int] genModule(int count, int depth) {
 	  public tuple[str,int] genExps1(int count, int depth) {
 	    confs = O0;
@@ -109,7 +164,7 @@ import IO;
 	        append "  (* error *)  <x> := <build(confs, t, depth, 1)>";
 	      }
 	      else {
-	        append "               <x> := <build(confs, t, depth, 1)>";
+	        append "               <x> := <build(confs, t, depth, 0)>";
 	      }
 	    } 
 	    return <intercalate(";\n", lines), lineNo>;
@@ -135,7 +190,7 @@ import IO;
 	    s0 = "<i>";
 	    s1 = "<n>";
 	    // bug in loc interpolation.
-    loc f = |project://oberon0/tests/rascal/type_errors/L1/<s1>_expression_ES<s2>_D<s3>_<s0>.ob|;
+    loc f = |project://oberon0/tests/rascal/negative/type_errors/L1/<s1>_expression_ES<s2>_D<s3>_<s0>.ob|;
 	    writeFile(f, m);
 	  }
 	}
