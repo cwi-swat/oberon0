@@ -2,7 +2,7 @@ module ldta::oberon0::l1::Syntax
 
 start syntax Module = mod: "MODULE" Ident name ";" Declarations decls Body? body "END" Ident ".";
 
-syntax Body = @Foldable "BEGIN" {Statement ";"}*;
+syntax Body = @Foldable "BEGIN" {Statement ";"}+;
 
 keyword Keywords 
 	= "MODULE"
