@@ -1,5 +1,0 @@
-MODULE Bla;
-
-BEGIN
-  x := 1;
-END
