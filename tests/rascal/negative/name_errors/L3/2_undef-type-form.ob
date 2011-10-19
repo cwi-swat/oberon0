@@ -1,5 +1,4 @@
 MODULE Bla;
-
 PROCEDURE F(x: X);
 BEGIN
   x := 1
