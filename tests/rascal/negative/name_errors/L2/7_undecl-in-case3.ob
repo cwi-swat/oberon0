@@ -3,7 +3,7 @@ VAR x, y: INTEGER;
 
 BEGIN
   CASE x OF
-   y: 
+   1: 
       z := 1
   END
 END Bla.
