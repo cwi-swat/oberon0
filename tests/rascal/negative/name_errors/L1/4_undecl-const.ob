@@ -4,8 +4,8 @@ CONST
   x = Y;
 
 VAR
-  x: X;
+  y: INTEGER;
 
 BEGIN
-  x := 1
+  y := 1
 END Bla.
