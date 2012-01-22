@@ -27,7 +27,7 @@ public default bool isReadable(Decl _) = false;
 
 
 
-public tuple[Module, set[Message]] bind(m:Module::mod(n1, ds, list[Statement] b, n2), NEnv nenv) {
+public tuple[Module, set[Message]] bind(m:Module::\mod(n1, ds, list[Statement] b, n2), NEnv nenv) {
   <m.decls, nenv, errs> = bind(ds, nenv, {});
   <m.body, errs> = bind(b, nenv, errs);
   errs += { idMismatchErr(n2@location) | n1 != n2 };
@@ -227,7 +227,7 @@ public tuple[Expression,set[Message]] evalConst(Expression e, NEnv nenv, set[Mes
     case mul(nat(a), nat(b)) => nat(a * b)
     case div(nat(a), nat(0)): return <e, errs + {divZeroErr(e@location)}>;
     case div(nat(a), nat(b)) => nat(a / b)
-    case mod(nat(a), nat(b)) => nat(a % b)
+    case \mod(nat(a), nat(b)) => nat(a % b)
     case a:lookup(x) => xe when isVisible(nenv, x), const(_, xe) := getDef(nenv, x)
   }
   return <e, errs>;

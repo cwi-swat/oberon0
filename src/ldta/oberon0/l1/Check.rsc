@@ -21,7 +21,7 @@ public Type intType() = user(id("INTEGER"));
 public Type boolType() = user(id("BOOLEAN"));
 
 
-public set[Message] check(Module::mod(n, ds, b, n1)) = check(ds) + checkBody(b);
+public set[Message] check(Module::\mod(n, ds, b, n1)) = check(ds) + checkBody(b);
 
 // Declarations
 public set[Message] check(decls(cds, _, _)) = ( {} | it + check(cd) | cd <- cds );
@@ -57,7 +57,7 @@ public set[Message] check(mul(e1, e2)) = check(e1) + check(e2) +
 public set[Message] check(div(e1, e2)) = check(e1) + check(e2) + 
     {intErr(e1@location) | !isInt(typeOf(e1)) } + {intErr(e2@location) | !isInt(typeOf(e2)) };
  
-public set[Message] check(Expression::mod(e1, e2)) = check(e1) + check(e2) + 
+public set[Message] check(Expression::\mod(e1, e2)) = check(e1) + check(e2) + 
     {intErr(e1@location) | !isInt(typeOf(e1)) } + {intErr(e2@location) | !isInt(typeOf(e2)) };
 
 public set[Message] check(add(e1, e2)) = check(e1) + check(e2) + 
@@ -104,7 +104,7 @@ public Type typeOf(pos(e)) = intType();
 public Type typeOf(not(e)) = boolType();
 public Type typeOf(mul(e1, e2)) = intType();
 public Type typeOf(div(e1, e2)) = intType();
-public Type typeOf(Expression::mod(e1, e2)) = intType(); 
+public Type typeOf(Expression::\mod(e1, e2)) = intType(); 
 public Type typeOf(add(e1, e2)) = intType();
 public Type typeOf(sub(e1, e2)) = intType();
 public Type typeOf(amp(e1, e2)) = boolType();

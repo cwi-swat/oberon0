@@ -1,6 +1,6 @@
 module ldta::oberon0::l1::Syntax
 
-start syntax Module = mod: "MODULE" Ident name ";" Declarations decls Body? body "END" Ident ".";
+start syntax Module = \mod: "MODULE" Ident name ";" Declarations decls Body? body "END" Ident ".";
 
 syntax Body = @Foldable "BEGIN" {Statement ";"}+;
 
@@ -87,14 +87,13 @@ syntax Expression
 	left (
 		mul: Expression lhs "*" Expression rhs
 		| div: Expression lhs "DIV" Expression rhs
-		| mod: Expression lhs "MOD" Expression rhs
+		| \mod: Expression lhs "MOD" Expression rhs
 		| amp: Expression lhs "&" Expression rhs
 	) 
 	>
-	pos: "+" Expression exp
-    | neg: "-" Expression exp
-    >
     left (
+        right pos: "+" Expression exp
+        | right neg: "-" Expression exp
 		| add: Expression lhs "+" Expression rhs
 		| sub: Expression lhs "-" Expression rhs
 		| or: Expression lhs "OR" Expression rhs

@@ -1,6 +1,6 @@
 module ldta::oberon0::l1::AST
 
-data Module = mod(Ident name, Declarations decls, list[Statement] body, Ident endName);
+data Module = \mod(Ident name, Declarations decls, list[Statement] body, Ident endName);
 
 data Declarations = decls(list[ConstDecl] consts, list[TypeDecl] types, list[VarDecl] vars);
 
@@ -29,7 +29,7 @@ data Expression
 	| not(Expression exp)
 	| mul(Expression lhs, Expression rhs)
 	| div(Expression lhs, Expression rhs)
-	| mod(Expression lhs, Expression rhs)
+	| \mod(Expression lhs, Expression rhs)
 	| amp(Expression lhs, Expression rhs)
 	| add(Expression lhs, Expression rhs)
 	| sub(Expression lhs, Expression rhs)
