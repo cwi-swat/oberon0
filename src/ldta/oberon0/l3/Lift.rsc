@@ -25,11 +25,11 @@ public Module normalizeDecls(Module m) = visit (m) {
   };
 
 
-public Module liftDecls(Module mod) {
+public Module liftDecls(Module \mod) {
   gcs = [];
   gts = [];
   gps = [];
-  mod = visit (mod) {
+  \mod = visit (\mod) {
     case Declarations decls: {
 	      gcs += decls.consts;
 	      gts += decls.types;
@@ -40,15 +40,15 @@ public Module liftDecls(Module mod) {
 	      insert decls;
     }
   }
-  mod.decls.consts = gcs;
-  mod.decls.types = gts;
-  mod.decls.procs = gps;
-  return mod;
+  \mod.decls.consts = gcs;
+  \mod.decls.types = gts;
+  \mod.decls.procs = gps;
+  return \mod;
 }
 
-public Module liftArrayTypes(Module mod) {  
+public Module liftArrayTypes(Module \mod) {  
   atypesMap = ();
-  mod = visit (mod) {
+  \mod = visit (\mod) {
     case a:array(b, et): {
       if (k <- atypesMap, typeDecl(n2, a2) := atypesMap[k], a2 == a@ntype) {
         insert user(n2)[@location=a@location];
@@ -62,11 +62,11 @@ public Module liftArrayTypes(Module mod) {
     }
   }
   atypes = [ atypesMap[l] | l <- atypesMap ];
-  atypes += mod.decls.types;
+  atypes += \mod.decls.types;
   deps = { <t1, t2> | t1:typeDecl(x, _) <- atypes, t2 <- atypes , x in { y | /user(Ident y) <- t2.\type } };
   nodeps = toList(toSet(atypes) - carrier(deps));
-  mod.decls.types = order(deps) + nodeps;
-  return mod;
+  \mod.decls.types = order(deps) + nodeps;
+  return \mod;
 }
 
 public rel[loc, Ident] freeVars(Module m) {

@@ -313,6 +313,561 @@ public test bool NEG_check_L1_kiama_8_badeq1_ob() =
 public test bool NEG_check_L1_kiama_8_badeq2_ob() = 
   tryCheck(checkL1, |project://oberon0/tests/kiama/negative/type_errors/L1/8_badeq2.ob|) == 8; 
 
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_10_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_10.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_11_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_11.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_23_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_23.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_29_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_29.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_33_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_33.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_35_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_35.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_40_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_40.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_43_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_43.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_5_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_5.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_51_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_51.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_53_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_53.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_55_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_55.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_56_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_56.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_59_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_59.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_70_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_70.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_72_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_72.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_77_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_77.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_85_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_85.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_9_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_9.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_11_expression_ES10_D4_93_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/11_expression_ES10_D4_93.ob|) == 11; 
+
+public test bool NEG_check_L1_rascal_12_expression_ES10_D4_19_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/12_expression_ES10_D4_19.ob|) == 12; 
+
+public test bool NEG_check_L1_rascal_12_expression_ES10_D4_22_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/12_expression_ES10_D4_22.ob|) == 12; 
+
+public test bool NEG_check_L1_rascal_12_expression_ES10_D4_27_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/12_expression_ES10_D4_27.ob|) == 12; 
+
+public test bool NEG_check_L1_rascal_12_expression_ES10_D4_3_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/12_expression_ES10_D4_3.ob|) == 12; 
+
+public test bool NEG_check_L1_rascal_12_expression_ES10_D4_30_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/12_expression_ES10_D4_30.ob|) == 12; 
+
+public test bool NEG_check_L1_rascal_12_expression_ES10_D4_32_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/12_expression_ES10_D4_32.ob|) == 12; 
+
+public test bool NEG_check_L1_rascal_12_expression_ES10_D4_41_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/12_expression_ES10_D4_41.ob|) == 12; 
+
+public test bool NEG_check_L1_rascal_12_expression_ES10_D4_49_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/12_expression_ES10_D4_49.ob|) == 12; 
+
+public test bool NEG_check_L1_rascal_12_expression_ES10_D4_61_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/12_expression_ES10_D4_61.ob|) == 12; 
+
+public test bool NEG_check_L1_rascal_12_expression_ES10_D4_64_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/12_expression_ES10_D4_64.ob|) == 12; 
+
+public test bool NEG_check_L1_rascal_12_expression_ES10_D4_69_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/12_expression_ES10_D4_69.ob|) == 12; 
+
+public test bool NEG_check_L1_rascal_12_expression_ES10_D4_73_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/12_expression_ES10_D4_73.ob|) == 12; 
+
+public test bool NEG_check_L1_rascal_12_expression_ES10_D4_78_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/12_expression_ES10_D4_78.ob|) == 12; 
+
+public test bool NEG_check_L1_rascal_12_expression_ES10_D4_9_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/12_expression_ES10_D4_9.ob|) == 12; 
+
+public test bool NEG_check_L1_rascal_12_expression_ES10_D4_90_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/12_expression_ES10_D4_90.ob|) == 12; 
+
+public test bool NEG_check_L1_rascal_12_expression_ES10_D4_97_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/12_expression_ES10_D4_97.ob|) == 12; 
+
+public test bool NEG_check_L1_rascal_13_expression_ES10_D4_13_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/13_expression_ES10_D4_13.ob|) == 13; 
+
+public test bool NEG_check_L1_rascal_13_expression_ES10_D4_24_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/13_expression_ES10_D4_24.ob|) == 13; 
+
+public test bool NEG_check_L1_rascal_13_expression_ES10_D4_28_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/13_expression_ES10_D4_28.ob|) == 13; 
+
+public test bool NEG_check_L1_rascal_13_expression_ES10_D4_37_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/13_expression_ES10_D4_37.ob|) == 13; 
+
+public test bool NEG_check_L1_rascal_13_expression_ES10_D4_42_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/13_expression_ES10_D4_42.ob|) == 13; 
+
+public test bool NEG_check_L1_rascal_13_expression_ES10_D4_48_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/13_expression_ES10_D4_48.ob|) == 13; 
+
+public test bool NEG_check_L1_rascal_13_expression_ES10_D4_51_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/13_expression_ES10_D4_51.ob|) == 13; 
+
+public test bool NEG_check_L1_rascal_13_expression_ES10_D4_68_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/13_expression_ES10_D4_68.ob|) == 13; 
+
+public test bool NEG_check_L1_rascal_13_expression_ES10_D4_7_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/13_expression_ES10_D4_7.ob|) == 13; 
+
+public test bool NEG_check_L1_rascal_13_expression_ES10_D4_75_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/13_expression_ES10_D4_75.ob|) == 13; 
+
+public test bool NEG_check_L1_rascal_13_expression_ES10_D4_76_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/13_expression_ES10_D4_76.ob|) == 13; 
+
+public test bool NEG_check_L1_rascal_13_expression_ES10_D4_89_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/13_expression_ES10_D4_89.ob|) == 13; 
+
+public test bool NEG_check_L1_rascal_13_expression_ES10_D4_94_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/13_expression_ES10_D4_94.ob|) == 13; 
+
+public test bool NEG_check_L1_rascal_13_expression_ES10_D4_99_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/13_expression_ES10_D4_99.ob|) == 13; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_1_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_1.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_14_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_14.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_21_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_21.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_26_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_26.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_29_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_29.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_31_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_31.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_36_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_36.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_39_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_39.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_4_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_4.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_44_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_44.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_5_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_5.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_53_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_53.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_6_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_6.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_61_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_61.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_72_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_72.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_8_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_8.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_82_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_82.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_85_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_85.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_87_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_87.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_14_expression_ES10_D4_99_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/14_expression_ES10_D4_99.ob|) == 14; 
+
+public test bool NEG_check_L1_rascal_15_expression_ES10_D4_100_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/15_expression_ES10_D4_100.ob|) == 15; 
+
+public test bool NEG_check_L1_rascal_15_expression_ES10_D4_21_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/15_expression_ES10_D4_21.ob|) == 15; 
+
+public test bool NEG_check_L1_rascal_15_expression_ES10_D4_25_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/15_expression_ES10_D4_25.ob|) == 15; 
+
+public test bool NEG_check_L1_rascal_15_expression_ES10_D4_35_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/15_expression_ES10_D4_35.ob|) == 15; 
+
+public test bool NEG_check_L1_rascal_15_expression_ES10_D4_46_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/15_expression_ES10_D4_46.ob|) == 15; 
+
+public test bool NEG_check_L1_rascal_15_expression_ES10_D4_47_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/15_expression_ES10_D4_47.ob|) == 15; 
+
+public test bool NEG_check_L1_rascal_15_expression_ES10_D4_57_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/15_expression_ES10_D4_57.ob|) == 15; 
+
+public test bool NEG_check_L1_rascal_15_expression_ES10_D4_67_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/15_expression_ES10_D4_67.ob|) == 15; 
+
+public test bool NEG_check_L1_rascal_15_expression_ES10_D4_69_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/15_expression_ES10_D4_69.ob|) == 15; 
+
+public test bool NEG_check_L1_rascal_15_expression_ES10_D4_76_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/15_expression_ES10_D4_76.ob|) == 15; 
+
+public test bool NEG_check_L1_rascal_15_expression_ES10_D4_8_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/15_expression_ES10_D4_8.ob|) == 15; 
+
+public test bool NEG_check_L1_rascal_15_expression_ES10_D4_89_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/15_expression_ES10_D4_89.ob|) == 15; 
+
+public test bool NEG_check_L1_rascal_15_expression_ES10_D4_92_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/15_expression_ES10_D4_92.ob|) == 15; 
+
+public test bool NEG_check_L1_rascal_15_expression_ES10_D4_93_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/15_expression_ES10_D4_93.ob|) == 15; 
+
+public test bool NEG_check_L1_rascal_15_expression_ES10_D4_98_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/15_expression_ES10_D4_98.ob|) == 15; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_12_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_12.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_19_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_19.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_20_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_20.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_22_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_22.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_23_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_23.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_24_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_24.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_25_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_25.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_30_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_30.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_41_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_41.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_44_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_44.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_50_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_50.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_60_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_60.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_62_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_62.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_63_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_63.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_65_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_65.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_66_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_66.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_68_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_68.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_70_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_70.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_74_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_74.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_79_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_79.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_81_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_81.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_86_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_86.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_88_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_88.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_90_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_90.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_94_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_94.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_95_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_95.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_16_expression_ES10_D4_97_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/16_expression_ES10_D4_97.ob|) == 16; 
+
+public test bool NEG_check_L1_rascal_17_expression_ES10_D4_15_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/17_expression_ES10_D4_15.ob|) == 17; 
+
+public test bool NEG_check_L1_rascal_17_expression_ES10_D4_16_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/17_expression_ES10_D4_16.ob|) == 17; 
+
+public test bool NEG_check_L1_rascal_17_expression_ES10_D4_17_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/17_expression_ES10_D4_17.ob|) == 17; 
+
+public test bool NEG_check_L1_rascal_17_expression_ES10_D4_18_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/17_expression_ES10_D4_18.ob|) == 17; 
+
+public test bool NEG_check_L1_rascal_17_expression_ES10_D4_20_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/17_expression_ES10_D4_20.ob|) == 17; 
+
+public test bool NEG_check_L1_rascal_17_expression_ES10_D4_31_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/17_expression_ES10_D4_31.ob|) == 17; 
+
+public test bool NEG_check_L1_rascal_17_expression_ES10_D4_34_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/17_expression_ES10_D4_34.ob|) == 17; 
+
+public test bool NEG_check_L1_rascal_17_expression_ES10_D4_37_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/17_expression_ES10_D4_37.ob|) == 17; 
+
+public test bool NEG_check_L1_rascal_17_expression_ES10_D4_39_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/17_expression_ES10_D4_39.ob|) == 17; 
+
+public test bool NEG_check_L1_rascal_17_expression_ES10_D4_40_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/17_expression_ES10_D4_40.ob|) == 17; 
+
+public test bool NEG_check_L1_rascal_17_expression_ES10_D4_45_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/17_expression_ES10_D4_45.ob|) == 17; 
+
+public test bool NEG_check_L1_rascal_17_expression_ES10_D4_47_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/17_expression_ES10_D4_47.ob|) == 17; 
+
+public test bool NEG_check_L1_rascal_17_expression_ES10_D4_55_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/17_expression_ES10_D4_55.ob|) == 17; 
+
+public test bool NEG_check_L1_rascal_17_expression_ES10_D4_6_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/17_expression_ES10_D4_6.ob|) == 17; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_10_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_10.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_100_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_100.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_14_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_14.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_17_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_17.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_18_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_18.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_27_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_27.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_33_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_33.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_36_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_36.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_48_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_48.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_50_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_50.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_52_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_52.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_54_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_54.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_57_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_57.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_58_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_58.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_65_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_65.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_71_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_71.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_74_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_74.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_79_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_79.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_80_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_80.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_82_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_82.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_83_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_83.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_86_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_86.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_18_expression_ES10_D4_98_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/18_expression_ES10_D4_98.ob|) == 18; 
+
+public test bool NEG_check_L1_rascal_19_expression_ES10_D4_2_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/19_expression_ES10_D4_2.ob|) == 19; 
+
+public test bool NEG_check_L1_rascal_19_expression_ES10_D4_32_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/19_expression_ES10_D4_32.ob|) == 19; 
+
+public test bool NEG_check_L1_rascal_19_expression_ES10_D4_38_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/19_expression_ES10_D4_38.ob|) == 19; 
+
+public test bool NEG_check_L1_rascal_19_expression_ES10_D4_43_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/19_expression_ES10_D4_43.ob|) == 19; 
+
+public test bool NEG_check_L1_rascal_19_expression_ES10_D4_49_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/19_expression_ES10_D4_49.ob|) == 19; 
+
+public test bool NEG_check_L1_rascal_19_expression_ES10_D4_52_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/19_expression_ES10_D4_52.ob|) == 19; 
+
+public test bool NEG_check_L1_rascal_19_expression_ES10_D4_56_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/19_expression_ES10_D4_56.ob|) == 19; 
+
+public test bool NEG_check_L1_rascal_19_expression_ES10_D4_67_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/19_expression_ES10_D4_67.ob|) == 19; 
+
+public test bool NEG_check_L1_rascal_19_expression_ES10_D4_78_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/19_expression_ES10_D4_78.ob|) == 19; 
+
+public test bool NEG_check_L1_rascal_19_expression_ES10_D4_80_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/19_expression_ES10_D4_80.ob|) == 19; 
+
+public test bool NEG_check_L1_rascal_19_expression_ES10_D4_81_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/19_expression_ES10_D4_81.ob|) == 19; 
+
+public test bool NEG_check_L1_rascal_19_expression_ES10_D4_87_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/19_expression_ES10_D4_87.ob|) == 19; 
+
+public test bool NEG_check_L1_rascal_19_expression_ES10_D4_88_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/19_expression_ES10_D4_88.ob|) == 19; 
+
+public test bool NEG_check_L1_rascal_19_expression_ES10_D4_91_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/19_expression_ES10_D4_91.ob|) == 19; 
+
+public test bool NEG_check_L1_rascal_19_expression_ES10_D4_96_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/19_expression_ES10_D4_96.ob|) == 19; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_1_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_1.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_11_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_11.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_12_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_12.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_15_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_15.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_16_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_16.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_2_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_2.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_26_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_26.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_3_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_3.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_34_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_34.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_42_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_42.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_46_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_46.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_59_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_59.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_63_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_63.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_64_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_64.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_66_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_66.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_7_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_7.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_77_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_77.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_84_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_84.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_91_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_91.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_95_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_95.ob|) == 20; 
+
+public test bool NEG_check_L1_rascal_20_expression_ES10_D4_96_ob() = 
+  tryCheck(checkL1, |project://oberon0/tests/rascal/negative/type_errors/L1/20_expression_ES10_D4_96.ob|) == 20; 
+
 public test bool NEG_check_L1_silver_10_add_bool_int_ob() = 
   tryCheck(checkL1, |project://oberon0/tests/silver/negative/type_errors/L1/10_add_bool_int.ob|) == 10; 
 
@@ -676,9 +1231,6 @@ public test bool NEG_parse_L1_rascal_reserved2_ob() =
 public test bool NEG_parse_L1_rascal_reserved3_ob() = 
   tryParse(parseL1, |project://oberon0/tests/rascal/negative/parse_errors/L1/reserved3.ob|) != -1; 
 
-public test bool NEG_parse_L1_rascal_trailing_semi1_ob() = 
-  tryParse(parseL1, |project://oberon0/tests/rascal/negative/parse_errors/L1/trailing-semi1.ob|) != -1; 
-
 public test bool NEG_parse_L1_silver_identifiers_fail_ob() = 
   tryParse(parseL1, |project://oberon0/tests/silver/negative/parse_errors/L1/identifiers_fail.ob|) != -1; 
 
@@ -798,7 +1350,6 @@ public test bool NEG_parse_L3_silver_reserved_procedure_ob() =
 
 public test bool NEG_parse_L4_rascal_array_reserved_ob() = 
   tryParse(parseL4, |project://oberon0/tests/rascal/negative/parse_errors/L4/array-reserved.ob|) != -1; 
-
 
 public test bool NEG_parse_L4_rascal_record_reserved_ob() = 
   tryParse(parseL4, |project://oberon0/tests/rascal/negative/parse_errors/L4/record-reserved.ob|) != -1; 

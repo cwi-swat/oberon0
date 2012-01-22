@@ -16,9 +16,9 @@ public Statement CASE = caseOf(nat(1), [
            
 
 
-public Module desugar(Module mod) {
-	  mod.body = (for2while o case2ifs o flattenBegin)(mod.body);
-	  return mod;
+public Module desugar(Module \mod) {
+	  \mod.body = (for2while o case2ifs o flattenBegin)(\mod.body);
+	  return \mod;
 }
 
 public list[Statement] case2ifs(list[Statement] stats) {

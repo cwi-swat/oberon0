@@ -3,6 +3,7 @@ module ldta::oberon0::l2::Check
 extend ldta::oberon0::l1::Check;
 import ldta::oberon0::l2::AST;
 
+// TODO: check int bound
 
 public set[Message] check(forDo(n, f, t, by, b)) = check(f) + check(t) + checkBody(b) + checkBy(by) + 
   { intErr(n@location) | (n@decl)?, !isInt((n@decl).\type)  } + 
