@@ -9,10 +9,10 @@ import Message;
 
 data Type = INVALID();
 
-public Message intErr(loc l) = error(l, "Expected int");
-public Message boolErr(loc l) = error(l, "Expected bool");
-public Message incompErr(loc l) = error(l, "Incompatible types");
-public Message assignErr(loc l) = error(l, "Invalid type for assignment");
+public Message intErr(loc l) = error("Expected int", l);
+public Message boolErr(loc l) = error("Expected bool", l);
+public Message incompErr(loc l) = error("Incompatible types", l);
+public Message assignErr(loc l) = error("Invalid type for assignment", l);
 
 
 public bool isInt(Type t) = t == intType();

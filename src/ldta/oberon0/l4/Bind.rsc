@@ -5,7 +5,7 @@ extend ldta::oberon0::l3::Bind;
 
 import IO;
 
-public Message boundErr(loc l) = error(l, "Invalid bound");
+public Message boundErr(loc l) = error("Invalid bound", l);
 
 anno Type Type@ntype;
 

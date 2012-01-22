@@ -10,8 +10,8 @@ import IO;
 
 // Currently the checker assume structural type equivalence for all types.
 
-public Message selectorErr(loc l) = error(l, "Invalid selector");
-public Message undefFieldErr(loc l) = error(l, "Undefined field");
+public Message selectorErr(loc l) = error("Invalid selector", l);
+public Message undefFieldErr(loc l) = error("Undefined field", l);
 
 public bool isLValue(lookup(x, _)) = !((x@decl) is const);
 

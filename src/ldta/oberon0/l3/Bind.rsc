@@ -7,8 +7,8 @@ extend ldta::oberon0::l2::Bind;
 
 import IO;
 
-public Message notAProcErr(loc l) = error(l, "Not a procedure");
-public Message undefProcErr(loc l) = error(l, "Undefined procedure");
+public Message notAProcErr(loc l) = error("Not a procedure", l);
+public Message undefProcErr(loc l) = error("Undefined procedure", l);
 
 
 public bool isReadable(param(_, _, _)) = true;

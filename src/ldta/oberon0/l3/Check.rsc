@@ -6,8 +6,8 @@ extend ldta::oberon0::l2::Check;
 import IO;
 import List;
 
-public Message lvalueErr(loc l) = error(l, "Not an lvalue");
-public Message argNumErr(loc l) = error(l, "Wrong number of arguments");
+public Message lvalueErr(loc l) = error("Not an lvalue", l);
+public Message argNumErr(loc l) = error("Wrong number of arguments", l);
 
 public bool isLValue(lookup(x)) = !((x@decl) is const);
 public default bool isLValue(Expression _) = false;

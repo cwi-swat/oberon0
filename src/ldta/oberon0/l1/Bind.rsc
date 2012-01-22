@@ -5,17 +5,17 @@ import ldta::oberon0::l1::Scope;
 import IO;
 import Message;
 
-public Message dupErr(loc l) = error(l, "Redeclared identifier");
-public Message undefTypeErr(loc l) = error(l, "Undefined type");
-public Message undefVarErr(loc l) = error(l, "Undefined variable");
-public Message undefVarOrConstErr(loc l) = error(l, "Undefined variable/constant");
-public Message undefConstErr(loc l) = error(l, "Undefined constant");
-public Message notATypeErr(loc l) = error(l, "Not a type");
-public Message notAVarErr(loc l) = error(l, "Not a variable");
+public Message dupErr(loc l) = error("Redeclared identifier", l);
+public Message undefTypeErr(loc l) = error("Undefined type", l);
+public Message undefVarErr(loc l) = error("Undefined variable", l);
+public Message undefVarOrConstErr(loc l) = error("Undefined variable/constant", l);
+public Message undefConstErr(loc l) = error("Undefined constant", l);
+public Message notATypeErr(loc l) = error("Not a type", l);
+public Message notAVarErr(loc l) = error("Not a variable", l);
 public Message notAVarOrConstErr(loc l) = error(l, "Not a variable/constant");
-public Message notAConstErr(loc l) = error(l, "Not a constant");
-public Message idMismatchErr(loc l) = error(l, "Identifier mismatch");
-public Message divZeroErr(loc l) = error(l, "Division by zero");
+public Message notAConstErr(loc l) = error("Not a constant", l);
+public Message idMismatchErr(loc l) = error("Identifier mismatch", l);
+public Message divZeroErr(loc l) = error("Division by zero", l);
 
 public bool isWritable(var(_, _)) = true;
 public default bool isWritable(Decl _) = false;
