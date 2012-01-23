@@ -13,6 +13,7 @@ public Message intErr(loc l) = error("Expected int", l);
 public Message boolErr(loc l) = error("Expected bool", l);
 public Message incompErr(loc l) = error("Incompatible types", l);
 public Message assignErr(loc l) = error("Invalid type for assignment", l);
+public Message invalidExpErr(loc l) = error("Invalid expression", l);
 
 
 public bool isInt(Type t) = t == intType();
@@ -30,7 +31,20 @@ public set[Message] check(cd:constDecl(n, e)) = { intErr(cd@location) | !isInt(t
 
 // Statements
 public set[Message] check(assign(v, e)) =
-  check(e) + { assignErr(v@location) | (v@decl)?, (v@decl).\type != typeOf(e) };
+  check(e) + { assignErr(v@location) | (v@decl)?, (v@decl).\type != typeOf(e) }
+    + { invalidExpErr(e@location) | isBoolExp(e) };
+     
+public bool isBoolExp(amp(e1, e2)) = true;
+public bool isBoolExp(or(e1, e2)) = true;
+public bool isBoolExp(eq(e1, e2)) = true;
+public bool isBoolExp(neq(e1, e2)) = true;
+public bool isBoolExp(gt(e1, e2)) = true;
+public bool isBoolExp(lt(e1, e2)) = true;
+public bool isBoolExp(geq(e1, e2)) = true;
+public bool isBoolExp(leq(e1, e2)) = true;
+
+public default bool isBoolExp(Expression e) = false;
+     
 
 public set[Message] check(ifThen(c, b, eis, e)) =
   ( checkCond(c) + check(c) + checkBody(b) + checkBody(e) | 
