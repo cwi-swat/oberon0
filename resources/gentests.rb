@@ -106,7 +106,7 @@ ENDCAT
     #return if tool != 'rascal'
     puts <<ENDCAT
 public test bool #{kind}_#{klass}_#{level}_#{tool}_#{tag(obfile)}() = 
-  try#{klass.capitalize}(#{klass}#{level}, #{loc(path)}) #{pred}; 
+  try#{klass.to_s.capitalize}(#{klass}#{level}, #{loc(path)}) #{pred}; 
 
 ENDCAT
   end
