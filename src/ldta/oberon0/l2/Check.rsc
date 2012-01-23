@@ -2,6 +2,7 @@ module ldta::oberon0::l2::Check
 
 extend ldta::oberon0::l1::Check;
 import ldta::oberon0::l2::AST;
+import ldta::oberon0::l2::Bind;
 
 // TODO: check int bound
 

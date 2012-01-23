@@ -11,15 +11,15 @@ public tuple[Statement, set[Message]] bind(s:forDo(i, f, t, b, ss), NEnv nenv, s
   <s.to, errs> = bind(t, nenv, errs);
   if (e <- b) {
     <e, errs> = bind(e, nenv, errs);
-    errs += checkConst(e, nenv);
+    errs = checkConst(e, nenv, errs);
     s.by = [e];
   }
   <s.body, errs> = bind(ss, nenv, errs);
   return <s, errs>;
 }
 
-public set[Message] checkConst(Expression e, NEnv nenv) {
-  <c, errs> = evalConst(e, nenv, {}); 
+public set[Message] checkConst(Expression e, NEnv nenv, set[Message] errs) {
+  <c, errs> = evalConst(e, nenv, errs); 
   return errs + { notAConstErr(e@location) | nat(_) !:= c };
 }
 
@@ -50,12 +50,15 @@ public tuple[list[Label], set[Message]] bind(list[Label] ls, NEnv nenv, set[Mess
 
 public tuple[Label, set[Message]] bind(l:expression(e), NEnv nenv, set[Message] errs) {
   <l.exp, errs> = bind(e, nenv, errs);
+  errs = checkConst(e, nenv, errs);
   return <l, errs>;
 }
 
 public tuple[Label, set[Message]] bind(l:range(e1, e2), NEnv nenv, set[Message] errs) {
   <l.from, errs> = bind(e1, nenv, errs);
   <l.to, errs> = bind(e2, nenv, errs);
+  errs = checkConst(e1, nenv, errs);
+  errs = checkConst(e2, nenv, errs);
   return <l, errs>;  
 }
 
