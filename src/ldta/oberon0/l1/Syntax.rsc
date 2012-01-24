@@ -113,8 +113,8 @@ keyword Keywords
 	= "DIV" 
 	| "MOD" 
 	| "OR" 
-	| "TRUE" 
-	| "FALSE"
+//	| "TRUE" 
+//	| "FALSE"
 	; 
 	
 lexical Ident = id: ([a-zA-Z] !<< [a-zA-Z][a-zA-Z0-9]*  !>> [A-Za-z0-9]) \ Keywords;
