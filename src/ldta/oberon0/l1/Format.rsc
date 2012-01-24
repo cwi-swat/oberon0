@@ -81,8 +81,6 @@ public Box stat2box(whileDo(Expression condition, list[Statement] body)) = V([
 
 // Annoying: it puts parens everywhere.
 public Box exp2box(nat(int val)) = L("<val>");
-public Box exp2box(\true()) = KW(L("TRUE"));
-public Box exp2box(\false()) = KW(L("FALSE"));
 public Box exp2box(lookup(Ident var)) = id2box(var);
 public Box exp2box(neg(arg)) = H([L("("),L("-"), exp2box(arg),L(")")])[@hs=0];
 public Box exp2box(pos(arg)) = H([L("("),L("+"), exp2box(arg),L(")")])[@hs=0];

@@ -37,9 +37,12 @@ public str stat2c(whileDo(c, b)) = "while (<exp2c(c)>) {
 public str stat2c(skip()) = ";";
 
 public str exp2c(nat(int val)) = "<val>";
-public str exp2c(\true()) = "1";
-public str exp2c(\false()) = "0";
-public str exp2c(lookup(v)) = var2c(v);
+public str exp2c(lookup(v)) = var2c(v)
+  when !(v@decl is trueOrFalse);
+
+public str exp2c(lookup(v)) = (v@decl).val ? "1" : "0"
+  when v@decl is trueOrFalse;
+  
 public str exp2c(neg(exp)) = "(-<exp2c(exp)>)";
 public str exp2c(pos(exp)) = exp2c(exp);
 public str exp2c(mul(lhs, rhs)) = "(<exp2c(lhs)> * <exp2c(rhs)>)";

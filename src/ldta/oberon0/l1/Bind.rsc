@@ -185,6 +185,10 @@ public tuple[Expression, set[Message]] bindConst(Expression e, NEnv nenv, set[Me
       }
       return <e, errs + { notAConstErr(e@location) }>;
     }
+    if (x.name in {"TRUE", "FALSE"}) {
+      e.var = x[@decl=trueOrFalse(x.name == "TRUE")];
+      return <e, errs>;
+    } 
     return <e, errs + { undefConstErr(e@location) }>;
   }
   return bindConstOperator(e, nenv, errs);

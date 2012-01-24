@@ -34,8 +34,8 @@ public set[Message] check(assign(v, e)) =
   check(e) + { assignErr(v@location) | (v@decl)?, (v@decl).\type != typeOf(e) }
     + { invalidExpErr(e@location) | isBoolExp(e) };
      
-public bool isBoolExp(amp(e1, e2)) = true;
-public bool isBoolExp(or(e1, e2)) = true;
+//public bool isBoolExp(amp(e1, e2)) = true;
+//public bool isBoolExp(or(e1, e2)) = true;
 public bool isBoolExp(eq(e1, e2)) = true;
 public bool isBoolExp(neq(e1, e2)) = true;
 public bool isBoolExp(gt(e1, e2)) = true;
@@ -111,8 +111,6 @@ public default set[Message] check(Expression e) = {};
 
 // Obtain the type of an expression
 public Type typeOf(nat(_)) = intType();
-public Type typeOf(\true()) = boolType();
-public Type typeOf(\false()) = boolType();
 public Type typeOf(neg(e)) = intType();
 public Type typeOf(pos(e)) = intType();
 public Type typeOf(not(e)) = boolType();
@@ -135,6 +133,9 @@ public Type typeOf(lookup(x)) {
     d = x@decl;
     if (d is const) {
       return intType();
+    }
+    if (d is trueOrFalse) {
+      return boolType();
     }
     return d.\type;
   }

@@ -78,8 +78,6 @@ keyword Keywords
 
 syntax Expression 
 	= nat: Natural value
-	| \true: "TRUE"
-	| \false: "FALSE"
 	| lookup: Ident var 
 	| bracket Bracket: "(" Expression exp ")"
 	| not: "~" Expression exp

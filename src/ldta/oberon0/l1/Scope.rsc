@@ -7,7 +7,8 @@ anno Decl Ident@decl;
 data Decl 
   = var(loc location, Type \type) 
   | const(loc location, Expression exp) 
-  | \type(loc location, Type \type);
+  | \type(loc location, Type \type)
+  | trueOrFalse(bool val);
 
 data NEnv = scope(map[Ident, Decl] env);
   
