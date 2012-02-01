@@ -38,7 +38,9 @@ public tuple[Type, set[Message]] bind(t:record(fs), NEnv nenv, set[Message] errs
 
 public tuple[Statement, set[Message]] bind(s:assign(x, list[Selector] ss, e), NEnv nenv, set[Message] errs) {
   <s.exp, errs> = bind(e, nenv, errs);
-  <s.selectors, errs> = bind(ss, nenv, errs);
+  if (ss != []) { // workaround
+    <s.selectors, errs> = bind(ss, nenv, errs);
+  }
   if (isVisible(nenv, x)) {
     d = getDef(nenv, x);
     if (isWritable(d)) {
@@ -54,17 +56,20 @@ public tuple[Statement, set[Message]] bind(s:assign(x, list[Selector] ss, e), NE
 public tuple[Expression, set[Message]] bind(e:lookup(x, list[Selector] ss), NEnv nenv, set[Message] errs) {
   <e2, errs> = bind(lookup(x), nenv, errs);
   e.var = e2.var;
-  <e.selectors, errs> = bind(ss, nenv, errs);
+  if (ss != []) { // workaround
+    <e.selectors, errs> = bind(ss, nenv, errs);
+  }
   return <e, errs>;
 }
 
 
 public tuple[list[Selector], set[Message]] bind(list[Selector] ss, NEnv nenv, set[Message] errs) {
-  ss = for (s <- ss) {
+  list[Selector] ss2;
+  ss2 = for (s <- ss) {
     <s, errs> = bind(s, nenv, errs);
     append s;
   }
-  return <ss, errs>;
+  return <ss2, errs>;
 }	  
 
 public tuple[Selector, set[Message]] bind(s:Selector::field(x), NEnv nenv, set[Message] errs) = <s, errs>;

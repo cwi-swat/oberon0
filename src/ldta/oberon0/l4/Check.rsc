@@ -17,10 +17,10 @@ public Message invalidAssignErr(loc l) = error("Invalid assignment", l);
 public bool isLValue(lookup(x, _)) = !((x@decl) is const);
 public bool isComplex(Expression e) = (typeOf(e) is array) || (typeOf(e) is record);
 
-public set[Message] check(assign(x, ss, e)) = check(e) + check(lookup(x,ss)) +
-  { assignErr(x@location) | typeOf(lookup(x, ss)) != typeOf(e) } +
-  { invalidAssignErr(x@location) | isComplex(lookup(x, ss)) };
-  
+public set[Message] check(a:assign(x, ss, e)) = check(e) + check(lookup(x,ss)) +
+  { assignErr(a@location) | typeOf(lookup(x, ss)) != typeOf(e) } +
+  { invalidAssignErr(a@location) | isComplex(lookup(x, ss)) };
+
 
 public set[Message] check(lookup(x, ss)) = check(typeOf(lookup(x)), ss);
   
