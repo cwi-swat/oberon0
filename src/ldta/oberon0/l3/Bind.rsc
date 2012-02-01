@@ -45,14 +45,15 @@ public tuple[Procedure, NEnv, set[Message]] bind(p:Procedure::proc(f, list[Forma
     return <p, nenv, errs + { dupErr(f@location) }>;
   }
   
-  //nenv = define(nenv, f, proc(f@location, flatten(fs, nenv)));
+  // TODO: review this again closely.
+  nenv = define(nenv, f, proc(f@location, flatten(fs, nenv)));
   NEnv inner = nest((), outermost(nenv));
   <p.formals, inner, errs> = bind(fs, inner, errs);
   <p.decls, inner, errs> = bind(ds, inner, errs);
   inner = define(inner, f, proc(f@location, flatten(fs, nenv)));
   <p.body, errs> = bind(b, inner, errs);
   errs += { idMismatchErr(f@location) | f1 != f };
-  return <p[@scope=inner], inner, errs>;
+  return <p[@scope=inner], nenv, errs>;
 }
 
 public tuple[list[Formal], NEnv, set[Message]] bind(list[Formal] fs, NEnv nenv, set[Message] errs) {

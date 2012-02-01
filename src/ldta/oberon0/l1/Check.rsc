@@ -16,11 +16,21 @@ public Message assignErr(loc l) = error("Invalid type for assignment", l);
 public Message invalidExpErr(loc l) = error("Invalid expression", l);
 
 
-public bool isInt(Type t) = t == intType();
-public bool isBool(Type t) = t == boolType();
+public bool isInt(Type t) = typeEq(t, intType());
+public bool isBool(Type t) = tyepEq(t, boolType());
 public Type intType() = user(id("INTEGER"));
 public Type boolType() = user(id("BOOLEAN"));
 
+public bool typeEq(\type(l1, t1), \type(l2, t2)) = l1 == l2;
+
+public bool typeEq(user(x), user(x)) = true
+   when x.name in {"BOOLEAN", "INTEGER"};
+   
+public bool typeEq(user(x), user(y)) = typeEq(x@decl, y@decl)
+  when {x.name, y.name} & {"BOOLEAN", "INTEGER"} == {};
+      
+public default bool typeEq(Type t1, Type t2) = false;
+ 
 
 public set[Message] check(Module::\mod(n, ds, b, n1)) = check(ds) + checkBody(b);
 
@@ -54,7 +64,7 @@ public set[Message] check(whileDo(c, b)) = checkCond(c) + check(c) + checkBody(b
 
 public set[Message] check(skip()) = {};
 
-public set[Message] checkCond(Expression c) = { boolErr(c@location) | typeOf(c) != boolType() };
+public set[Message] checkCond(Expression c) = { boolErr(c@location) | !typeEq(typeOf(c), boolType()) };
   
 public set[Message] checkBody(list[Statement] b) = ({} | it + check(s) | s <- b );
 

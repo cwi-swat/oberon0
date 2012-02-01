@@ -21,7 +21,6 @@ public tuple[Type, set[Message]] bind(t:array(e, t2), NEnv nenv, set[Message] er
   <t.exp, errs> = bind(e, nenv, errs);
   <t.\type, errs> = bind(t2, nenv, errs);
   <c, errs> = evalConst(t.exp, nenv, errs);
-  println("C = <c>");
   errs += { notAConstErr(e@location) | nat(_) !:= c }
     + { boundErr(e@location) | nat(n) := c, n < 0 };
   return <t[@ntype=evalType(t, nenv)], errs>; 

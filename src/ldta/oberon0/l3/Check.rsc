@@ -29,7 +29,7 @@ public set[Message] check(s:call(f, as)) {
   int i = 0;
   for (frm <- fs, n <- frm.names, i < size(as)) {
     // types in formals annos (e.g. fs) have ben evaluated)
-    errs += { incompErr((as[i])@location) | typeOf(as[i]) != frm.\type }
+    errs += { incompErr((as[i])@location) | !typeEq(typeOf(as[i]), frm.\type) }
       + { lvalueErr((as[i])@location) | frm.hasVar, !isLValue(as[i]) };
     i += 1; 
   }
