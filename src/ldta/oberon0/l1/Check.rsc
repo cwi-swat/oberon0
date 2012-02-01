@@ -17,7 +17,7 @@ public Message invalidExpErr(loc l) = error("Invalid expression", l);
 
 
 public bool isInt(Type t) = typeEq(t, intType());
-public bool isBool(Type t) = tyepEq(t, boolType());
+public bool isBool(Type t) = typeEq(t, boolType());
 public Type intType() = user(id("INTEGER"));
 public Type boolType() = user(id("BOOLEAN"));
 
@@ -41,7 +41,7 @@ public set[Message] check(cd:constDecl(n, e)) = { intErr(cd@location) | !isInt(t
 
 // Statements
 public set[Message] check(assign(v, e)) =
-  check(e) + { assignErr(v@location) | (v@decl)?, (v@decl).\type != typeOf(e) }
+  check(e) + { assignErr(v@location) | (v@decl)?, !typeEq((v@decl).\type, typeOf(e)) }
     + { invalidExpErr(e@location) | isBoolExp(e) };
      
 //public bool isBoolExp(amp(e1, e2)) = true;

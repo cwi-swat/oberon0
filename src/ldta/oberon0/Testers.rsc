@@ -24,6 +24,7 @@ private int report(set[Message] errs) {
   if (errs != {}) {
      e = firstError(errs);
      println("ERROR: <e>");
+     println("All errors: \n\t <errs>");
      return e.at.begin.line;
   }
   println("Ok");

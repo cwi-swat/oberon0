@@ -228,17 +228,22 @@ public tuple[Expression, set[Message]] bindConstOperator(Expression e, NEnv nenv
   
 // Partially evaluate const exp
 public tuple[Expression,set[Message]] evalConst(Expression e, NEnv nenv, set[Message] errs) {
-  e = innermost visit (e) {
-    case pos(nat(a)) => nat(a)
-    case neg(nat(a)) => nat(- a)
-    case add(nat(a), nat(b)) => nat(a + b)
-    case sub(nat(a), nat(b)) => nat(a - b)
-    case mul(nat(a), nat(b)) => nat(a * b)
-    case div(nat(a), nat(0)): return <e, errs + {divZeroErr(e@location)}>;
-    case div(nat(a), nat(b)) => nat(a / b)
-    case \mod(nat(a), nat(b)) => nat(a % b)
-    case a:lookup(x) => xe when isVisible(nenv, x), const(_, xe) := getDef(nenv, x)
-    default: return extendEvalConst(e, nenv, errs); // UGH
+  solve (e) {
+    e = visit (e) {
+      case pos(nat(a)) => nat(a)
+      case neg(nat(a)) => nat(- a)
+      case add(nat(a), nat(b)) => nat(a + b)
+      case sub(nat(a), nat(b)) => nat(a - b)
+      case mul(nat(a), nat(b)) => nat(a * b)
+      case div(nat(a), nat(0)): return <e, errs + {divZeroErr(e@location)}>;
+      case div(nat(a), nat(b)) => nat(a / b)
+      case \mod(nat(a), nat(b)) => nat(a % b)
+      case a:lookup(x) => xe when isVisible(nenv, x), const(_, xe) := getDef(nenv, x)
+      case Expression x: {
+         <x, errs> =  extendEvalConst(x, nenv, errs); // UGH
+         insert x;
+      }
+    }
   }
   return <e, errs>;
 }
