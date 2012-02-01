@@ -12,10 +12,16 @@ anno Type Type@ntype;
 //public Statement assign(x, e) = assign(x, [], e);
 //public Expression lookup(x) = lookup(x, []);
 
+
+// ignoring selectors here...
+public tuple[Expression, set[Message]] extendEvalConst(lookup(x, _), NEnv nenv, set[Message] errs) 
+  = <xe, errs> when isVisible(nenv, x), const(_, xe) := getDef(nenv, x);
+
 public tuple[Type, set[Message]] bind(t:array(e, t2), NEnv nenv, set[Message] errs) {
   <t.exp, errs> = bind(e, nenv, errs);
   <t.\type, errs> = bind(t2, nenv, errs);
-  <c, errs> = evalConst(e, nenv, errs);
+  <c, errs> = evalConst(t.exp, nenv, errs);
+  println("C = <c>");
   errs += { notAConstErr(e@location) | nat(_) !:= c }
     + { boundErr(e@location) | nat(n) := c, n < 0 };
   return <t[@ntype=evalType(t, nenv)], errs>; 

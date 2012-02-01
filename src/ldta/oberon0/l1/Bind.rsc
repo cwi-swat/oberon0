@@ -225,7 +225,7 @@ public tuple[Expression, set[Message]] bindConstOperator(Expression e, NEnv nenv
   }
   return <e, errs>;
 }
-
+  
 // Partially evaluate const exp
 public tuple[Expression,set[Message]] evalConst(Expression e, NEnv nenv, set[Message] errs) {
   e = innermost visit (e) {
@@ -238,9 +238,13 @@ public tuple[Expression,set[Message]] evalConst(Expression e, NEnv nenv, set[Mes
     case div(nat(a), nat(b)) => nat(a / b)
     case \mod(nat(a), nat(b)) => nat(a % b)
     case a:lookup(x) => xe when isVisible(nenv, x), const(_, xe) := getDef(nenv, x)
+    default: return extendEvalConst(e, nenv, errs); // UGH
   }
   return <e, errs>;
 }
+
+public default tuple[Expression, set[Message]] extendEvalConst(Expression e, NEnv nenv, set[Message] errs)
+  = <e, errs>;
 
 // partially evaluate a type.
 public Type evalType(t:user(x), NEnv nenv) {
