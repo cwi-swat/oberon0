@@ -46,12 +46,12 @@ public set[Message] check(assign(v, e)) =
      
 //public bool isBoolExp(amp(e1, e2)) = true;
 //public bool isBoolExp(or(e1, e2)) = true;
-public bool isBoolExp(eq(e1, e2)) = true;
-public bool isBoolExp(neq(e1, e2)) = true;
-public bool isBoolExp(gt(e1, e2)) = true;
-public bool isBoolExp(lt(e1, e2)) = true;
-public bool isBoolExp(geq(e1, e2)) = true;
-public bool isBoolExp(leq(e1, e2)) = true;
+//public bool isBoolExp(eq(e1, e2)) = true;
+//public bool isBoolExp(neq(e1, e2)) = true;
+//public bool isBoolExp(gt(e1, e2)) = true;
+//public bool isBoolExp(lt(e1, e2)) = true;
+//public bool isBoolExp(geq(e1, e2)) = true;
+//public bool isBoolExp(leq(e1, e2)) = true;
 
 public default bool isBoolExp(Expression e) = false;
      

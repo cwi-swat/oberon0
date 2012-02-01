@@ -242,7 +242,8 @@ public tuple[Expression,set[Message]] evalConst(Expression e, NEnv nenv, set[Mes
       case mul(nat(a), nat(b)) => nat(a * b)
       case div(nat(a), nat(0)): return <e, errs + {divZeroErr(e@location)}>;
       case div(nat(a), nat(b)) => nat(a / b)
-      case \mod(nat(a), nat(b)) => nat(a % b)
+      case \mod(nat(a), nat(0)): return <e, errs + {divZeroErr(e@location)}>;
+      case \mod(nat(a), nat(b)) => nat(a mod b)
       case a:lookup(x) => xe when isVisible(nenv, x), const(_, xe) := getDef(nenv, x)
       case Expression x: {
          <x, errs> =  extendEvalConst(x, nenv, errs); // UGH

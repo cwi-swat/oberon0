@@ -51,7 +51,8 @@ public set[Message] check(Type t, list[Selector] ss) {
 public set[Message] check(record(fs), s:Selector::field(x)) =
   { undefFieldErr(s@location) | !any(f <- fs, x in f.names) };
 
-public set[Message] check(array(b, _), s:subscript(e)) = {};
+public set[Message] check(array(b, _), s:subscript(e)) = 
+    { outOfBoundsErr(s@location) | nat(n) := e, n < 0 };
   //{outOfBoundsErr(s@location) | nat(n1) := e@propagated, nat(n2) := b@propagated, n1 < 0 || n1 > n2 };
 
 public default set[Message] check(Type _, Selector s) = { selectorErr(s@location) };
