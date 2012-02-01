@@ -12,11 +12,14 @@ import IO;
 
 public Message selectorErr(loc l) = error("Invalid selector", l);
 public Message undefFieldErr(loc l) = error("Undefined field", l);
+public Message invalidAssignErr(loc l) = error("Invalid assignment", l);
 
 public bool isLValue(lookup(x, _)) = !((x@decl) is const);
+public bool isComplex(Expression e) = (typeOf(e) is array) || (typeOf(e) is record);
 
 public set[Message] check(assign(x, ss, e)) = check(e) + check(lookup(x,ss)) +
-  { assignErr(x@location) | typeOf(lookup(x, ss)) != typeOf(e) };
+  { assignErr(x@location) | typeOf(lookup(x, ss)) != typeOf(e) } +
+  { invalidAssignErr(x@location) | isComplex(lookup(x, ss)) };
   
 
 public set[Message] check(lookup(x, ss)) = check(typeOf(lookup(x)), ss);
@@ -33,7 +36,7 @@ public set[Message] check(Type t, list[Selector] ss) {
 public set[Message] check(record(fs), s:Selector::field(x)) =
   { undefFieldErr(s@location) | !any(f <- fs, x in f.names) };
 
-public set[Message] check(array(_, _), subscript(_)) = {};
+public set[Message] check(array(b, _), subscript(e)) = {};
 
 public default set[Message] check(Type _, Selector s) = { selectorErr(s@location) };
 

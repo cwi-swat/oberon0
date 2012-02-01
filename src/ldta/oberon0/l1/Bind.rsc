@@ -126,7 +126,7 @@ public tuple[Statement, set[Message]] bind(s:assign(x, e), NEnv nenv, set[Messag
   return <s, errs>;
 }
 
-public tuple[Ident, set[Message]] bindVar(Ident x, NEnv nenv, set[Message] errs) {
+public default tuple[Ident, set[Message]] bindVar(Ident x, NEnv nenv, set[Message] errs) {
   if (isVisible(nenv, x)) {
     d = getDef(nenv, x);
     if (isWritable(d)) {
@@ -158,8 +158,9 @@ public tuple[Statement, set[Message]] bind(s:whileDo(c, b), NEnv nenv, set[Messa
 public tuple[Statement, set[Message]] bind(s:skip(), NEnv nenv, set[Message] errs) = <s, errs>;
 
 // Expressions (note the default :-(
+// NB: this shares too much with bindVar and bindConst
 public default tuple[Expression, set[Message]] bind(Expression e, NEnv nenv, set[Message] errs) {
-  if (e has var) {
+  if (e has var) { // lookup expressions
     x = e.var;
     if (isVisible(nenv, x)) {
       d = getDef(nenv, x);
@@ -168,6 +169,10 @@ public default tuple[Expression, set[Message]] bind(Expression e, NEnv nenv, set
          return <e, errs>;
       }
       return <e, errs + { notAVarOrConstErr(x@location) }>;
+    }
+    if (x.name in {"TRUE", "FALSE"}) {
+      e.var = x[@decl=trueOrFalse(x.name == "TRUE")];
+      return <e, errs>; // no errors.
     }
     return <e, errs + { undefVarOrConstErr(x@location) }>;
   }
@@ -187,7 +192,7 @@ public tuple[Expression, set[Message]] bindConst(Expression e, NEnv nenv, set[Me
     }
     if (x.name in {"TRUE", "FALSE"}) {
       e.var = x[@decl=trueOrFalse(x.name == "TRUE")];
-      return <e, errs>;
+      return <e, errs>; // no errors
     } 
     return <e, errs + { undefConstErr(e@location) }>;
   }

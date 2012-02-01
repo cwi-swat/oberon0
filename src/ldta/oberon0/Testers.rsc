@@ -3,6 +3,7 @@ module ldta::oberon0::Testers
 import Exception;
 import Message;
 import ParseTree;
+import IO;
 
 // NB: the parens are needed around the return type (amb).
 public int tryParse((&T <: Tree)(loc) parse, loc file) {
@@ -22,8 +23,10 @@ public int tryCheck(set[Message](loc) check, loc file) = report(check(file));
 private int report(set[Message] errs) {
   if (errs != {}) {
      e = firstError(errs);
+     println("ERROR: <e>");
      return e.at.begin.line;
   }
+  println("Ok");
   return -1;
 }
 

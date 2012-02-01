@@ -47,16 +47,8 @@ syntax Type = user: Ident name ;
 
 syntax Statement 
 	= assign: Ident var ":=" Expression exp
-	
-	| ifThen: "IF" Expression condition "THEN" 
-					{Statement ";"}+ body 
-					ElsIfPart* 
-					ElsePart? 
-	          "END"
-	          
-	| whileDo: "WHILE" Expression condition "DO" 
-					{Statement ";"}+ body 
-	           "END"
+	| ifThen: "IF" Expression condition "THEN"  {Statement ";"}+ body ElsIfPart* ElsePart?  "END"
+	| whileDo: "WHILE" Expression condition "DO" {Statement ";"}+ body "END"
 	| skip: 
 	;
 
@@ -117,7 +109,17 @@ keyword Keywords
 	
 lexical Ident = id: ([a-zA-Z] !<< [a-zA-Z][a-zA-Z0-9]*  !>> [A-Za-z0-9]) \ Keywords;
 
-lexical Natural = [0-9]+ !>> [0-9] ;
+//private int MAX_INT = 65536;
+//lexical Natural = [0-9]+ !>> [0-9] ;
+lexical Natural 
+  = [0-9] !>> [0-9]
+  | [1-9][0-9] !>> [0-9]
+  | [1-9][0-9][0-9] !>> [0-9]
+  | [1-9][0-9][0-9][0-9] !>> [0-9]
+  | [1-6][0-5][0-5][0-3][0-6] !>> [0-9]
+  ;
+  
+
 
 
 lexical Layout 
@@ -139,4 +141,6 @@ lexical CommentChar
 	| [*] !>> [)]
 	| [(] !>> [*] 
 	;
+
+
 
