@@ -1088,7 +1088,7 @@ BEGIN
                 IF ((1 + 1) >= z) THEN
                   WHILE r DO
                     q := (((1 + 200) < 200) OR q);
-                    q := (1 <= 200)MOD 2
+                    q := 1 >= 200 MOD 2
                   END;
                   WHILE p DO
                     r := (((+1) - z) < x);
