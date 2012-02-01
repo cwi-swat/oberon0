@@ -12,6 +12,7 @@ public int tryParse((&T <: Tree)(loc) parse, loc file) {
     return -1;
   }
   catch ParseError(loc l): {
+    println("parse error: <l.path> <l.begin.line>");
     return l.begin.line;
   }
 }
