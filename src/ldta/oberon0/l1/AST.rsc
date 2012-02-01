@@ -52,3 +52,5 @@ anno loc Type@location;
 anno loc Statement@location;
 anno loc Expression@location;
 
+anno Expression Expression@propagated;
+

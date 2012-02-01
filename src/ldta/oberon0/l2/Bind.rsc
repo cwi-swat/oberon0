@@ -20,6 +20,7 @@ public tuple[Statement, set[Message]] bind(s:forDo(i, f, t, b, ss), NEnv nenv, s
 
 public set[Message] checkConst(Expression e, NEnv nenv, set[Message] errs) {
   <c, errs> = evalConst(e, nenv, errs); 
+  e@propagated = c;
   return errs + { notAConstErr(e@location) | nat(_) !:= c };
 }
 

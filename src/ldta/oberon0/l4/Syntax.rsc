@@ -8,15 +8,18 @@ syntax Expression = lookup: Ident var Selector+ selectors;
 
 syntax Selector 
 	  = field: "." Ident field
-	  | subscript: "[" Expression exp "]" 
+	  | subscript: "[" Expression exp "]"
 	  ;
 
 syntax Type 
 	  = array: "ARRAY" Expression exp "OF" Type type
-	  | record: "RECORD" {Field ";"}* fields "END"
+	  | record: "RECORD" {Field ";"}+ fields "END"
   	;
 
-syntax Field = field: {Ident ","}+ names ":" Type type;
+syntax Field 
+  = field: {Ident ","}+ names ":" Type type
+  | empty:
+  ;
 
 keyword Keywords
   = "ARRAY" 

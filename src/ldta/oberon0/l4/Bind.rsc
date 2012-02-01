@@ -14,11 +14,13 @@ anno Type Type@ntype;
 
 
 // ignoring selectors here...
-public tuple[Expression, set[Message]] extendEvalConst(lookup(x, _), NEnv nenv, set[Message] errs) 
+public tuple[Expression, set[Message]] extendEvalConst(e:lookup(x, _), NEnv nenv, set[Message] errs) 
   = <xe, errs> when isVisible(nenv, x), const(_, xe) := getDef(nenv, x);
 
 public tuple[Type, set[Message]] bind(t:array(e, t2), NEnv nenv, set[Message] errs) {
+  //println("E = <e>");
   <t.exp, errs> = bind(e, nenv, errs);
+  //println("E anno: <t.exp@propagated>");
   <t.\type, errs> = bind(t2, nenv, errs);
   <c, errs> = evalConst(t.exp, nenv, errs);
   errs += { notAConstErr(e@location) | nat(_) !:= c }
@@ -29,6 +31,9 @@ public tuple[Type, set[Message]] bind(t:array(e, t2), NEnv nenv, set[Message] er
 public tuple[Type, set[Message]] bind(t:record(fs), NEnv nenv, set[Message] errs) {
   done = {};
   t.fields = for (f <- fs) {
+    if (f is empty) {
+       continue;
+    }
     f.names = for (n <- f.names) {
       errs += { dupErr(n@location) | n in done };
       done += {n};
@@ -61,6 +66,8 @@ public tuple[Statement, set[Message]] bind(s:assign(x, list[Selector] ss, e), NE
 public tuple[Expression, set[Message]] bind(e:lookup(x, list[Selector] ss), NEnv nenv, set[Message] errs) {
   <e2, errs> = bind(lookup(x), nenv, errs);
   e.var = e2.var;
+  //println("e2 anno: <e2@propagated>");
+  e@propagated = e2@propagated;
   if (ss != []) { // workaround
     <e.selectors, errs> = bind(ss, nenv, errs);
   }
@@ -87,6 +94,7 @@ public Type evalType(a:array(e, t), NEnv nenv) {
   <c, _> = evalConst(e, nenv, {}); 
   return array(c, evalType(t, nenv))[@location=a@location];
 }
+
 
 // Flatten field lists.
 public Type evalType(r:record(fs), NEnv nenv) =

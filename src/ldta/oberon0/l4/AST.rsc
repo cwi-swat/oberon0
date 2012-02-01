@@ -7,7 +7,10 @@ data Type
 	  | record(list[Field] fields)
 	  ;
 
-data Field = field(list[Ident] names, Type \type);
+data Field 
+  = field(list[Ident] names, Type \type)
+  | empty()
+  ;
 	
 data Statement = assign(Ident var, list[Selector] selectors, Expression exp);
 

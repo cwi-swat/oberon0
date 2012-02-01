@@ -1447,12 +1447,12 @@ public test bool POS_bind_L4_kiama_array_ob() =
 public test bool POS_bind_L4_kiama_record_ob() = 
   tryBind(bindL4, |project://oberon0/tests/kiama/positive/L4/record.ob|) == -1; 
 
-public test bool POS_bind_L5_ocaml_Factorize_ob() = 
-  tryBind(bindL5, |project://oberon0/tests/ocaml/positive/L5/Factorize.ob|) == -1; 
-
-public test bool POS_bind_L5_ocaml_Corec_ob() = 
-  tryBind(bindL5, |project://oberon0/tests/ocaml/positive/L5/Corec.ob|) == -1; 
-
-public test bool POS_bind_L5_rascal_collatz_ob() = 
-  tryBind(bindL5, |project://oberon0/tests/rascal/positive/L5/collatz.ob|) == -1; 
+//public test bool POS_bind_L5_ocaml_Factorize_ob() = 
+//  tryBind(bindL5, |project://oberon0/tests/ocaml/positive/L5/Factorize.ob|) == -1; 
+//
+//public test bool POS_bind_L5_ocaml_Corec_ob() = 
+//  tryBind(bindL5, |project://oberon0/tests/ocaml/positive/L5/Corec.ob|) == -1; 
+//
+//public test bool POS_bind_L5_rascal_collatz_ob() = 
+//  tryBind(bindL5, |project://oberon0/tests/rascal/positive/L5/collatz.ob|) == -1; 
 

@@ -14,6 +14,7 @@ public Message selectorErr(loc l) = error("Invalid selector", l);
 public Message undefFieldErr(loc l) = error("Undefined field", l);
 public Message invalidAssignErr(loc l) = error("Invalid assignment", l);
 public Message missingVarKeyword(loc l) = error("Missing VAR keyword", l);
+public Message outOfBoundsErr(loc l) = error("Index out of bounds", l);
 
 public bool isLValue(lookup(x, _)) = !((x@decl) is const);
 public bool isComplex(Expression e) = isComplex(typeOf(e));
@@ -50,7 +51,8 @@ public set[Message] check(Type t, list[Selector] ss) {
 public set[Message] check(record(fs), s:Selector::field(x)) =
   { undefFieldErr(s@location) | !any(f <- fs, x in f.names) };
 
-public set[Message] check(array(b, _), subscript(e)) = {};
+public set[Message] check(array(b, _), s:subscript(e)) = {};
+  //{outOfBoundsErr(s@location) | nat(n1) := e@propagated, nat(n2) := b@propagated, n1 < 0 || n1 > n2 };
 
 public default set[Message] check(Type _, Selector s) = { selectorErr(s@location) };
 

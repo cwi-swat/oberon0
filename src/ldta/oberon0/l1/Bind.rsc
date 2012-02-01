@@ -160,6 +160,9 @@ public tuple[Statement, set[Message]] bind(s:skip(), NEnv nenv, set[Message] err
 // Expressions (note the default :-(
 // NB: this shares too much with bindVar and bindConst
 public default tuple[Expression, set[Message]] bind(Expression e, NEnv nenv, set[Message] errs) {
+  // Propagate constants
+  <evc, errs> = evalConst(e, nenv, errs);
+  e@propagated = evc;
   if (e has var) { // lookup expressions
     x = e.var;
     if (isVisible(nenv, x)) {
@@ -176,16 +179,18 @@ public default tuple[Expression, set[Message]] bind(Expression e, NEnv nenv, set
     }
     return <e, errs + { undefVarOrConstErr(x@location) }>;
   }
+  
   return bindOperator(e, nenv, errs);
 }
 
-public tuple[Expression, set[Message]] bindConst(Expression e, NEnv nenv, set[Message] errs) {
+public tuple[Expression, set[Message]] bindConst(Expression e, NEnv nenv, set[Message] errs) {  
   if (e has var) {
     x = e.var;
     if (isVisible(nenv, x)) {
       b = getDef(nenv, x);
       if (b is const) {
          e.var = x[@decl=b];
+         e@propagated = b.exp;
          return <e, errs>;
       }
       return <e, errs + { notAConstErr(e@location) }>;
