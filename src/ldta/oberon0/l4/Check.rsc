@@ -13,13 +13,22 @@ import IO;
 public Message selectorErr(loc l) = error("Invalid selector", l);
 public Message undefFieldErr(loc l) = error("Undefined field", l);
 public Message invalidAssignErr(loc l) = error("Invalid assignment", l);
+public Message missingVarKeyword(loc l) = error("Missing VAR keyword", l);
 
 public bool isLValue(lookup(x, _)) = !((x@decl) is const);
-public bool isComplex(Expression e) = (typeOf(e) is array) || (typeOf(e) is record);
+public bool isComplex(Expression e) = isComplex(typeOf(e));
+public bool isComplex(Type t) = (t is array) || (t is record);
+
 
 public bool typeEq(Type t1, Type t2) = (t1@location) == (t2@location) 
    when (t1 is record && t2 is record) ||
       (t1 is array && t2 is array);
+
+
+// Override
+public set[Message] checkFormals(list[Formal] fs) = 
+  { missingVarKeyword(f@location)  | f <- fs, !f.hasVar, n <- f.names, isComplex((n@decl).\type) };   
+
 
 // bprintln("<(a@location).begin.line> t1: <typeOf(lookup(x, ss))>, \n  t2= <typeOf(e)>")
 public set[Message] check(a:assign(x, ss, e)) = check(e) + check(lookup(x,ss)) +

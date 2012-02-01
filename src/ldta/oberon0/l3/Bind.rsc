@@ -60,10 +60,14 @@ public tuple[list[Formal], NEnv, set[Message]] bind(list[Formal] fs, NEnv nenv, 
   fs = for (f <- fs) {
     <f.\type, errs> = bind(f.\type, nenv, errs);
     f.names = for (n <- f.names) {
-      if (isDefined(nenv, n))  // always a param
+      if (isDefined(nenv, n)) {  // always a param
         errs += { dupErr(n@location) };
-      else 
-        nenv = define(nenv, n, param(n@location, evalType(f.\type, nenv), f.hasVar));
+      }
+      else {
+        ann = param(n@location, evalType(f.\type, nenv), f.hasVar);
+        nenv = define(nenv, n, ann);
+        n@decl = ann;
+      }
       append n;
     }
     append f;

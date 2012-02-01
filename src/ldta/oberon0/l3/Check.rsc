@@ -16,7 +16,10 @@ public default bool isLValue(Expression _) = false;
 public set[Message] check(decls(cds, tds, vds, pds)) =
   ( check(decls(cds, tds, vds)) | it + check(pd) | pd <- pds );
   
-public set[Message] check(Procedure::proc(_, _, ds, b, _)) = check(ds) + checkBody(b); 
+public set[Message] check(Procedure::proc(_, fs, ds, b, _)) = 
+   check(ds) + checkBody(b) + checkFormals(fs);
+   
+public default set[Message] checkFormals(list[Formal] fs) = {};     
 
 public set[Message] check(s:call(f, as)) {
   if (!(f@decl)?) {
@@ -29,13 +32,16 @@ public set[Message] check(s:call(f, as)) {
   int i = 0;
   for (frm <- fs, n <- frm.names, i < size(as)) {
     // types in formals annos (e.g. fs) have ben evaluated)
-    errs += { incompErr((as[i])@location) | !typeEq(typeOf(as[i]), frm.\type) }
-      + { lvalueErr((as[i])@location) | frm.hasVar, !isLValue(as[i]) };
+    errs += checkFormal(frm, as[i]);
     i += 1; 
   }
   
   return  ( errs | it + check(a) | a <- as);
 }
 
+public set[Message] checkFormal(Formal frm, Expression exp) =
+    { incompErr(exp@location) | !typeEq(typeOf(exp), frm.\type) }
+      + { lvalueErr(exp@location) | frm.hasVar, !isLValue(exp) };
+   
 
 
