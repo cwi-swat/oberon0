@@ -36,8 +36,11 @@ public tuple[list[Procedure], NEnv, set[Message]] bind(list[Procedure] ps, NEnv 
 //public list[Formal] flatten(list[Formal] fs, NEnv nenv) = 
 //  [ formal(hv, [n], evalType(t, nenv)) | formal(hv, ns, t) <- fs, n <- ns ]; 
 
-public NEnv outermost(s:scope(_)) = s;
-public NEnv outermost(nest(_, p)) = outermost(p); 
+
+// Global scope = nest((), scope((...builtins...)))
+//public NEnv globalScope(s:scope(_)) = s;
+public NEnv globalScope(s:nest(_, scope(_))) = s;
+public default NEnv globalScope(nest(_, p)) = globalScope(p); 
 
 public tuple[Procedure, NEnv, set[Message]] bind(p:Procedure::proc(f, list[Formal] fs, ds, b, f1), NEnv nenv, set[Message] errs) {
   // TODO: what is the semantics of nested procs with the same name, shadowing or error?
@@ -49,7 +52,7 @@ public tuple[Procedure, NEnv, set[Message]] bind(p:Procedure::proc(f, list[Forma
   
   
   // create new scope
-  NEnv inner = nest((), nenv);
+  NEnv inner = nest((), globalScope(nenv));
   
   // Declare the formal params in them
   <p.formals, inner, errs> = bind(fs, inner, errs);
