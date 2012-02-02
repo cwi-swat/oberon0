@@ -112,13 +112,13 @@ public Box type2box(user(Ident name)) = id2box(name);
 public list[Box] hsepList(list[&T] elts, str sep, Box(&T) tobox) {
 	if (elts == [])  
       return [];
-  	result = [];
-  	Box lst = tobox(head(elts));
-  	for (e <- tail(elts)) {
-   		result += [H([lst, L(sep)])[@hs=0]];
-   		lst = tobox(e);
-  	}
-  	return result + [lst];
+  result = [];
+  Box lst = tobox(head(elts));
+  for (e <- tail(elts)) {
+    result += [H([lst, L(sep)])[@hs=0]];
+    lst = tobox(e);
+  }
+  return result + [lst];
 }
 
 public Box id2box(Ident id) = VAR(L(id.name));
