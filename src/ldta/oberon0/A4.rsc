@@ -17,8 +17,16 @@ import lang::box::util::Box2Text;
 
 // NB: duplicated from A2a
 public NEnv GLOBAL_A4 = nest((), scope((
-  id("Write"): proc(|file://-|,[formal(false, [id("x")], user(id("INTEGER")))]),
-  id("Read"): proc(|file://-|,[formal(true, [id("x")], user(id("INTEGER")))]),
+  id("Write"): proc(|file://-|,[
+     formal(false, [id("x")[
+        @decl=param(|file://-|, user(id("INTEGER")), false)
+     ]], user(id("INTEGER")))
+  ]),
+  id("Read"): proc(|file://-|,[
+     formal(true, [id("x")[
+        @decl=param(|file://-|, user(id("INTEGER")), true)
+     ]], user(id("INTEGER")))
+  ]),
   id("WriteLn"): proc(|file://-|,[])
 )));
 

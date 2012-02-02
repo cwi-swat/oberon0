@@ -33,8 +33,8 @@ public tuple[list[Procedure], NEnv, set[Message]] bind(list[Procedure] ps, NEnv 
   return <ps, nenv, errs>;
 }
 
-public list[Formal] flatten(list[Formal] fs, NEnv nenv) = 
-  [ formal(hv, [n], evalType(t, nenv)) | formal(hv, ns, t) <- fs, n <- ns ]; 
+//public list[Formal] flatten(list[Formal] fs, NEnv nenv) = 
+//  [ formal(hv, [n], evalType(t, nenv)) | formal(hv, ns, t) <- fs, n <- ns ]; 
 
 public NEnv outermost(s:scope(_)) = s;
 public NEnv outermost(nest(_, p)) = outermost(p); 
@@ -46,13 +46,30 @@ public tuple[Procedure, NEnv, set[Message]] bind(p:Procedure::proc(f, list[Forma
   }
   
   // TODO: review this again closely.
-  nenv = define(nenv, f, proc(f@location, flatten(fs, nenv)));
-  NEnv inner = nest((), outermost(nenv));
+  
+  
+  // create new scope
+  NEnv inner = nest((), nenv);
+  
+  // Declare the formal params in them
   <p.formals, inner, errs> = bind(fs, inner, errs);
+  
+  // Define a forward reference to this proc
+  inner = define(inner, f, proc(f@location, p.formals));
+  
+  // Declare the decls
   <p.decls, inner, errs> = bind(ds, inner, errs);
-  inner = define(inner, f, proc(f@location, flatten(fs, nenv)));
+  
+  // Bind the body of the procedure in the inner scope
   <p.body, errs> = bind(b, inner, errs);
+  
+  // Make the proc visible to the outside.
+  nenv = define(nenv, f, proc(f@location, p.formals));
+  
+  // Check the end keyword.
   errs += { idMismatchErr(f@location) | f1 != f };
+ 
+  // Annotate the proc with its inner scope. 
   return <p[@scope=inner], nenv, errs>;
 }
 
@@ -64,6 +81,8 @@ public tuple[list[Formal], NEnv, set[Message]] bind(list[Formal] fs, NEnv nenv, 
         errs += { dupErr(n@location) };
       }
       else {
+        println("FRMT: <n.name>: <evalType(f.\type, nenv)>");
+      
         ann = param(n@location, evalType(f.\type, nenv), f.hasVar);
         nenv = define(nenv, n, ann);
         n@decl = ann;

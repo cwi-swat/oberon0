@@ -24,8 +24,11 @@ public int tryCheck(set[Message](loc) check, loc file) = report(check(file));
 private int report(set[Message] errs) {
   if (errs != {}) {
      e = firstError(errs);
-     println("ERROR: <e>");
-     println("All errors: \n\t <errs>");
+     println("ERROR: <e.msg> @ <e.at.begin.line>");
+     println("All errors: \n");
+     for (e2 <- errs) {
+       println("\t<e2.msg> @ <e2.at.begin.line>");
+     }
      return e.at.begin.line;
   }
   println("Ok");

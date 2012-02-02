@@ -44,15 +44,6 @@ public set[Message] check(assign(v, e)) =
   check(e) + { assignErr(v@location) | (v@decl)?, !typeEq((v@decl).\type, typeOf(e)) }
     + { invalidExpErr(e@location) | isBoolExp(e) };
      
-//public bool isBoolExp(amp(e1, e2)) = true;
-//public bool isBoolExp(or(e1, e2)) = true;
-//public bool isBoolExp(eq(e1, e2)) = true;
-//public bool isBoolExp(neq(e1, e2)) = true;
-//public bool isBoolExp(gt(e1, e2)) = true;
-//public bool isBoolExp(lt(e1, e2)) = true;
-//public bool isBoolExp(geq(e1, e2)) = true;
-//public bool isBoolExp(leq(e1, e2)) = true;
-
 public default bool isBoolExp(Expression e) = false;
      
 
@@ -97,11 +88,9 @@ public set[Message] check(or(e1, e2)) = check(e1) + check(e2) +
     {boolErr(e1@location) | !isBool(typeOf(e1)) } + {boolErr(e2@location) | !isBool(typeOf(e2)) };
  
 public set[Message] check(o:eq(e1, e2)) = check(e1) + check(e2) + 
-//    {incompErr(o@location) | typeOf(e1) != typeOf(e2) };
     {incompErr(o@location) | !(isInt(typeOf(e1)) && isInt(typeOf(e2))) };
  
 public set[Message] check(o:neq(e1, e2)) = check(e1) + check(e2) + 
-//    {incompErr(o@location) | typeOf(e1) != typeOf(e2) };
     {incompErr(o@location) | !(isInt(typeOf(e1)) && isInt(typeOf(e2))) };
 
 public set[Message] check(gt(e1, e2)) = check(e1) + check(e2) + 

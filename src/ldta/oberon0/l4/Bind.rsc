@@ -18,9 +18,7 @@ public tuple[Expression, set[Message]] extendEvalConst(e:lookup(x, _), NEnv nenv
   = <xe, errs> when isVisible(nenv, x), const(_, xe) := getDef(nenv, x);
 
 public tuple[Type, set[Message]] bind(t:array(e, t2), NEnv nenv, set[Message] errs) {
-  //println("E = <e>");
   <t.exp, errs> = bind(e, nenv, errs);
-  //println("E anno: <t.exp@propagated>");
   <t.\type, errs> = bind(t2, nenv, errs);
   <c, errs> = evalConst(t.exp, nenv, errs);
   errs += { notAConstErr(e@location) | nat(_) !:= c }

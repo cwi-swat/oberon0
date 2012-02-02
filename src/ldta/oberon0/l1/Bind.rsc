@@ -89,6 +89,7 @@ public tuple[TypeDecl, NEnv, set[Message]] bind(td:typeDecl(n, t), NEnv nenv, se
 public tuple[VarDecl, NEnv, set[Message]] bind(vd:varDecl(ns, t), NEnv nenv, set[Message] errs) {
   <vd.\type, errs> = bind(t, nenv, errs);
   for (n <- vd.names) {
+    //println("TYPE: <n.name>: <evalType(t, nenv)>");
     <nenv, errs> = declare(n, var(vd@location, evalType(t, nenv)), nenv, errs);
   }
   return <vd, nenv, errs>;

@@ -24,16 +24,25 @@ public default set[Message] checkFormals(list[Formal] fs) = {};
 public set[Message] check(s:call(f, as)) {
   fs = (f@decl).formals;
   arity = ( 0 | it + size(ns) | formal(_, ns, _) <- fs );
-  errs = if (size(as) < arity || size(as) > arity)
-           { argNumErr(s@location) }; 
-         else 
-           ( {} | it + checkFormal(frm, as[i]) | frm <- fs, n <- frm.names, i <- [0,1..size(as)-1] );
+  errs =  {};
+  if (size(as) < arity || size(as) > arity) {
+    errs += { argNumErr(s@location) };
+  }
+  else {
+    i = 0;
+    for (frm <- fs, n <- frm.names) {
+      errs += checkFormal(n, as[i], frm.hasVar);
+      i += 1;
+    }
+  }
   return  ( errs | it + check(a) | a <- as);
 }
 
-public set[Message] checkFormal(Formal frm, Expression exp) =
-    { incompErr(exp@location) | !typeEq(typeOf(exp), frm.\type) }
-      + { lvalueErr(exp@location) | frm.hasVar, !isLValue(exp) };
+public set[Message] checkFormal(Ident n, Expression exp, bool hasVar) =
+    { incompErr(exp@location) | 
+    bprintln("N: <n.name>\n\tet:<typeOf(exp)>\n\te:<exp>\n\tf:<n@decl.\type>\n\t: <typeEq(typeOf(exp), n@decl.\type)>"), 
+    !typeEq(typeOf(exp), n@decl.\type) }
+      + { lvalueErr(exp@location) | hasVar, !isLValue(exp) };
    
 
 
