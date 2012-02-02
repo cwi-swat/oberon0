@@ -126,8 +126,8 @@ public tuple[Statement, set[Message]] bind(s:assign(x, e), NEnv nenv, set[Messag
   return <s, errs>;
 }
 
-public default tuple[Ident, set[Message]] bindVar(Ident x, 
-                      NEnv nenv, set[Message] errs) {
+// default: to be overridden in L3
+public default tuple[Ident, set[Message]] bindVar(Ident x, NEnv nenv, set[Message] errs) {
   if (!isVisible(nenv, x)) {
     return <x, errs + { undefVarErr(x@location) }>;
   }

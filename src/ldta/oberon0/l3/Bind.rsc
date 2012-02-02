@@ -13,9 +13,6 @@ public Message undefProcErr(loc l) = error("Undefined procedure", l);
 public bool isReadable(param(_, _, _)) = true;
 public bool isWritable(param(_, _, _)) = true;
 
-// Normalize decls
-//public Declarations decls(cds, tds, vds) = decls(cds, tds, vds, []);
-
 public tuple[Declarations, NEnv, set[Message]] bind(ds:decls(list[ConstDecl] cds, list[TypeDecl] tds, list[VarDecl] vds, list[Procedure] pds), NEnv nenv, set[Message] errs) {
   <ds.consts, nenv, errs> = bind(cds, nenv, errs);
   <ds.types, nenv, errs> = bind(tds, nenv, errs);
@@ -33,8 +30,8 @@ public tuple[list[Procedure], NEnv, set[Message]] bind(list[Procedure] ps, NEnv 
 }
 
 //// Global scope = nest((), scope((...builtins...)))
-//public NEnv globalScope(s:nest(_, scope(_))) = s;
-//public default NEnv globalScope(nest(_, p)) = globalScope(p);
+public NEnv globalScope(s:nest(_, scope(_))) = s;
+public default NEnv globalScope(nest(_, p)) = globalScope(p);
 
 public NEnv parentScope(nest(_, s)) = s; 
 
@@ -43,9 +40,6 @@ public tuple[Procedure, NEnv, set[Message]] bind(p:Procedure::proc(f, list[Forma
   if (isDefined(nenv, f)) {
     return <p, nenv, errs + { dupErr(f@location) }>;
   }
-  
-  // TODO: review this again closely.
-  
   
   // create new scope
   NEnv inner = nest((), nenv);
@@ -91,12 +85,26 @@ public tuple[list[Formal], NEnv, set[Message]] bind(list[Formal] fs, NEnv nenv, 
   return <fs, nenv, errs>;
 }
 
+// overriding from L1
+public tuple[Ident, set[Message]] bindVar(Ident x, NEnv nenv, set[Message] errs) {
+  if (isVisible(nenv, x) && !(isDefined(nenv, x) || isDefined(globalScope(nenv), x))) {
+    return <x, errs + { undefVarErr(x@location) }>;
+  }
+  // TODO: factor out, it's the same in L1
+  d = getDef(nenv, x);
+  if (!isWritable(d)) {
+    return <x, errs + { notAVarErr(x@location) }>;
+  }
+  return <x[@decl=d], errs>;
+}
+
+
 public tuple[Statement, set[Message]] bind(s:call(f, as), NEnv nenv, set[Message] errs) {
   s.args = for (a <- as) {
     <a, errs> = bind(a, nenv, errs);
     append a;
   }
-  if (isVisible(nenv, f)) {
+  if (isVisible(nenv, f) && (isDefined(nenv, f) || isDefined(globalScope(nenv), f))) {
     d = getDef(nenv, f);
     if (d is proc) {
       s.proc = f[@decl=d];
