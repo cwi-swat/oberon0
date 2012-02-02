@@ -16,11 +16,11 @@ import ParseTree;
 import lang::box::util::Box2Text;
 
 // NB: duplicated from A2a
-public NEnv GLOBAL_A4 = scope((
+public NEnv GLOBAL_A4 = nest((), scope((
   id("Write"): proc(|file://-|,[formal(false, [id("x")], user(id("INTEGER")))]),
   id("Read"): proc(|file://-|,[formal(true, [id("x")], user(id("INTEGER")))]),
   id("WriteLn"): proc(|file://-|,[])
-));
+)));
 
 public Tree parseL4(loc l) = parse(l);
 
@@ -37,7 +37,10 @@ public set[Message] bindL4(loc l) {
 public set[Message] checkL4(loc l) {  
   m = normalize(implode(parse(l)));
   <m2, errs> = bind(m, GLOBAL_A4);
-  return errs + check(m2);
+  if (errs == {}) {
+    errs = check(m2);
+  }
+  return errs;
 }
 
 public Module transformA4(loc l) {

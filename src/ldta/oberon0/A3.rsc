@@ -12,11 +12,11 @@ import Message;
 import lang::box::util::Box2Text;
 
 // NB: duplicate from A2a
-public NEnv GLOBAL_L3 = scope((
+public NEnv GLOBAL_L3 = nest((), scope((
   id("Write"): proc(|file://-|,[formal(false, [id("x")], user(id("INTEGER")))]),
   id("Read"): proc(|file://-|,[formal(true, [id("x")], user(id("INTEGER")))]),
   id("WriteLn"): proc(|file://-|,[])
-));
+)));
 
   
 
@@ -27,6 +27,9 @@ public str formatL3(loc l) {
 public set[Message] checkL3(loc l) {  
   m = implode(parse(l));
   <m2, errs> = bind(m, GLOBAL_L3);
-  return errs + check(m2);
+  if (errs == {}) {
+    errs = check(m2);
+  }
+  return errs;
 }
 

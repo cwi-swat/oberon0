@@ -846,7 +846,6 @@ public test bool NEG_bind_L3_rascal_7_undef_proc_ob() =
 
 public test bool NEG_bind_L3_rascal_7_no_proc3_ob() = 
   tryBind(bindL3, |project://oberon0/tests/rascal/negative/name_errors/L3/7_no-proc3.ob|) == 7; 
-525
 
 public test bool NEG_bind_L3_rascal_2_undef_type_form_ob() = 
   tryBind(bindL3, |project://oberon0/tests/rascal/negative/name_errors/L3/2_undef-type-form.ob|) == 2; 
@@ -1126,7 +1125,6 @@ public test bool POS_check_L1_kiama_redeftrue_ob() =
 
 public test bool POS_check_L1_kiama_while_ob() = 
   tryCheck(checkL1, |project://oberon0/tests/kiama/positive/L1/while.ob|) == -1; 
-525
 
 public test bool POS_check_L1_kiama_const_ob() = 
   tryCheck(checkL1, |project://oberon0/tests/kiama/positive/L1/const.ob|) == -1; 
@@ -1210,7 +1208,7 @@ public test bool POS_check_L4_jastadd_RecordDecl_ob() =
   tryCheck(checkL4, |project://oberon0/tests/jastadd/positive/L4/RecordDecl.ob|) == -1; 
 
 public test bool POS_check_L4_ocaml_For_ob() = 
-  tryCheck(checkL4, |project://oberon0/tests/ocaml/positive/L4/For.ob|) == -1; 525
+  tryCheck(checkL4, |project://oberon0/tests/ocaml/positive/L4/For.ob|) == -1;
   
 
 public test bool POS_check_L4_ocaml_Overriding1_ob() = 
@@ -1286,7 +1284,7 @@ public test bool POS_bind_L1_silver_comments_ob() =
   tryBind(bindL1, |project://oberon0/tests/silver/positive/L1/comments.ob|) == -1; 
 
 public test bool POS_bind_L1_silver_while_ob() = 
-  tryBind(bindL1, |project://oberon0/tests/silver/positive/L1/while.ob|) == -1; generating
+  tryBind(bindL1, |project://oberon0/tests/silver/positive/L1/while.ob|) == -1; 
 
 public test bool POS_bind_L1_silver_if_elsif_ob() = 
   tryBind(bindL1, |project://oberon0/tests/silver/positive/L1/if_elsif.ob|) == -1; 
@@ -1304,7 +1302,7 @@ public test bool POS_bind_L1_kiama_emptybody_ob() =
   tryBind(bindL1, |project://oberon0/tests/kiama/positive/L1/emptybody.ob|) == -1; 
 
 public test bool POS_bind_L1_kiama_type_ob() = 
-  tryBind(bindL1, |project://oberon0/tests/kiama/positive/L1/type.ob|) == -1; 525
+  tryBind(bindL1, |project://oberon0/tests/kiama/positive/L1/type.ob|) == -1; 
   
 
 public test bool POS_bind_L1_kiama_emptymodule_ob() = 
@@ -1337,8 +1335,7 @@ public test bool POS_bind_L1_kiama_emptydeclsections_ob() =
 public test bool POS_bind_L1_kiama_cond_ob() = 
   tryBind(bindL1, |project://oberon0/tests/kiama/positive/L1/cond.ob|) == -1; 
 
-public test bool POS_bind_L2_silver_for_loop_ob() = 525
-
+public test bool POS_bind_L2_silver_for_loop_ob() = 
   tryBind(bindL2, |project://oberon0/tests/silver/positive/L2/for_loop.ob|) == -1; 
 
 public test bool POS_bind_L2_silver_case_ob() = 
@@ -1367,7 +1364,7 @@ public test bool POS_bind_L3_silver_type_diff_scope_ob() =
 
 public test bool POS_bind_L3_silver_Lift1_ob() = 
   tryBind(bindL3, |project://oberon0/tests/silver/positive/L3/Lift1.ob|) == -1; 
-generating
+
 public test bool POS_bind_L3_silver_non_var_in_proc_ob() = 
   tryBind(bindL3, |project://oberon0/tests/silver/positive/L3/non_var_in_proc.ob|) == -1; 
 
@@ -1404,8 +1401,7 @@ public test bool POS_bind_L4_jastadd_NestedTypeUse2_ob() =
 public test bool POS_bind_L4_jastadd_RecordDecl_ob() = 
   tryBind(bindL4, |project://oberon0/tests/jastadd/positive/L4/RecordDecl.ob|) == -1; 
 
-public test bool POS_bind_L4_ocaml_For_ob() = 525
-
+public test bool POS_bind_L4_ocaml_For_ob() = 
   tryBind(bindL4, |project://oberon0/tests/ocaml/positive/L4/For.ob|) == -1; 
 
 public test bool POS_bind_L4_ocaml_Overriding1_ob() = 
