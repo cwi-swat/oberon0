@@ -22,19 +22,22 @@ public set[Message] check(Procedure::proc(_, fs, ds, b, _)) =
 public default set[Message] checkFormals(list[Formal] fs) = {};     
 
 public set[Message] check(s:call(f, as)) {
+  // TODO: remove this!!!! Only check, if no name-errors.
   if (!(f@decl)?) {
     return {}; // name error
   }
   fs = (f@decl).formals;
   fsize = ( 0 | it + size(ns) | formal(_, ns, _) <- fs );
   errs = { argNumErr(s@location) | (size(as) < fsize || size(as) > fsize) };
-  
-  int i = 0;
-  for (frm <- fs, n <- frm.names, i < size(as)) {
-    // types in formals annos (e.g. fs) have ben evaluated)
-    errs += checkFormal(frm, as[i]);
-    i += 1; 
-  }
+  errs = ( errs | it + checkFormal(frm, as[i]) 
+                | frm <- fs, n <- frm.names, i <- [0..size(as)-1] );
+
+//   int i = 0;
+//   for (frm <- fs, n <- frm.names, i < size(as)) {
+//     // types in formals annos (e.g. fs) have ben evaluated)
+//     errs += checkFormal(frm, as[i]);
+//     i += 1; 
+//   }
   
   return  ( errs | it + check(a) | a <- as);
 }

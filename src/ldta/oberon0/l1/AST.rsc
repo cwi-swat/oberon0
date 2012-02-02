@@ -12,9 +12,11 @@ data VarDecl = varDecl(list[Ident] names, Type \type);
 
 data Type = user(Ident name);
 	
+alias ElseIf = tuple[Expression condition, list[Statement] body];
+
 data Statement 
 	= assign(Ident var, Expression exp)
-	| ifThen(Expression condition, list[Statement] body, list[tuple[Expression condition, list[Statement] body]] elseIfs, list[Statement] elsePart)
+	| ifThen(Expression condition, list[Statement] body, list[ElseIf] elseIfs, list[Statement] elsePart)
 	| whileDo(Expression condition, list[Statement] body)
 	| skip()
 	;

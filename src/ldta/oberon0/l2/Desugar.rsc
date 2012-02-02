@@ -36,19 +36,15 @@ public list[Statement] case2ifs(list[Statement] stats) {
   }
 }
 
+
 public list[Statement] for2while(list[Statement] stats) {
-  return visit (stats) {
-	    case forDo(n, f, t, [by], b) => 
-		             begin([assign(n, f), whileDo(leq(lookup(n), t), 
-				                 [b, assign(n, add(lookup(n), by))])]) 
-	    case forDo(n, f, t, [], b) => 
-		             begin([assign(n, f), whileDo(leq(lookup(n), t), 
-				                 [b, assign(n, add(lookup(n), nat(1)))])]) 
+  return innermost visit (stats) {
+    case forDo(n, f, t, [], b) => forDo(n, f, t, [nat(1)], b)
+    case forDo(n, f, t, [by], b) => 
+             begin([assign(n, f), whileDo(leq(lookup(n), t), 
+                [b, assign(n, add(lookup(n), by))])]) 
   }
 }
 
-public list[Statement] flattenBegin(list[Statement] stats) {
-  return visit (stats) {
-	    case [s1*, begin(b), s2*] => [s1, b, s2]
-  }
-}
+public list[Statement] flattenBegin(list[Statement] stats) 
+  = visit (stats) { case [*s1, begin(b), *s2] => [*s1, *b, *s2] };

@@ -126,16 +126,28 @@ public tuple[Statement, set[Message]] bind(s:assign(x, e), NEnv nenv, set[Messag
   return <s, errs>;
 }
 
-public default tuple[Ident, set[Message]] bindVar(Ident x, NEnv nenv, set[Message] errs) {
-  if (isVisible(nenv, x)) {
-    d = getDef(nenv, x);
-    if (isWritable(d)) {
-      return <x[@decl=d], errs>;
-    }
+public default tuple[Ident, set[Message]] bindVar(Ident x, 
+                      NEnv nenv, set[Message] errs) {
+  if (!isVisible(nenv, x)) {
+    return <x, errs + { undefVarErr(x@location) }>;
+  }
+  d = getDef(nenv, x);
+  if (!isWritable(d)) {
     return <x, errs + { notAVarErr(x@location) }>;
   }
-  return <x, errs + { undefVarErr(x@location) }>;
+  return <x[@decl=d], errs>;
 }
+
+// public default tuple[Ident, set[Message]] bindVar(Ident x, NEnv nenv, set[Message] errs) {
+//   if (isVisible(nenv, x)) {
+//     d = getDef(nenv, x);
+//     if (isWritable(d)) {
+//       return <x[@decl=d], errs>;
+//     }
+//     return <x, errs + { notAVarErr(x@location) }>;
+//   }
+//   return <x, errs + { undefVarErr(x@location) }>;
+// }
 
 public tuple[Statement, set[Message]] bind(s:ifThen(c, b, list[tuple[Expression condition, list[Statement] body]] eis, list[Statement] e), NEnv nenv, set[Message] errs) {
   <s.condition, errs> = bind(c, nenv, errs);

@@ -47,7 +47,7 @@ syntax Type = user: Ident name ;
 
 syntax Statement 
 	= assign: Ident var ":=" Expression exp
-	| ifThen: "IF" Expression condition "THEN"  {Statement ";"}+ body ElsIfPart* ElsePart?  "END"
+	| ifThen: "IF" Expression condition "THEN" {Statement ";"}+ body ElsIfPart* ElsePart? "END"
 	| whileDo: "WHILE" Expression condition "DO" {Statement ";"}+ body "END"
 	| skip: 
 	;
@@ -138,13 +138,8 @@ lexical Layout
 
 layout Layouts = Layout* !>> [\t-\n \r \ ] !>> "(*" ;
 
-lexical Comment =  "(*" CommentElt* "*)" ;
-
-lexical CommentElt
-   = CommentChar+
-   | Comment
-   ;
-
+lexical Comment = "(*" CommentElt* "*)" ;
+lexical CommentElt = CommentChar+ | Comment ;
 lexical CommentChar 
 	= ![*(] 
 	| [*] !>> [)]

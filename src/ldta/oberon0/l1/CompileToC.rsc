@@ -21,14 +21,14 @@ public str stat2c(assign(v, exp)) = "<var2c(v)> = <exp2c(exp)>;";
 public str stat2c(ifThen(c, b, eis, ep)) = "if (<exp2c(c)>) {
                                            '    <stats2c(b)>
                                            '}<for (ei <- eis) {>
-										       'else if (<exp2c(ei[0])>) {
-										       '    <stats2c(ei[1])>
-										       '}
-										   '<}><if (ep != []) {>
-										        'else {
-										        '    <stats2c(ep)>
-										        '}
-										   '<}>";
+                           'else if (<exp2c(ei[0])>) {
+                           '    <stats2c(ei[1])>
+                           '}
+                       '<}><if (ep != []) {>
+                            'else {
+                            '    <stats2c(ep)>
+                            '}
+                       '<}>";
     
 public str stat2c(whileDo(c, b)) = "while (<exp2c(c)>) {
                                    '    <stats2c(b)>
