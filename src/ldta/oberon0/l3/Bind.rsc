@@ -81,8 +81,6 @@ public tuple[list[Formal], NEnv, set[Message]] bind(list[Formal] fs, NEnv nenv, 
         errs += { dupErr(n@location) };
       }
       else {
-        println("FRMT: <n.name>: <evalType(f.\type, nenv)>");
-      
         ann = param(n@location, evalType(f.\type, nenv), f.hasVar);
         nenv = define(nenv, n, ann);
         n@decl = ann;

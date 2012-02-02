@@ -39,9 +39,7 @@ public set[Message] check(s:call(f, as)) {
 }
 
 public set[Message] checkFormal(Ident n, Expression exp, bool hasVar) =
-    { incompErr(exp@location) | 
-    bprintln("N: <n.name>\n\tet:<typeOf(exp)>\n\te:<exp>\n\tf:<n@decl.\type>\n\t: <typeEq(typeOf(exp), n@decl.\type)>"), 
-    !typeEq(typeOf(exp), n@decl.\type) }
+    { incompErr(exp@location) | !typeEq(typeOf(exp), n@decl.\type) }
       + { lvalueErr(exp@location) | hasVar, !isLValue(exp) };
    
 

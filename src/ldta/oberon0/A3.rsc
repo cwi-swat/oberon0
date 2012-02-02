@@ -12,13 +12,21 @@ import Message;
 import lang::box::util::Box2Text;
 
 // NB: duplicate from A2a
+
 public NEnv GLOBAL_L3 = nest((), scope((
-  id("Write"): proc(|file://-|,[formal(false, [id("x")], user(id("INTEGER")))]),
-  id("Read"): proc(|file://-|,[formal(true, [id("x")], user(id("INTEGER")))]),
+  id("Write"): proc(|file://-|,[
+     formal(false, [id("x")[
+        @decl=param(|file://-|, user(id("INTEGER")), false)
+     ]], user(id("INTEGER")))
+  ]),
+  id("Read"): proc(|file://-|,[
+     formal(true, [id("x")[
+        @decl=param(|file://-|, user(id("INTEGER")), true)
+     ]], user(id("INTEGER")))
+  ]),
   id("WriteLn"): proc(|file://-|,[])
 )));
 
-  
 
 public str formatL3(loc l) {
  return format(mod2box(implode(parse(l))));
