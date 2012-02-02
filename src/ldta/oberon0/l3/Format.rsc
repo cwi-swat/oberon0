@@ -8,7 +8,7 @@ extend ldta::oberon0::l2::Format;
 
 
 public Box decls2box(decls(consts, types, vars, procs)) =
-  V([consts2boxes(consts) + types2boxes(types) + vars2boxes(vars), V([proc2box(x) | x <- procs])[@vs=1]])[@vs=0];
+  V([*consts2boxes(consts), *types2boxes(types), *vars2boxes(vars), V([proc2box(x) | x <- procs])[@vs=1]])[@vs=0];
 
 
 public Box stat2box(call(Ident proc, list[Expression] args)) = 
@@ -17,7 +17,7 @@ public Box stat2box(call(Ident proc, list[Expression] args)) =
 
 public Box proc2box(Procedure pr) =
   V([
-    H([KW(L("PROCEDURE")), H([id2box(pr.name), L("("), hsepList(pr.formals, ";", formal2box), L(")"), L(";")])[@hs=0]])[@hs=1],
+    H([KW(L("PROCEDURE")), H([id2box(pr.name), L("("), *hsepList(pr.formals, ";", formal2box), L(")"), L(";")])[@hs=0]])[@hs=1],
     I([
       decls2box(pr.decls)
     ])[@vs=1],

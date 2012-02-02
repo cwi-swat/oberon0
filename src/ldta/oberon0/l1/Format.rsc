@@ -1,6 +1,7 @@
 module ldta::oberon0::l1::Format
 
 import ldta::oberon0::l1::AST;
+import ldta::oberon0::l1::Priorities;
 import lang::box::util::Box;
 import List;
 
@@ -60,14 +61,14 @@ public Box stat2box(ifThen(Expression condition, list[Statement] body, list[tupl
     }
     Box els;
     if(elsePart != []){
-    	els = V([
+    	els = [V([
         	KW(L("ELSE")),
         	I(hsepList(elsePart, ";", stat2box))
-    	]);
+    	])];
     } else {
     	els = [];
     }
-    return V([ift] + elifs + [els] + [KW(L("END"))]);
+    return V([ift] + elifs + els + [KW(L("END"))]);
     
 }
 
@@ -82,24 +83,29 @@ public Box stat2box(whileDo(Expression condition, list[Statement] body)) = V([
 // Annoying: it puts parens everywhere.
 public Box exp2box(nat(int val)) = L("<val>");
 public Box exp2box(lookup(Ident var)) = id2box(var);
-public Box exp2box(neg(arg)) = H([L("("),L("-"), exp2box(arg),L(")")])[@hs=0];
-public Box exp2box(pos(arg)) = H([L("("),L("+"), exp2box(arg),L(")")])[@hs=0];
-public Box exp2box(not(arg)) = H([L("("),L("~"), exp2box(arg),L(")")])[@hs=0];
-public Box exp2box(mul(lhs, rhs)) = H([L("("), H([exp2box(lhs), L("*"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
-public Box exp2box(div(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("DIV"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
-public Box exp2box(Expression::\mod(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("MOD"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
-public Box exp2box(amp(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("&"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
-public Box exp2box(add(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("+"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
-public Box exp2box(sub(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("-"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
-public Box exp2box(or(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("OR"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
-public Box exp2box(eq(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("="), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
-public Box exp2box(neq(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("#"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
-public Box exp2box(lt(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("\<"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
-public Box exp2box(gt(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("\>"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
-public Box exp2box(leq(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("\<="), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
-public Box exp2box(geq(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("\>="), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
+public Box exp2box(neg(arg)) = H([L("-"), exp2box(arg)])[@hs=0];
+public Box exp2box(pos(arg)) = H([L("+"), exp2box(arg)])[@hs=0];
+public Box exp2box(not(arg)) = H([L("~"), exp2box(arg)])[@hs=0];
 
+public Box exp2box(p:mul(lhs, rhs)) = H([exp2box(p, lhs), L("*"), exp2box(p, rhs)])[@hs=1];
+public Box exp2box(p:div(lhs, rhs)) = H([exp2box(p, lhs), L("DIV"), exp2box(p, rhs)])[@hs=1];
+public Box exp2box(p:Expression::\mod(lhs, rhs)) = H([exp2box(p, lhs), L("MOD"), exp2box(p, rhs)])[@hs=1];
+public Box exp2box(p:amp(lhs, rhs)) = H([exp2box(p, lhs), L("&"), exp2box(p, rhs)])[@hs=1];
+public Box exp2box(p:add(lhs, rhs)) = H([exp2box(p, lhs), L("+"), exp2box(p, rhs)])[@hs=1];
+public Box exp2box(p:sub(lhs, rhs)) = H([exp2box(p, lhs), L("-"), exp2box(p, rhs)])[@hs=1];
+public Box exp2box(p:or(lhs, rhs)) = H([exp2box(p, lhs), L("OR"), exp2box(p, rhs)])[@hs=1];
+public Box exp2box(p:eq(lhs, rhs)) = H([exp2box(p, lhs), L("="), exp2box(p, rhs)])[@hs=1];
+public Box exp2box(p:neq(lhs, rhs)) = H([exp2box(p, lhs), L("#"), exp2box(p, rhs)])[@hs=1];
+public Box exp2box(p:lt(lhs, rhs)) = H([exp2box(p, lhs), L("\<"), exp2box(p, rhs)])[@hs=1];
+public Box exp2box(p:gt(lhs, rhs)) = H([exp2box(p, lhs), L("\>"), exp2box(p, rhs)])[@hs=1];
+public Box exp2box(p:leq(lhs, rhs)) = H([exp2box(p, lhs), L("\<="), exp2box(p, rhs)])[@hs=1];
+public Box exp2box(p:geq(lhs, rhs)) = H([exp2box(p, lhs), L("\>="), exp2box(p, rhs)])[@hs=1];
+public Box exp2box(p:geq(lhs, rhs)) = H([exp2box(p, lhs), L("\>="), exp2box(p, rhs)])[@hs=1];
+  
+public Box exp2box(Expression parent, Expression kid) =
+  parens(parent, kid, exp2box(kid), parenizer);
 
+private Box parenizer(Box box) = H([L("("), box, L(")")])[@hs=0];
 
 public Box type2box(user(Ident name)) = id2box(name);
 
