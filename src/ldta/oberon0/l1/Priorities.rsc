@@ -21,10 +21,6 @@ public &T parens(DoNotNest prios, node parent, node kid, &T x,  &T(&T x) pareniz
      kprod.def has name, 
      pprod.def.name == getName(parent), 
      kprod.def.name == getName(kid),
-     bprintln(kprod.def.name),
-     bprintln(pprod),
-     bprintln(pos),
-     bprintln(astPosition(pos, pprod)),
      parent[astPosition(pos, pprod)] == kid;
 
 private int astPosition(int pos, Production p)

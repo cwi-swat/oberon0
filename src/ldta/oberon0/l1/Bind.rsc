@@ -89,7 +89,6 @@ public tuple[TypeDecl, NEnv, set[Message]] bind(td:typeDecl(n, t), NEnv nenv, se
 public tuple[VarDecl, NEnv, set[Message]] bind(vd:varDecl(ns, t), NEnv nenv, set[Message] errs) {
   <vd.\type, errs> = bind(t, nenv, errs);
   for (n <- vd.names) {
-    //println("TYPE: <n.name>: <evalType(t, nenv)>");
     <nenv, errs> = declare(n, var(vd@location, evalType(t, nenv)), nenv, errs);
   }
   return <vd, nenv, errs>;
@@ -138,17 +137,6 @@ public default tuple[Ident, set[Message]] bindVar(Ident x,
   }
   return <x[@decl=d], errs>;
 }
-
-// public default tuple[Ident, set[Message]] bindVar(Ident x, NEnv nenv, set[Message] errs) {
-//   if (isVisible(nenv, x)) {
-//     d = getDef(nenv, x);
-//     if (isWritable(d)) {
-//       return <x[@decl=d], errs>;
-//     }
-//     return <x, errs + { notAVarErr(x@location) }>;
-//   }
-//   return <x, errs + { undefVarErr(x@location) }>;
-// }
 
 public tuple[Statement, set[Message]] bind(s:ifThen(c, b, list[tuple[Expression condition, list[Statement] body]] eis, list[Statement] e), NEnv nenv, set[Message] errs) {
   <s.condition, errs> = bind(c, nenv, errs);
