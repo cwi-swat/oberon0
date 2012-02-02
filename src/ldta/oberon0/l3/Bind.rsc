@@ -33,6 +33,9 @@ public tuple[list[Procedure], NEnv, set[Message]] bind(list[Procedure] ps, NEnv 
 public NEnv globalScope(s:nest(_, scope(_))) = s;
 public default NEnv globalScope(nest(_, p)) = globalScope(p);
 
+public NEnv builtinScope(s:scope(_)) = s;
+public NEnv builtinScope(nest(_, p)) = builtinScope(p);
+
 public NEnv parentScope(nest(_, s)) = s; 
 
 public tuple[Procedure, NEnv, set[Message]] bind(p:Procedure::proc(f, list[Formal] fs, ds, b, f1), NEnv nenv, set[Message] errs) {
@@ -104,7 +107,10 @@ public tuple[Statement, set[Message]] bind(s:call(f, as), NEnv nenv, set[Message
     <a, errs> = bind(a, nenv, errs);
     append a;
   }
-  if (isVisible(nenv, f) && (isDefined(nenv, f) || isDefined(globalScope(nenv), f))) {
+  if (isVisible(nenv, f) &&
+     (isDefined(nenv, f) 
+       || isDefined(globalScope(nenv), f) 
+       || isDefined(builtinScope(nenv), f))) {
     d = getDef(nenv, f);
     if (d is proc) {
       s.proc = f[@decl=d];
