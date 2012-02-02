@@ -2,19 +2,11 @@ module ldta::oberon0::l4::CompileToC
 
 import ldta::oberon0::l4::AST;
 extend ldta::oberon0::l3::CompileToC;
-import ldta::oberon0::l4::Check;
 
 import String;
 import List;
 
-public str compileL4toC(Module m) {
-  m = visit (m) {
-    case assign(x, e) => assign(x, [], e)
-    case lookup(x) => lookup(x, [])
-  }
-  return compileL3toC(m);
-}
-
+public str compileL4toC(Module m) = compileL3toC(m);
 
 public str stat2c(assign(v, sels, exp)) = "<var2c(v, sels)> = <exp2c(exp)>;";
 

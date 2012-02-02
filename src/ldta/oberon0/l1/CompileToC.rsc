@@ -63,7 +63,10 @@ public str exp2c(geq(lhs, rhs)) = "(<exp2c(lhs)> \>= <exp2c(rhs)>)";
 
 public default str var2c(Ident x) = x.name;
 
-public str types2c(list[TypeDecl] tds) = ("" | it + "typedef <type2c(td.\type)> <td.name.name>;\n" | td <- tds );
+public str uniqify(Ident x) = "<x.name>_<x@location.offset>";
+
+public str types2c(list[TypeDecl] tds) = 
+  ("" | it + "typedef <type2c(td.\type)> <td.name.name>;\n" | td <- tds );
 
 public str vars2c(list[VarDecl] vds) = ("" | it + "<varType2c(n.name, vd.\type)>;\n" | vd <- vds, n <- vd.names );
 

@@ -14,11 +14,8 @@ import Relation;
 // TODO remove this
 anno Type Type@ntype;
 
-public Module lift(Module m, NEnv global, Module(Module) bind) {
-  m = normalizeDecls(m);
-  m = bind(extendSigs(desugar(m), freeVars(m)));
-  return liftArrayTypes(liftDecls(rename(m, global)));
-}
+public Module lift(Module m, NEnv global, Module(Module) bind) =
+  liftDecls(rename(bind(desugar(normalizeDecls(m))), global));
 
 public Module normalizeDecls(Module m) = visit (m) {
     case decls(cds, tds, vds) => decls(cds, tds, vds, [])
@@ -45,68 +42,6 @@ public Module liftDecls(Module \mod) {
   \mod.decls.procs = gps;
   return \mod;
 }
-
-public Module liftArrayTypes(Module \mod) {  
-  atypesMap = ();
-  \mod = visit (\mod) {
-    case a:array(b, et): {
-      if (k <- atypesMap, typeDecl(n2, a2) := atypesMap[k], a2 == a@ntype) {
-        insert user(n2)[@location=a@location];
-      }
-      else {  
-        n = id("array_<(a@location).offset>");
-        atypesMap[a@location] = typeDecl(n, a@ntype);
-        insert user(n)[@location=a@location];
-      }
-      
-    }
-  }
-  atypes = [ atypesMap[l] | l <- atypesMap ];
-  atypes += \mod.decls.types;
-  deps = { <t1, t2> | t1:typeDecl(x, _) <- atypes, t2 <- atypes , x in { y | /user(Ident y) <- t2.\type } };
-  nodeps = toList(toSet(atypes) - carrier(deps));
-  \mod.decls.types = order(deps) + nodeps;
-  return \mod;
-}
-
-public rel[loc, Ident] freeVars(Module m) {
-  result = {};
-  globals = { x | vd <- m.decls.vars, x <- vd.names };
-
-  set[Ident] freeVarsDecls(Declarations d) {
-    fv = {};
-    for (p <- d.procs) {
-      fv += freeVars(p);
-      result += {(p.name)@location} * fv; 
-    }
-    return fv;
-  }
-  
-  set[Ident] freeVars(Procedure p) {
-    fv = freeVarsDecls(p.decls) + { e.var | /Expression e <- p.body, e is lookup, !(((e.var)@decl) is const) }
-       // assignments can never be consts (is caught by binding)
-       + { s.var | /Statement s <- p.body, s is assign };
-    return { x | x <- fv, !isDefined(p@scope, x) };
-  }
-  
-  freeVarsDecls(m.decls);
-  
-  return result;
-}
-
-public Module extendSigs(Module m, rel[loc, Ident] fv) {
-  return top-down visit (m) {
-    case p:proc(f, fs, _, _, _): {
-      p.formals += [ formal(true, [x], ((x@decl).\type)) | x <- sort(toList(fv[f@location])) ];
-      insert p;
-    }
-    case c:call(f, as): {
-      c.args += [ lookup(x) | x <- sort(toList(fv[(f@decl).location])) ];
-      insert c;
-    }
-  }
-}
-
 
 public list[Procedure] liftProc(Procedure proc) {
   newProcs = ( [] | it + liftProc(p) | p <- proc.decls.procs );

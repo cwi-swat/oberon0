@@ -1,5 +1,3 @@
-
-
 module ldta::oberon0::Main
 
 import ldta::oberon0::A1;
@@ -14,8 +12,8 @@ public void main(list[str] args) {
   op = args[1];
   file = |cwd:///<args[2]>|;
   switch (<lang, op>) {
-    case <"A1", "format">: formatA1(file);
-    case <"A1", "bind">: bindA1(file);
+    case <"A1", "format">: formatL2(file);
+    case <"A1", "bind">: bindL2(file);
     case <"A2a", "format">: formatA2a(file);
     case <"A2a", "bind">: bindA2a(file);
     case <"A2b", "check">: bindA2b(file);

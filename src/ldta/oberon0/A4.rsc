@@ -16,7 +16,7 @@ import ParseTree;
 import lang::box::util::Box2Text;
 
 // NB: duplicated from A2a
-public NEnv GLOBAL_A4 = nest((), scope((
+public NEnv GLOBAL_L4 = nest((), scope((
   id("Write"): proc(|file://-|,[
      formal(false, [id("x")[
         @decl=param(|file://-|, user(id("INTEGER")), false)
@@ -38,25 +38,25 @@ public str formatL4(loc l) {
 
 public set[Message] bindL4(loc l) {
   m = normalize(implode(parse(l)));
-  <m2, errs> = bind(m, GLOBAL_A4);
+  <m2, errs> = bind(m, GLOBAL_L4);
   return errs;
 }
 
 public set[Message] checkL4(loc l) {  
   m = normalize(implode(parse(l)));
-  <m2, errs> = bind(m, GLOBAL_A4);
+  <m2, errs> = bind(m, GLOBAL_L4);
   if (errs == {}) {
     errs = check(m2);
   }
   return errs;
 }
 
-public Module transformA4(loc l) {
-  Module myBind(Module m) = bind(m, GLOBAL_A4)[0];
-  return lift(myBind(normalize(implode(parse(l)))), GLOBAL_A4, myBind);
+public Module transformL4(loc l) {
+  Module myBind(Module m) = bind(m, GLOBAL_L4)[0];
+  return lift(myBind(normalize(implode(parse(l)))), GLOBAL_L4, myBind);
 }
 
-public str compileA4(loc l) {
-  Module myBind(Module m) = bind(m, GLOBAL_A4)[0];
-  return compileL4toC(lift(myBind(normalize(implode(parse(l)))), GLOBAL_A4, myBind));
+public str compileL4(loc l) {
+  Module myBind(Module m) = bind(m, GLOBAL_L4)[0];
+  return compileL4toC(lift(myBind(normalize(implode(parse(l)))), GLOBAL_L4, myBind));
 }
