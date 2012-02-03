@@ -31,6 +31,7 @@ public NEnv GLOBAL_L4 = nest((), scope((
 )));
 
 public Tree parseL4(loc l) = parse(l);
+public Tree parseL4(str src, loc l) = parse(src, l);
 
 public str formatL4(loc l) {
  return format(mod2box(implode(parse(l))));
