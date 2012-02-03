@@ -139,7 +139,7 @@ lexical Layout
 layout Layouts = Layout* !>> [\t-\n \r \ ] !>> "(*" ;
 
 lexical Comment = "(*" CommentElt* "*)" ;
-lexical CommentElt = CommentChar+ | Comment ;
+lexical CommentElt = CommentChar+ !>> ![*(] | Comment ;
 lexical CommentChar 
 	= ![*(] 
 	| [*] !>> [)]
