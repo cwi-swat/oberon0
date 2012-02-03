@@ -44,6 +44,8 @@ data Expression
 
 data Ident = id(str name);
 
+data Type = INVALID();
+
 anno loc Ident@location;
 anno loc Module@location;
 anno loc VarDecl@location;

@@ -119,7 +119,8 @@ public default tuple[list[Statement], set[Message]] bindStats(list[Statement] ss
   return <ss, errs>;
 }
 
-public tuple[Statement, set[Message]] bindStat(s:assign(x, e), NEnv nenv, set[Message] errs) {
+// default: to be overridden in L4
+public default tuple[Statement, set[Message]] bindStat(s:assign(x, e), NEnv nenv, set[Message] errs) {
   <s.exp, errs> = bindExp(e, nenv, errs);
   <s.var, errs> = bindVar(x, nenv, errs);
   return <s, errs>;

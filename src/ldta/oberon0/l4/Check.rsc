@@ -11,14 +11,12 @@ import IO;
 // Currently the checker assume structural type equivalence for all types.
 
 public Message selectorErr(loc l) = error("Invalid selector", l);
-public Message undefFieldErr(loc l) = error("Undefined field", l);
-public Message invalidAssignErr(loc l) = error("Invalid assignment", l);
 public Message missingVarKeyword(loc l) = error("Missing VAR keyword", l);
 public Message outOfBoundsErr(loc l) = error("Index out of bounds", l);
 
 public bool isLValue(lookup(x, _)) = !((x@decl) is const);
+
 public bool isComplex(Expression e) = isComplex(typeOf(e));
-public bool isComplex(Type t) = (t is array) || (t is record);
 
 
 public bool typeEq(Type t1, Type t2) = (t1@location) == (t2@location) 
@@ -36,7 +34,6 @@ public set[Message] check(a:assign(x, ss, e)) = check(e) + check(lookup(x,ss)) +
   { assignErr(a@location) |  !typeEq(typeOf(lookup(x, ss)), typeOf(e)) } +
   { invalidAssignErr(a@location) | isComplex(lookup(x, ss)) };
 
-
 public set[Message] check(lookup(x, ss)) = check(typeOf(lookup(x)), ss);
   
 public set[Message] check(Type t, list[Selector] ss) {
@@ -51,14 +48,12 @@ public set[Message] check(Type t, list[Selector] ss) {
 public set[Message] check(record(fs), s:Selector::field(x)) =
   { undefFieldErr(s@location) | !any(f <- fs, x in f.names) };
 
-// Ugh, constant propagation does not work :-(
 public set[Message] check(array(b, _), s:subscript(e)) = 
-    { outOfBoundsErr(s@location) | neg(nat(_)) := e  }
-    + { outOfBoundsErr(s@location) | nat(n) := e, nat(n2) := b, n >= n2  }
-    + {  outOfBoundsErr(s@location) | 
-         lookup(x, []) := e, x@decl is const, nat(n) := x@decl.exp,
-         nat(n2) := b, n >= n2  };
-  //{outOfBoundsErr(s@location) | nat(n1) := e@propagated, nat(n2) := b@propagated, n1 < 0 || n1 > n2 };
+    { err | neg(nat(_)) := e  } +
+    { err | nat(n) := e, nat(n2) := b, n >= n2  } +
+    { err | lookup(x, []) := e, x@decl is const, nat(n) := x@decl.exp, nat(n2) := b, n >= n2 } +
+    { err | lookup(x) := e, x@decl is const, nat(n) := x@decl.exp, nat(n2) := b, n >= n2  }       
+  when err := outOfBoundsErr(s@location);
 
 public default set[Message] check(Type _, Selector s) = { selectorErr(s@location) };
 

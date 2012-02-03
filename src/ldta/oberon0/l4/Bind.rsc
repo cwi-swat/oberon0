@@ -6,12 +6,17 @@ extend ldta::oberon0::l3::Bind;
 import IO;
 
 public Message boundErr(loc l) = error("Invalid bound", l);
+public Message invalidSelectorErr(loc l) = error("Invalid selector", l);
+public Message undefFieldErr(loc l) = error("Undefined field", l);
+public Message invalidAssignErr(loc l) = error("Invalid assignment", l);
 
 anno Type Type@ntype;
 
 //public Statement assign(x, e) = assign(x, [], e);
 //public Expression lookup(x) = lookup(x, []);
 
+
+public bool isComplex(Type t) = (t is array) || (t is record);
 
 // ignoring selectors here...
 public tuple[Expression, set[Message]] extendEvalConst(e:lookup(x, _), NEnv nenv, set[Message] errs) 
@@ -34,21 +39,42 @@ public tuple[Type, set[Message]] bindType(t:record(fs), NEnv nenv, set[Message] 
     }
     f.names = for (n <- f.names) {
       errs += { dupErr(n@location) | n in done };
-      done += {n};
+      done += {n};    
       append n;
     }      
     <f.\type, errs> = bindType(f.\type, nenv, errs);
-    append f;
+    append f;public bool isComplex(Type t) = (t is array) || (t is record);
+    
   }
   return <t[@ntype=evalType(t, nenv)], errs>;
 }
 
 
-public tuple[Statement, set[Message]] bindStat(s:assign(x, list[Selector] ss, e), NEnv nenv, set[Message] errs) {
+public tuple[Statement, set[Message]] bindStat(s:assign(x, e), NEnv nenv, set[Message] errs) {
   <s.exp, errs> = bindExp(e, nenv, errs);
-  <s.selectors, errs> = bindSelectors(ss, nenv, errs);
   if (isVisible(nenv, x)) {
     d = getDef(nenv, x);
+    if (isComplex(d.\type)) {
+      return <s, errs + { invalidAssignErr(s@location) }>;
+    }
+    if (isWritable(d)) {
+      s.var = x[@decl=d];
+      return <s, errs>;
+    }
+    return <s, errs + { notAVarErr(x@location) }>;
+  }
+  return <s, errs + { undefVarErr(x@location) }>;
+}
+
+public tuple[Statement, set[Message]] bindStat(s:assign(x, list[Selector] ss, e), NEnv nenv, set[Message] errs) {
+  <s.exp, errs> = bindExp(e, nenv, errs);
+  if (isVisible(nenv, x)) {
+    d = getDef(nenv, x);
+    <s.selectors, errs, t> = bindSelectors(ss, nenv, errs, d.\type);
+    if (isComplex(t)) {
+      println("complex: <t>");
+      return <s, errs + { invalidAssignErr(s@location) }>;
+    }
     if (isWritable(d)) {
       s.var = x[@decl=d];
       return <s, errs>;
@@ -62,27 +88,35 @@ public tuple[Statement, set[Message]] bindStat(s:assign(x, list[Selector] ss, e)
 public tuple[Expression, set[Message]] bindExp(e:lookup(x, list[Selector] ss), NEnv nenv, set[Message] errs) {
   <e2, errs> = bindExp(lookup(x), nenv, errs);
   e.var = e2.var;
-  //println("e2 anno: <e2@propagated>");
-  e@propagated = e2@propagated;
-  if (ss != []) { // workaround
-    <e.selectors, errs> = bindSelectors(ss, nenv, errs);
-  }
+  <e.selectors, errs, t> = bindSelectors(ss, nenv, errs, (e.var@decl).\type);
   return <e, errs>;
 }
 
 
-public tuple[list[Selector], set[Message]] bindSelectors(list[Selector] ss, NEnv nenv, set[Message] errs) {
+public tuple[list[Selector], set[Message], Type] bindSelectors(list[Selector] ss, NEnv nenv, set[Message] errs, Type t) {
   ss = for (s <- ss) {
-    <s, errs> = bindSelector(s, nenv, errs);
+    <s, errs, t> = bindSelector(s, nenv, errs, t);
     append s;
   }
-  return <ss, errs>;
+  return <ss, errs, t>;
 }	  
 
-public tuple[Selector, set[Message]] bindSelector(s:Selector::field(x), NEnv nenv, set[Message] errs) = <s, errs>;
-public tuple[Selector, set[Message]] bindSelector(s:subscript(e), NEnv nenv, set[Message] errs) {
-  <s.exp, errs> = bindExp(e, nenv, errs);
-  return <s, errs>;
+public tuple[Selector, set[Message], Type] bindSelector(s:Selector::field(x), NEnv nenv, set[Message] errs, Type t) {
+  if (t is record) {
+    if (f <- t.fields, x in f.names) {
+      return <s, errs, f.\type>; // TODO: annotate selector with type?
+    }
+    return <s, errs + { undefFieldErr(s@location) }, INVALID()>; 
+  }
+  return  <s, errs + { invalidSelectorErr(s@location) }, INVALID()>;
+}
+
+public tuple[Selector, set[Message], Type] bindSelector(s:subscript(e), NEnv nenv, set[Message] errs, Type t) {
+  if (t is array) {
+    <s.exp, errs> = bindExp(e, nenv, errs);
+    return <s, errs, t.\type>;
+  }
+  return <s, errs + { invalidSelectorErr(s@location) }, INVALID()>; 
 }
 
 public Type evalType(a:array(e, t), NEnv nenv) {
