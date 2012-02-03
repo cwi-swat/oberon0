@@ -8,14 +8,13 @@ import ldta::oberon0::l2::Desugar;
 import List;
 import Set;
 import Graph;
-import IO;
 import Relation;
+import util::Math;
 
 // TODO remove this
 anno Type Type@ntype;
 
 public Module lift(Module m, NEnv global, Module(Module) bind) {
-  println("Lifting");
   return liftDecls(rename(bind(desugar(normalizeDecls(m))), global));
 }
 
@@ -51,9 +50,11 @@ public list[Procedure] liftProc(Procedure proc) {
   return newProcs + [proc];
 }
 
+public str suffix(loc l) = "_<abs(l.offset)>";
+
 public Module rename(Module m, NEnv global) {
   return visit (m) {
-    case c:call(x:id(s), as) => call(id("<s>_<(x@decl).location.offset>")[@decl=x@decl][@location=x@location], as)
+    case c:call(x:id(s), as) => call(id("<s><(x@decl).location.offset>")[@decl=x@decl][@location=x@location], as)
        when !isDefined(global, x)
     case p:proc(x:id(s), fs, ds, b, f2) => proc(id("<s>_<(x@location).offset>")[@location=x@location], fs, ds, b, f2)[@scope=p@scope]
     case constDecl(x:id(s), e) => constDecl(id("<s>_<(x@location).offset>")[@location=x@location], e)

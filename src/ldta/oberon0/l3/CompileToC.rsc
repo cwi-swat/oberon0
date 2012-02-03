@@ -6,10 +6,8 @@ import ldta::oberon0::l3::Scope;
 
 import String;
 import List;
-import IO;
 
 public str compileL3toC(Module m) {
-  println("Compiling l3");
 	return "
 #include \<builtins.h\>
 <decls2c(m.decls)>

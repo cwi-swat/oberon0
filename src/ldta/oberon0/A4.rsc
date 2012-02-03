@@ -8,7 +8,7 @@ import ldta::oberon0::l4::Bind;
 import ldta::oberon0::l3::Scope;
 import ldta::oberon0::l4::Format;
 import ldta::oberon0::l4::CompileToC;
-import ldta::oberon0::l4::Normalize;
+//import ldta::oberon0::l4::Normalize;
 import ldta::oberon0::l3::Lift;
 
 import Message;
@@ -38,13 +38,13 @@ public str formatL4(loc l) {
 }
 
 public set[Message] bindL4(loc l) {
-  m = normalize(implode(parse(l)));
-  <m2, errs> = bind(m, GLOBAL_L4);
+  m = implode(parse(l));
+  <m2, errs> = bindModule(m, GLOBAL_L4);
   return errs;
 }
 
 public set[Message] checkL4(loc l) {  
-  m = normalize(implode(parse(l)));
+  m = implode(parse(l));
   <m2, errs> = bindModule(m, GLOBAL_L4);
   if (errs == {}) {
     errs = check(m2);
@@ -54,10 +54,10 @@ public set[Message] checkL4(loc l) {
 
 public Module transformL4(loc l) {
   Module myBind(Module m) = bindModule(m, GLOBAL_L4)[0];
-  return lift(myBind(normalize(implode(parse(l)))), GLOBAL_L4, myBind);
+  return lift(myBind(implode(parse(l))), GLOBAL_L4.parent, myBind);
 }
 
 public str compileL4(loc l) {
   Module myBind(Module m) = bindModule(m, GLOBAL_L4)[0];
-  return compileL4toC(lift(myBind(normalize(implode(parse(l)))), GLOBAL_L4, myBind));
+  return compileL4toC(lift(myBind(implode(parse(l))), GLOBAL_L4.parent, myBind));
 }

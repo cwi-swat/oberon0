@@ -3,7 +3,6 @@ module ldta::oberon0::l1::CompileToC
 import ldta::oberon0::l1::AST;
 import String;
 import List;
-import IO;
 
 public str compile2c(Module m) = mod2c(m);
 
@@ -15,7 +14,7 @@ public str body2c(list[Statement] stats) = "int main(int argc, char **argv) {
                                            '    <stats2c(stats)>
                                            '}";
 
-public str stats2c(list[Statement] stats) = intercalate("\n", [ stat2c(s) | s <- stats, bprintln(s) ]);
+public str stats2c(list[Statement] stats) = intercalate("\n", [ stat2c(s) | s <- stats ]);
 
 public str stat2c(assign(v, exp)) = "<var2c(v)> = <exp2c(exp)>;";
 
