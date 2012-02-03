@@ -9,7 +9,8 @@ import List;
 import IO;
 
 public str compileL3toC(Module m) {
-	  return "
+  println("Compiling l3");
+	return "
 #include \<builtins.h\>
 <decls2c(m.decls)>
 <procs2cdecls(m.decls.procs)>

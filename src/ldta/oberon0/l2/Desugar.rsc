@@ -16,10 +16,13 @@ public Statement CASE = caseOf(nat(1), [
            
 
 
-public Module desugar(Module \mod) {
-	  \mod.body = (for2while o case2ifs o flattenBegin)(\mod.body);
-	  return \mod;
-}
+public Module desugar(Module \mod) = visit (\mod) {
+     case list[Statement] ss: { // work around list[void] thing 
+       if (ss != []) {
+         insert flattenBegin(for2while(case2ifs(ss)));
+       } 
+     }
+	};
 
 public list[Statement] case2ifs(list[Statement] stats) {
   Statement cases2if(Expression e, list[Case] cs, list[Statement] es) {
@@ -27,9 +30,8 @@ public list[Statement] case2ifs(list[Statement] stats) {
 	    ei = head(eis);
 	    return ifThen(ei[0], ei[1], tail(eis), es); 
   }
-  
- 		 Expression label2cond(Expression e, expression(e2)) = eq(e, e2);
- 		 Expression label2cond(Expression e, range(e1, e2)) = amp(leq(e1, e), leq(e, e2));
+  Expression label2cond(Expression e, expression(e2)) = eq(e, e2);
+  Expression label2cond(Expression e, range(e1, e2)) = amp(leq(e1, e), leq(e, e2));
  		 
   return visit (stats) {
 	    case caseOf(e, cs, es) => cases2if(e, cs, es)
@@ -42,7 +44,7 @@ public list[Statement] for2while(list[Statement] stats) {
     case forDo(n, f, t, [], b) => forDo(n, f, t, [nat(1)], b)
     case forDo(n, f, t, [by], b) => 
              begin([assign(n, f), whileDo(leq(lookup(n), t), 
-                [b, assign(n, add(lookup(n), by))])]) 
+                [*b, assign(n, add(lookup(n), by))])]) 
   }
 }
 

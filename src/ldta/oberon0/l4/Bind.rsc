@@ -17,16 +17,16 @@ anno Type Type@ntype;
 public tuple[Expression, set[Message]] extendEvalConst(e:lookup(x, _), NEnv nenv, set[Message] errs) 
   = <xe, errs> when isVisible(nenv, x), const(_, xe) := getDef(nenv, x);
 
-public tuple[Type, set[Message]] bind(t:array(e, t2), NEnv nenv, set[Message] errs) {
-  <t.exp, errs> = bind(e, nenv, errs);
-  <t.\type, errs> = bind(t2, nenv, errs);
+public tuple[Type, set[Message]] bindType(t:array(e, t2), NEnv nenv, set[Message] errs) {
+  <t.exp, errs> = bindExp(e, nenv, errs);
+  <t.\type, errs> = bindType(t2, nenv, errs);
   <c, errs> = evalConst(t.exp, nenv, errs);
   errs += { notAConstErr(e@location) | nat(_) !:= c }
     + { boundErr(e@location) | nat(n) := c, n < 0 };
   return <t[@ntype=evalType(t, nenv)], errs>; 
 }
 
-public tuple[Type, set[Message]] bind(t:record(fs), NEnv nenv, set[Message] errs) {
+public tuple[Type, set[Message]] bindType(t:record(fs), NEnv nenv, set[Message] errs) {
   done = {};
   t.fields = for (f <- fs) {
     if (f is empty) {
@@ -37,18 +37,16 @@ public tuple[Type, set[Message]] bind(t:record(fs), NEnv nenv, set[Message] errs
       done += {n};
       append n;
     }      
-    <f.\type, errs> = bind(f.\type, nenv, errs);
+    <f.\type, errs> = bindType(f.\type, nenv, errs);
     append f;
   }
   return <t[@ntype=evalType(t, nenv)], errs>;
 }
 
 
-public tuple[Statement, set[Message]] bind(s:assign(x, list[Selector] ss, e), NEnv nenv, set[Message] errs) {
-  <s.exp, errs> = bind(e, nenv, errs);
-  if (ss != []) { // workaround
-    <s.selectors, errs> = bind(ss, nenv, errs);
-  }
+public tuple[Statement, set[Message]] bindStat(s:assign(x, list[Selector] ss, e), NEnv nenv, set[Message] errs) {
+  <s.exp, errs> = bindExp(e, nenv, errs);
+  <s.selectors, errs> = bindSelectors(ss, nenv, errs);
   if (isVisible(nenv, x)) {
     d = getDef(nenv, x);
     if (isWritable(d)) {
@@ -61,30 +59,29 @@ public tuple[Statement, set[Message]] bind(s:assign(x, list[Selector] ss, e), NE
 }
 
 
-public tuple[Expression, set[Message]] bind(e:lookup(x, list[Selector] ss), NEnv nenv, set[Message] errs) {
-  <e2, errs> = bind(lookup(x), nenv, errs);
+public tuple[Expression, set[Message]] bindExp(e:lookup(x, list[Selector] ss), NEnv nenv, set[Message] errs) {
+  <e2, errs> = bindExp(lookup(x), nenv, errs);
   e.var = e2.var;
   //println("e2 anno: <e2@propagated>");
   e@propagated = e2@propagated;
   if (ss != []) { // workaround
-    <e.selectors, errs> = bind(ss, nenv, errs);
+    <e.selectors, errs> = bindSelectors(ss, nenv, errs);
   }
   return <e, errs>;
 }
 
 
-public tuple[list[Selector], set[Message]] bind(list[Selector] ss, NEnv nenv, set[Message] errs) {
-  list[Selector] ss2;
-  ss2 = for (s <- ss) {
-    <s, errs> = bind(s, nenv, errs);
+public tuple[list[Selector], set[Message]] bindSelectors(list[Selector] ss, NEnv nenv, set[Message] errs) {
+  ss = for (s <- ss) {
+    <s, errs> = bindSelector(s, nenv, errs);
     append s;
   }
-  return <ss2, errs>;
+  return <ss, errs>;
 }	  
 
-public tuple[Selector, set[Message]] bind(s:Selector::field(x), NEnv nenv, set[Message] errs) = <s, errs>;
-public tuple[Selector, set[Message]] bind(s:subscript(e), NEnv nenv, set[Message] errs) {
-  <s.exp, errs> = bind(e, nenv, errs);
+public tuple[Selector, set[Message]] bindSelector(s:Selector::field(x), NEnv nenv, set[Message] errs) = <s, errs>;
+public tuple[Selector, set[Message]] bindSelector(s:subscript(e), NEnv nenv, set[Message] errs) {
+  <s.exp, errs> = bindExp(e, nenv, errs);
   return <s, errs>;
 }
 

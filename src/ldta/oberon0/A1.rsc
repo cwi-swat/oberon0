@@ -25,7 +25,7 @@ public set[Message] bindL1(loc l) = bindL2(l);
 
 public set[Message] bindL2(loc l) {
   m = implode(parse(l));
-  <m2, errs> = bind(m, scope(()));
+  <m2, errs> = bindModule(m, scope(()));
   return errs;
 }
 

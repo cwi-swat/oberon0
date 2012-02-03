@@ -45,7 +45,7 @@ public set[Message] bindL4(loc l) {
 
 public set[Message] checkL4(loc l) {  
   m = normalize(implode(parse(l)));
-  <m2, errs> = bind(m, GLOBAL_L4);
+  <m2, errs> = bindModule(m, GLOBAL_L4);
   if (errs == {}) {
     errs = check(m2);
   }
@@ -53,11 +53,11 @@ public set[Message] checkL4(loc l) {
 }
 
 public Module transformL4(loc l) {
-  Module myBind(Module m) = bind(m, GLOBAL_L4)[0];
+  Module myBind(Module m) = bindModule(m, GLOBAL_L4)[0];
   return lift(myBind(normalize(implode(parse(l)))), GLOBAL_L4, myBind);
 }
 
 public str compileL4(loc l) {
-  Module myBind(Module m) = bind(m, GLOBAL_L4)[0];
+  Module myBind(Module m) = bindModule(m, GLOBAL_L4)[0];
   return compileL4toC(lift(myBind(normalize(implode(parse(l)))), GLOBAL_L4, myBind));
 }

@@ -27,41 +27,40 @@ public default bool isReadable(Decl _) = false;
 
 
 
-public tuple[Module, set[Message]] bind(m:Module::\mod(n1, ds, list[Statement] b, n2), NEnv nenv) {
-  <m.decls, nenv, errs> = bind(ds, nenv, {});
-  <m.body, errs> = bind(b, nenv, errs);
+public tuple[Module, set[Message]] bindModule(m:Module::\mod(n1, ds, list[Statement] b, n2), NEnv nenv) {
+  <m.decls, nenv, errs> = bindDecls(ds, nenv, {});
+  <m.body, errs> = bindStats(b, nenv, errs);
   errs += { idMismatchErr(n2@location) | n1 != n2 };
   return <m, errs>;
 }
 
 // Declarations
-public tuple[Declarations, NEnv, set[Message]] bind(ds:decls(list[ConstDecl] cds, list[TypeDecl] tds, list[VarDecl] vds), NEnv nenv, set[Message] errs) {
-  <ds.consts, nenv, errs> = bind(cds, nenv, errs);
-  <ds.types, nenv, errs> = bind(tds, nenv, errs);
-  <ds.vars, nenv, errs> = bind(vds, nenv, errs);
+public tuple[Declarations, NEnv, set[Message]] bindDecls(ds:decls(list[ConstDecl] cds, list[TypeDecl] tds, list[VarDecl] vds), NEnv nenv, set[Message] errs) {
+  <ds.consts, nenv, errs> = bindConsts(cds, nenv, errs);
+  <ds.types, nenv, errs> = bindTypes(tds, nenv, errs);
+  <ds.vars, nenv, errs> = bindVars(vds, nenv, errs);
   return <ds, nenv, errs>;
 }
 
-public tuple[list[ConstDecl], NEnv, set[Message]] bind(list[ConstDecl] cds, NEnv nenv, set[Message] errs) {
+public tuple[list[ConstDecl], NEnv, set[Message]] bindConsts(list[ConstDecl] cds, NEnv nenv, set[Message] errs) {
   cds = for (cd <- cds) {
-    <cd, nenv, errs> = bind(cd, nenv, errs);
+    <cd, nenv, errs> = bindConstDecl(cd, nenv, errs);
     append cd;
   }
   return <cds, nenv, errs>;
 }
 
-public tuple[list[TypeDecl], NEnv, set[Message]] bind(list[TypeDecl] tds, NEnv nenv, set[Message] errs) {
-  list[TypeDecl] tds2;
-  tds2 = for (td <- tds) {
-    <td, nenv, errs> = bind(td, nenv, errs);
+public tuple[list[TypeDecl], NEnv, set[Message]] bindTypes(list[TypeDecl] tds, NEnv nenv, set[Message] errs) {
+  tds = for (td <- tds) {
+    <td, nenv, errs> = bindTypeDecl(td, nenv, errs);
     append td;
   }
-  return <tds2, nenv, errs>;
+  return <tds, nenv, errs>;
 }
 
-public tuple[list[VarDecl], NEnv, set[Message]] bind(list[VarDecl] vds, NEnv nenv, set[Message] errs) {
+public tuple[list[VarDecl], NEnv, set[Message]] bindVars(list[VarDecl] vds, NEnv nenv, set[Message] errs) {
   vds = for (vd <- vds) {
-    <vd, nenv, errs> = bind(vd, nenv, errs);
+    <vd, nenv, errs> = bindVarDecl(vd, nenv, errs);
     append vd;
   } 
   return <vds, nenv, errs>;
@@ -73,21 +72,21 @@ public tuple[NEnv, set[Message]] declare(Ident n, Decl b, NEnv nenv, set[Message
   return <define(nenv, n, b), errs>;
 }
 
-public tuple[ConstDecl, NEnv, set[Message]] bind(cd:constDecl(n, e), NEnv nenv, set[Message] errs) {
+public tuple[ConstDecl, NEnv, set[Message]] bindConstDecl(cd:constDecl(n, e), NEnv nenv, set[Message] errs) {
   <cd.\value, errs> = bindConst(e, nenv, errs);
   <evc, errs> = evalConst(e, nenv, errs);
   <nenv, errs> = declare(n, const(cd@location, evc), nenv, errs);
   return <cd, nenv, errs>;
 }
 
-public tuple[TypeDecl, NEnv, set[Message]] bind(td:typeDecl(n, t), NEnv nenv, set[Message] errs) {
-  <td.\type, errs> = bind(t, nenv, errs);
+public tuple[TypeDecl, NEnv, set[Message]] bindTypeDecl(td:typeDecl(n, t), NEnv nenv, set[Message] errs) {
+  <td.\type, errs> = bindType(t, nenv, errs);
   <nenv, errs> = declare(n, \type(td@location, evalType(t, nenv)), nenv, errs);
   return <td, nenv, errs>;
 }
 
-public tuple[VarDecl, NEnv, set[Message]] bind(vd:varDecl(ns, t), NEnv nenv, set[Message] errs) {
-  <vd.\type, errs> = bind(t, nenv, errs);
+public tuple[VarDecl, NEnv, set[Message]] bindVarDecl(vd:varDecl(ns, t), NEnv nenv, set[Message] errs) {
+  <vd.\type, errs> = bindType(t, nenv, errs);
   for (n <- vd.names) {
     <nenv, errs> = declare(n, var(vd@location, evalType(t, nenv)), nenv, errs);
   }
@@ -96,9 +95,9 @@ public tuple[VarDecl, NEnv, set[Message]] bind(vd:varDecl(ns, t), NEnv nenv, set
 
 // Types
 
-public tuple[Type, set[Message]] bind(t:user(id("INTEGER")), NEnv nenv, set[Message] errs) = <t, errs>;
-public tuple[Type, set[Message]] bind(t:user(id("BOOLEAN")), NEnv nenv, set[Message] errs) = <t, errs>;
-public default tuple[Type, set[Message]] bind(t:user(x), NEnv nenv, set[Message] errs) {
+public tuple[Type, set[Message]] bindType(t:user(id("INTEGER")), NEnv nenv, set[Message] errs) = <t, errs>;
+public tuple[Type, set[Message]] bindType(t:user(id("BOOLEAN")), NEnv nenv, set[Message] errs) = <t, errs>;
+public default tuple[Type, set[Message]] bindType(t:user(x), NEnv nenv, set[Message] errs) {
   if (isVisible(nenv, x)) {
     d = getDef(nenv, x);
     if (d is \type) {
@@ -112,16 +111,16 @@ public default tuple[Type, set[Message]] bind(t:user(x), NEnv nenv, set[Message]
 
 // Statements
 
-public tuple[list[Statement], set[Message]] bind(list[Statement] ss, NEnv nenv, set[Message] errs) {
+public default tuple[list[Statement], set[Message]] bindStats(list[Statement] ss, NEnv nenv, set[Message] errs) {
   ss = for(s <- ss) {
-    <s, errs> = bind(s, nenv, errs);
+    <s, errs> = bindStat(s, nenv, errs);
     append s;
   }
   return <ss, errs>;
 }
 
-public tuple[Statement, set[Message]] bind(s:assign(x, e), NEnv nenv, set[Message] errs) {
-  <s.exp, errs> = bind(e, nenv, errs);
+public tuple[Statement, set[Message]] bindStat(s:assign(x, e), NEnv nenv, set[Message] errs) {
+  <s.exp, errs> = bindExp(e, nenv, errs);
   <s.var, errs> = bindVar(x, nenv, errs);
   return <s, errs>;
 }
@@ -138,29 +137,29 @@ public default tuple[Ident, set[Message]] bindVar(Ident x, NEnv nenv, set[Messag
   return <x[@decl=d], errs>;
 }
 
-public tuple[Statement, set[Message]] bind(s:ifThen(c, b, list[tuple[Expression condition, list[Statement] body]] eis, list[Statement] e), NEnv nenv, set[Message] errs) {
-  <s.condition, errs> = bind(c, nenv, errs);
-  <s.body, errs> = bind(b, nenv, errs);
+public tuple[Statement, set[Message]] bindStat(s:ifThen(c, b, list[tuple[Expression condition, list[Statement] body]] eis, list[Statement] e), NEnv nenv, set[Message] errs) {
+  <s.condition, errs> = bindExp(c, nenv, errs);
+  <s.body, errs> = bindStats(b, nenv, errs);
   s.elseIfs = for (ei <- eis) {
-    <ei.condition, errs> = bind(ei.condition, nenv, errs);
-    <ei.body, errs> = bind(ei.body, nenv, errs);
+    <ei.condition, errs> = bindExp(ei.condition, nenv, errs);
+    <ei.body, errs> = bindStats(ei.body, nenv, errs);
     append ei;
   }
-  <s.elsePart, errs> = bind(e, nenv, errs);
+  <s.elsePart, errs> = bindStats(e, nenv, errs);
   return <s, errs>;
 }
 
-public tuple[Statement, set[Message]] bind(s:whileDo(c, b), NEnv nenv, set[Message] errs) {
-  <s.condition, errs> = bind(c, nenv, errs);
-  <s.body, errs> = bind(b, nenv, errs);
+public tuple[Statement, set[Message]] bindStat(s:whileDo(c, b), NEnv nenv, set[Message] errs) {
+  <s.condition, errs> = bindExp(c, nenv, errs);
+  <s.body, errs> = bindStats(b, nenv, errs);
   return <s, errs>;
 }
 
-public tuple[Statement, set[Message]] bind(s:skip(), NEnv nenv, set[Message] errs) = <s, errs>;
+public tuple[Statement, set[Message]] bindStat(s:skip(), NEnv nenv, set[Message] errs) = <s, errs>;
 
 // Expressions (note the default :-(
 // NB: this shares too much with bindVar and bindConst
-public default tuple[Expression, set[Message]] bind(Expression e, NEnv nenv, set[Message] errs) {
+public default tuple[Expression, set[Message]] bindExp(Expression e, NEnv nenv, set[Message] errs) {
   // Propagate constants
   <evc, errs> = evalConst(e, nenv, errs);
   e@propagated = evc;
@@ -208,12 +207,12 @@ public tuple[Expression, set[Message]] bindConst(Expression e, NEnv nenv, set[Me
 // TODO: factor bind vs. bindConst out of here...
 public tuple[Expression, set[Message]] bindOperator(Expression e, NEnv nenv, set[Message] errs) {
   if (e has exp) {
-    <e.exp, errs> = bind(e.exp, nenv, errs);
+    <e.exp, errs> = bindExp(e.exp, nenv, errs);
     return <e, errs>;
   }
   if (e has lhs && e has rhs) {
-    <e.lhs, errs> = bind(e.lhs, nenv, errs);
-    <e.rhs, errs> = bind(e.rhs, nenv, errs);
+    <e.lhs, errs> = bindExp(e.lhs, nenv, errs);
+    <e.rhs, errs> = bindExp(e.rhs, nenv, errs);
     return <e, errs>;
   }
   return <e, errs>;

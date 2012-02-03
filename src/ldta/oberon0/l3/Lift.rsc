@@ -14,8 +14,10 @@ import Relation;
 // TODO remove this
 anno Type Type@ntype;
 
-public Module lift(Module m, NEnv global, Module(Module) bind) =
-  liftDecls(rename(bind(desugar(normalizeDecls(m))), global));
+public Module lift(Module m, NEnv global, Module(Module) bind) {
+  println("Lifting");
+  return liftDecls(rename(bind(desugar(normalizeDecls(m))), global));
+}
 
 public Module normalizeDecls(Module m) = visit (m) {
     case decls(cds, tds, vds) => decls(cds, tds, vds, [])

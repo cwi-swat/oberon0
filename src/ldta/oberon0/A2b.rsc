@@ -12,6 +12,9 @@ public set[Message] checkL1(loc l) = checkL2(l);
 
 public set[Message] checkL2(loc l) {  
   m = implode(parse(l));
-  <m2, errs> = bind(m, scope(()));
-  return errs + check(m2);
+  <m2, errs> = bindModule(m, scope(()));
+  if (errs == {}) {
+    return check(m2);
+  }
+  return errs;
 }

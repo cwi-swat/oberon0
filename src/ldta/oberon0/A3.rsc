@@ -34,7 +34,7 @@ public str formatL3(loc l) {
 
 public set[Message] checkL3(loc l) {  
   m = implode(parse(l));
-  <m2, errs> = bind(m, GLOBAL_L3);
+  <m2, errs> = bindModule(m, GLOBAL_L3);
   if (errs == {}) {
     errs = check(m2);
   }

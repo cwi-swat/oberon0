@@ -39,6 +39,6 @@ public str formatL3(loc l) {
 
 public set[Message] bindL3(loc l) {
   m = implode(parse(l));
-  <m2, errs> = bind(m, GLOBAL_L3);
+  <m2, errs> = bindModule(m, GLOBAL_L3);
   return errs;
 }
