@@ -2,8 +2,6 @@ module ldta::oberon0::l3::Lift
 
 import ldta::oberon0::l3::AST;
 import ldta::oberon0::l3::Scope;
-import ldta::oberon0::l2::Desugar;
-
 
 import List;
 import Set;
@@ -14,9 +12,8 @@ import util::Math;
 // TODO remove this
 anno Type Type@ntype;
 
-public Module lift(Module m, NEnv global, Module(Module) bind) {
-  return liftDecls(rename(bind(desugar(normalizeDecls(m))), global));
-}
+// presumes m to have been desugared.
+public Module lift(Module m) = liftDecls(rename(normalizeDecls(m)));
 
 public Module normalizeDecls(Module m) = visit (m) {
     case decls(cds, tds, vds) => decls(cds, tds, vds, [])

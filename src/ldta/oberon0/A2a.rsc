@@ -1,6 +1,5 @@
 module ldta::oberon0::A2a
 
-import ldta::oberon0::l3::AST;
 import ldta::oberon0::l3::Bind;
 import ldta::oberon0::l3::Parse;
 import ldta::oberon0::l3::Implode;
