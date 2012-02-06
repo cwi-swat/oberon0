@@ -22,6 +22,10 @@ public set[Message] check(Procedure::proc(_, fs, ds, b, _)) =
 public default set[Message] checkFormals(list[Formal] fs) = {};     
 
 public set[Message] check(s:call(f, as)) {
+  // TODO: fix this???
+  if (!f@decl? || !(f@decl is proc)) {
+    return {}; // name error
+  }
   fs = (f@decl).formals;
   arity = ( 0 | it + size(ns) | formal(_, ns, _) <- fs );
   errs =  {};

@@ -22,9 +22,9 @@ public set[Message] bindL4(loc l) = errs
   when
     <_, errs> := bindModule(implode(parse(l)), GLOBALS()); 
 
-public set[Message] checkL4(loc l) = check(m)
+public set[Message] checkL4(loc l) = errs + check(m)
   when
-    <m, {}> := bindModule(implode(parse(l)), GLOBALS()); 
+    <m, errs> := bindModule(implode(parse(l)), GLOBALS()); 
 
 public str compileL4(loc l) = compileL4toC(lift(m), GLOBALS(), bindOnly)
   when

@@ -123,17 +123,17 @@ public tuple[Statement, set[Message]] bindStat(s:call(f, as), NEnv nenv, set[Mes
     <a, errs> = bindExp(a, nenv, errs);
     append a;
   }
-  if (isVisible(nenv, f) &&
-     (isDefined(nenv, f) 
-       || isDefined(globalScope(nenv), f) 
-       || isDefined(builtinScope(nenv), f))) {
-    d = getDef(nenv, f);
-    if (d is proc) {
-      s.proc = f[@decl=d];
-      return <s, errs>;
-    }
+  if (!isVisible(nenv, f)) {
+    return <s, errs + { undefProcErr(f@location) }>;
+  }
+  if (!(getDef(nenv, f) is proc)) {
     return <s, errs + { notAProcErr(f@location) }>;
   }
-  return <s, errs + { undefProcErr(f@location) }>;
+  if (isDefined(nenv, f) || isDefined(globalScope(nenv), f) || isDefined(builtinScope(nenv), f)) {
+    d = getDef(nenv, f);
+    s.proc = f[@decl=d];
+    return <s, errs>;
+  }
+  return <s, errs + { notAProcErr(f@location) }>;
 }
 
