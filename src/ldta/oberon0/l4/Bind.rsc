@@ -12,10 +12,6 @@ public Message invalidAssignErr(loc l) = error("Invalid assignment", l);
 
 anno Type Type@ntype;
 
-//public Statement assign(x, e) = assign(x, [], e);
-//public Expression lookup(x) = lookup(x, []);
-
-
 public bool isComplex(Type t) = (t is array) || (t is record);
 
 // ignoring selectors here...

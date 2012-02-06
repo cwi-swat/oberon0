@@ -4,4 +4,4 @@ import ldta::oberon0::l1::AST;
 
 import ParseTree;
 
-public  Module implode(Tree x) = implode(#Module, x);
+public Module implode(Tree x) = implode(#Module, x);
