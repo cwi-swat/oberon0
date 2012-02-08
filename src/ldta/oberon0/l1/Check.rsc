@@ -7,12 +7,25 @@ import Message;
 
 // presupposes name binding to have occurred.
 
+public Message notATypeErr(loc l) = error("Not a type", l);
+public Message notAVarOrConstErr(loc l) = error("Not a variable/constant", l);
+public Message notAConstErr(loc l) = error("Not a constant", l);
+public Message cannotEvalConstErr(loc l) = error("Cannot evaluate constant", l);
+public Message notAVarErr(loc l) = error("Not a variable", l);
+public Message divZeroErr(loc l) = error("Division by zero", l);
+
 public Message intErr(loc l) = error("Expected int", l);
 public Message boolErr(loc l) = error("Expected bool", l);
 public Message incompErr(loc l) = error("Incompatible types", l);
 public Message assignErr(loc l) = error("Invalid type for assignment", l);
 public Message invalidExpErr(loc l) = error("Invalid expression", l);
 
+public bool isWritable(Decl::var(_, _)) = true;
+public default bool isWritable(Decl _) = false;
+
+public bool isReadable(Decl::var(_, _)) = true;
+public bool isReadable(Decl::const(_, _)) = true;
+public default bool isReadable(Decl _) = false;
 
 public bool isInt(Type t) = typeEq(t, intType());
 public bool isBool(Type t) = typeEq(t, boolType());
@@ -35,29 +48,35 @@ public set[Message] check(Module::\mod(n, ds, b, n1)) = check(ds) + checkBody(b)
 // Declarations
 public set[Message] check(decls(cds, _, _)) = ( {} | it + check(cd) | cd <- cds );
   
-public set[Message] check(cd:constDecl(n, e)) = { intErr(cd@location) | !isInt(typeOf(e)) }; 
+public set[Message] check(cd:constDecl(n, e)) = 
+  { intErr(cd@location) | !isInt(typeOf(e)) } + evalConst(e); 
 
 // Statements
 public set[Message] check(assign(v, e)) =
-  check(e) + { assignErr(v@location) | (v@decl)?, !typeEq((v@decl).\type, typeOf(e)) }
-    + { invalidExpErr(e@location) | isBoolExp(e) };
+  check(e) + { assignErr(v@location) | isWritable(v@decl), !typeEq((v@decl).\type, typeOf(e)) }
+    + { invalidExpErr(e@location) | isBoolExp(e) }
+    + { notAVarErr(v@location) | !isWritable(v@decl) };
      
 public default bool isBoolExp(Expression e) = false;
-     
 
 public set[Message] check(ifThen(c, b, eis, e)) =
-  ( checkCond(c) + check(c) + checkBody(b) + checkBody(e) | 
-    it + checkCond(ec) + check(ec) + checkBody(eb) | <ec, eb> <- eis ); 
+  ( checkCond(c) + checkBody(b) + checkBody(e) | 
+    it + checkCond(ec) + checkBody(eb) | <ec, eb> <- eis ); 
 
-public set[Message] check(whileDo(c, b)) = checkCond(c) + check(c) + checkBody(b);
+public set[Message] check(whileDo(c, b)) = checkCond(c) + checkBody(b);
 
 public set[Message] check(skip()) = {};
 
-public set[Message] checkCond(Expression c) = { boolErr(c@location) | !typeEq(typeOf(c), boolType()) };
+public set[Message] checkCond(Expression c) = 
+ check(c) + { boolErr(c@location) | !typeEq(typeOf(c), boolType()) };
   
 public set[Message] checkBody(list[Statement] b) = ({} | it + check(s) | s <- b );
 
 // Expressions
+
+public set[Message] check(lookup(x)) = 
+  { notAVarOrConstErr(x@location) | !(x@decl is trueOrFalse), !isReadable(x@decl) };
+
 public set[Message] check(neg(e)) = check(e) + { intErr(e@location)| !isInt(typeOf(e)) };  
 
 public set[Message] check(pos(e)) = check(e) + { intErr(e@location)| !isInt(typeOf(e)) };  
@@ -127,16 +146,25 @@ public Type typeOf(lt(e1, e2)) = boolType();
 public Type typeOf(geq(e1, e2)) = boolType();
 public Type typeOf(leq(e1, e2)) = boolType();
 
-public Type typeOf(lookup(x)) {
-  if ((x@decl)?) {
-    d = x@decl;
-    if (d is const) {
-      return intType();
+public Type typeOf(lookup(x)) = intType() when x@decl is const;
+public Type typeOf(lookup(x)) = boolType() when x@decl is trueOrFalse;
+public Type typeOf(lookup(x)) = x@decl.\type when x@decl is var;
+
+public set[Message] evalConst(Expression e) {
+  solve (e) {
+    e = visit (e) {
+      case pos(nat(a)) => nat(a)
+      case neg(nat(a)) => nat(- a)
+      case add(nat(a), nat(b)) => nat(a + b)
+      case sub(nat(a), nat(b)) => nat(a - b)
+      case mul(nat(a), nat(b)) => nat(a * b)
+      case div(nat(a), nat(0)): return {divZeroErr(e@location)};
+      case div(nat(a), nat(b)) => nat(a / b)
+      case \mod(nat(a), nat(0)): return {divZeroErr(e@location)};
+      case \mod(nat(a), nat(b)) => nat(a mod b)
+      case a:lookup(x) => xe when const(_, xe) := x@decl
     }
-    if (d is trueOrFalse) {
-      return boolType();
-    }
-    return d.\type;
   }
-  return INVALID();
+  return { cannotEvalConstErr(e@location) | !(e is nat) };
 }
+
