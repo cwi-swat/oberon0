@@ -45,45 +45,18 @@ public tuple[Type, set[Message]] bindType(t:record(fs), NEnv nenv, set[Message] 
   return <t[@ntype=evalType(t, nenv)], errs>;
 }
 
-
-public tuple[Statement, set[Message]] bindStat(s:assign(x, e), NEnv nenv, set[Message] errs) {
-  <s.exp, errs> = bindExp(e, nenv, errs);
-  if (isVisible(nenv, x)) {
-    d = getDef(nenv, x);
-    if (isComplex(d.\type)) {
-      return <s, errs + { invalidAssignErr(s@location) }>;
-    }
-    if (isWritable(d)) {
-      s.var = x[@decl=d];
-      return <s, errs>;
-    }
-    return <s, errs + { notAVarErr(x@location) }>;
-  }
-  return <s, errs + { undefVarErr(x@location) }>;
-}
-
 public tuple[Statement, set[Message]] bindStat(s:assign(x, list[Selector] ss, e), NEnv nenv, set[Message] errs) {
+  <s.var, errs> = bindId(x, nenv, errs);
   <s.exp, errs> = bindExp(e, nenv, errs);
-  if (isVisible(nenv, x)) {
-    d = getDef(nenv, x);
-    <s.selectors, errs, t> = bindSelectors(ss, nenv, errs, d.\type);
-    if (isComplex(t)) {
-      println("complex: <t>");
-      return <s, errs + { invalidAssignErr(s@location) }>;
-    }
-    if (isWritable(d)) {
-      s.var = x[@decl=d];
-      return <s, errs>;
-    }
-    return <s, errs + { notAVarErr(x@location) }>;
-  }
-  return <s, errs + { undefVarErr(x@location) }>;
+  <s.selectors, errs, t> = bindSelectors(ss, nenv, errs, (s.var)@decl.\type);
+  return <s, errs>;
 }
 
 
 public tuple[Expression, set[Message]] bindExp(e:lookup(x, list[Selector] ss), NEnv nenv, set[Message] errs) {
   <e2, errs> = bindExp(lookup(x), nenv, errs);
   e.var = e2.var;
+  // what if there is no .\type
   <e.selectors, errs, t> = bindSelectors(ss, nenv, errs, (e.var@decl).\type);
   return <e, errs>;
 }

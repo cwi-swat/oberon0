@@ -22,7 +22,7 @@ public set[Message] bindL4(loc l) = errs
   when
     <_, errs> := bindModule(implode(parse(l)), GLOBALS()); 
 
-public set[Message] checkL4(loc l) = errs + check(m)
+public set[Message] checkL4(loc l) = check(m)
   when
     <m, errs> := bindModule(implode(parse(l)), GLOBALS()); 
 

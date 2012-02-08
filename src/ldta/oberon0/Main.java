@@ -26,17 +26,16 @@ public class Main {
 		this.eval = new Evaluator(vf, new PrintWriter(System.err), 
 				new PrintWriter(System.out), env, heap);
 		this.org = vf.sourceLocation(WD).getURI();
-		eval.addClassLoader(Main.class.getClassLoader());
+		eval.addClassLoader(getClass().getClassLoader());
 	}
 
 	public static void main(String[] args) {
 		new Main(args).run(args);
-		
 	}
 
 	private void run(String[] args) {
 		if (args[0].equals("test")) {
-			eval("import List;");
+			eval("import ldta::oberon0::Tests;");
 			eval(":test");
 		}
 	}

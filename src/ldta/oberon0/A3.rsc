@@ -12,7 +12,7 @@ import lang::box::util::Box2Text;
 
 public str formatL3(loc l) = format(mod2box(implode(parse(l))));
 
-public set[Message] checkL3(loc l) = errs + check(m)
+public set[Message] checkL3(loc l) = check(m)
   when
     <m, errs> := bindModule(implode(parse(l)), GLOBALS());
 

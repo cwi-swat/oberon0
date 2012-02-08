@@ -51,6 +51,8 @@ public set[Message] check(s:call(f, as)) {
   return  ( errs | it + check(a) | a <- as);
 }
 
+public Type typeOf(lookup(x)) = x@decl.\type when x@decl is param;
+
 public set[Message] checkFormal(Ident n, Expression exp, bool hasVar) =
     { incompErr(exp@location) | !typeEq(typeOf(exp), n@decl.\type) }
       + { lvalueErr(exp@location) | hasVar, !isLValue(exp) };

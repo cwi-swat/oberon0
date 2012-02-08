@@ -8,14 +8,12 @@ import ldta::oberon0::l4::Bind; // for evalType
 import List;
 import IO;
 
-// Currently the checker assume structural type equivalence for all types.
-
 public Message selectorErr(loc l) = error("Invalid selector", l);
 public Message missingVarKeyword(loc l) = error("Missing VAR keyword", l);
 public Message outOfBoundsErr(loc l) = error("Index out of bounds", l);
 
-public bool isLValue(lookup(x, _)) = !((x@decl) is const);
 
+public bool isLValue(lookup(x, _)) = isWritable(x@decl);
 public bool isComplex(Expression e) = isComplex(typeOf(e));
 
 
@@ -31,7 +29,8 @@ public set[Message] checkFormals(list[Formal] fs) =
 
 // bprintln("<(a@location).begin.line> t1: <typeOf(lookup(x, ss))>, \n  t2= <typeOf(e)>")
 public set[Message] check(a:assign(x, ss, e)) = check(e) + check(lookup(x,ss)) +
-  { assignErr(a@location) |  !typeEq(typeOf(lookup(x, ss)), typeOf(e)) } +
+  { assignErr(a@location) |  isWritable(x@decl), !typeEq(typeOf(lookup(x, ss)), typeOf(e)) } +
+  { notAVar(x@location) | !isWritable(x@decl) } +
   { invalidAssignErr(a@location) | isComplex(lookup(x, ss)) };
 
 public set[Message] check(lookup(x, ss)) = check(typeOf(lookup(x)), ss);
