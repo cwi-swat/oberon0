@@ -13,15 +13,8 @@ public Message argNumErr(loc l) = error("Wrong number of arguments", l);
 public bool isLValue(lookup(x)) = isWritable(x@decl);
 public default bool isLValue(Expression _) = false;
 
-public Message notAProcErr(loc l) = error("Not a procedure", l);
-
-public bool isCallable(Decl::proc(_, _)) = true;
-public default bool isCallable(Decl _) = false;
-
 public bool isWritable(param(_, _, _)) = true;
 public bool isReadable(param(_, _, _)) = true;
-
-
 
 public set[Message] check(decls(cds, tds, vds, pds)) =
   ( check(decls(cds, tds, vds)) | it + check(pd) | pd <- pds );
@@ -32,9 +25,9 @@ public set[Message] check(Procedure::proc(_, fs, ds, b, _)) =
 public default set[Message] checkFormals(list[Formal] fs) = {};     
 
 public set[Message] check(s:call(f, as)) {
-  if (!isCallable(f@decl)) {
-    return { notAProcErr(f@location) };
-  }
+  //if (!isCallable(f@decl)) {
+  //  return { notAProcErr(f@location) };
+  //}
   fs = (f@decl).formals;
   arity = ( 0 | it + size(ns) | formal(_, ns, _) <- fs );
   errs =  {};

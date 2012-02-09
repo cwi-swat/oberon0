@@ -11,15 +11,21 @@ import IO;
 public Message selectorErr(loc l) = error("Invalid selector", l);
 public Message missingVarKeyword(loc l) = error("Missing VAR keyword", l);
 public Message outOfBoundsErr(loc l) = error("Index out of bounds", l);
+public Message boundErr(loc l) = error("Invalid bound", l);
 
 
 public bool isLValue(lookup(x, _)) = isWritable(x@decl);
 public bool isComplex(Expression e) = isComplex(typeOf(e));
 
+public bool isComplex(Type t) = (t is array) || (t is record);
+
+//// ignoring selectors here...
+//public tuple[Expression, set[Message]] extendEvalConst(e:lookup(x, _), NEnv nenv, set[Message] errs) 
+//  = <xe, errs> when isVisible(nenv, x), const(_, xe) := getDef(nenv, x);
+
 
 public bool typeEq(Type t1, Type t2) = (t1@location) == (t2@location) 
-   when (t1 is record && t2 is record) ||
-      (t1 is array && t2 is array);
+   when (t1 is record && t2 is record) || (t1 is array && t2 is array);
 
 
 // Override
@@ -62,11 +68,8 @@ public set[Message] check(s:subscript(e)) = check(e) + { intErr(e@location) | !i
 
 public Type typeOf(lookup(x, ss)) = ( typeOf(lookup(x)) | typeOf(it, s) | s <- ss );
 
-public Type typeOf(record(fs), s:Selector::field(x)) {
-  if (f <- fs, x in f.names) 
-     return f.\type;
-  return INVALID();
-}
+public Type typeOf(record(fs), s:Selector::field(x)) = f.\type
+   when f <- fs, x in f.name;
 
 public Type typeOf(array(e, t), subscript(_)) = t;
 

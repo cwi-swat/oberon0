@@ -54,14 +54,13 @@ public set[Message] check(cd:constDecl(n, e)) =
 // Statements
 public set[Message] check(assign(v, e)) =
   check(e) + { assignErr(v@location) | isWritable(v@decl), !typeEq((v@decl).\type, typeOf(e)) }
-    + { invalidExpErr(e@location) | isBoolExp(e) }
+//    + { invalidExpErr(e@location) | isBoolExp(e) }
     + { notAVarErr(v@location) | !isWritable(v@decl) };
      
 public default bool isBoolExp(Expression e) = false;
 
 public set[Message] check(ifThen(c, b, eis, e)) =
-  ( checkCond(c) + checkBody(b) + checkBody(e) | 
-    it + checkCond(ec) + checkBody(eb) | <ec, eb> <- eis ); 
+  ( checkCond(c) + checkBody(b) + checkBody(e) | it + checkCond(ec) + checkBody(eb) | <ec, eb> <- eis ); 
 
 public set[Message] check(whileDo(c, b)) = checkCond(c) + checkBody(b);
 

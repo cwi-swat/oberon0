@@ -4,69 +4,34 @@ start syntax Module = \mod: "MODULE" Ident name ";" Declarations decls Body? bod
 
 syntax Body = @Foldable "BEGIN" {Statement ";"}+;
 
-keyword Keywords 
-	= "MODULE"
-	| "BEGIN"
-	;
+keyword Keywords = "MODULE" | "BEGIN" | "VAR" | "TYPE" | "CONST" "IF" | "THEN" | "ELSE" | "ELSIF" | "DO" | "WHILE" | "END" | "DIV" | "MOD" | "OR";
 
-syntax Declarations 
-	= decls: ConstSect? consts TypeSect? types VarSect? vars
-	;
+syntax Declarations = decls: ConstSect? consts TypeSect? types VarSect? vars;
 
-syntax ConstDecl 
-	= constDecl: Ident name "=" Expression value ";"
-	;
+syntax ConstDecl = constDecl: Ident name "=" Expression value ";";
 	
-syntax ConstSect 
-	= "CONST" ConstDecl* consts
-	;
+syntax ConstSect = "CONST" ConstDecl* consts;
 
-syntax TypeDecl 
-	= typeDecl: Ident name "=" Type type ";"
-	;
+syntax TypeDecl = typeDecl: Ident name "=" Type type ";";
 
-syntax TypeSect 
-	= "TYPE" TypeDecl* types
-	;
+syntax TypeSect = "TYPE" TypeDecl* types;
 
-syntax VarDecl 
-	= varDecl: {Ident ","}* names ":" Type type ";"
-	;
+syntax VarDecl = varDecl: {Ident ","}* names ":" Type type ";";
 	
-syntax VarSect 
-	= @Foldable "VAR" VarDecl* vars
-	;
+syntax VarSect = @Foldable "VAR" VarDecl* vars;
 
-keyword Keywords 
-	= "VAR" 
-	| "TYPE" 
-	| "CONST" 
-	;
-	
 syntax Type = user: Ident name ;
 
 syntax Statement 
 	= assign: Ident var ":=" Expression exp
 	| ifThen: "IF" Expression condition "THEN" {Statement ";"}+ body ElsIfPart* ElsePart? "END"
 	| whileDo: "WHILE" Expression condition "DO" {Statement ";"}+ body "END"
-	| skip: 
-	;
+	| skip: ;
 
 
 syntax ElsIfPart = "ELSIF" Expression condition "THEN" {Statement ";"}+ body ;
 
 syntax ElsePart = "ELSE" {Statement ";"}+ body;
-
-keyword Keywords 
-	= "IF" 
-	| "THEN" 
-	| "ELSE" 
-	| "ELSIF" 
-	| "DO" 
-	| "WHILE" 
-	| "END" 
-	;
-
 
 syntax Expression 
 	= nat: Natural value
@@ -96,22 +61,9 @@ syntax Expression
 		| leq: Expression lhs "\<=" Expression rhs
 		| gt: Expression lhs "\>" Expression rhs
 		| geq: Expression lhs "\>=" Expression rhs
-	)
-	;
+	);
 
-keyword Keywords 
-	= "DIV" 
-	| "MOD" 
-	| "OR" 
-//	| "TRUE" 
-//	| "FALSE"
-	; 
-	
 lexical Ident = id: ([a-zA-Z] !<< [a-zA-Z][a-zA-Z0-9]*  !>> [A-Za-z0-9]) \ Keywords;
-
-//private int MAX_INT = 65536;
-//lexical Natural = [0-9]+ !>> [0-9] ;
-// 2147483648
 
 // This SHOULD be in the typechecking phase.
 // or using a semantic action (but no time now).
@@ -128,13 +80,7 @@ lexical Natural
   | [1-2][0-1][0-4][0-7][0-4][0-8][0-3][0-6][0-4][0-7] !>> [0-9]
   ;
   
-
-
-
-lexical Layout 
-	= whitespace: [\t-\n\r\ ] 
-	| @category="Comment" Comment 
-	;
+lexical Layout = whitespace: [\t-\n\r\ ] | @category="Comment" Comment ;
 
 layout Layouts = Layout* !>> [\t-\n \r \ ] !>> "(*" ;
 

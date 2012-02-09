@@ -60,20 +60,20 @@ public tuple[NEnv, set[Message]] declare(Ident n, Decl b, NEnv nenv, set[Message
 
 public tuple[ConstDecl, NEnv, set[Message]] bindConstDecl(cd:constDecl(n, e), NEnv nenv, set[Message] errs) {
   <cd.\value, errs> = bindExp(e, nenv, errs);
-  <nenv, errs> = declare(n, const(cd@location, e), nenv, errs);
+  <nenv, errs> = declare(n, const(cd@location, cd.\value), nenv, errs);
   return <cd, nenv, errs>;
 }
 
 public tuple[TypeDecl, NEnv, set[Message]] bindTypeDecl(td:typeDecl(n, t), NEnv nenv, set[Message] errs) {
   <td.\type, errs> = bindType(t, nenv, errs);
-  <nenv, errs> = declare(n, \type(td@location, evalType(t, nenv)), nenv, errs);
+  <nenv, errs> = declare(n, \type(td@location, td.\type), nenv, errs);
   return <td, nenv, errs>;
 }
 
 public tuple[VarDecl, NEnv, set[Message]] bindVarDecl(vd:varDecl(ns, t), NEnv nenv, set[Message] errs) {
   <vd.\type, errs> = bindType(t, nenv, errs);
   for (n <- vd.names) {
-    <nenv, errs> = declare(n, var(vd@location, evalType(t, nenv)), nenv, errs);
+    <nenv, errs> = declare(n, var(vd@location, vd.\type), nenv, errs);
   }
   return <vd, nenv, errs>;
 }
@@ -84,8 +84,7 @@ public tuple[Type, set[Message]] bindType(t:user(id("INTEGER")), NEnv nenv, set[
 public tuple[Type, set[Message]] bindType(t:user(id("BOOLEAN")), NEnv nenv, set[Message] errs) = <t, errs>;
 public default tuple[Type, set[Message]] bindType(t:user(x), NEnv nenv, set[Message] errs) {
   if (isVisible(nenv, x)) {
-    d = getDef(nenv, x);
-    t.name = x[@decl=d];
+    t.name = x[@decl=getDef(nenv, x)];
     return <t, errs>;
   }
   return <t, errs + { undefTypeErr(t@location) }>;
@@ -129,15 +128,13 @@ public tuple[Statement, set[Message]] bindStat(s:whileDo(c, b), NEnv nenv, set[M
 public tuple[Statement, set[Message]] bindStat(s:skip(), NEnv nenv, set[Message] errs) = <s, errs>;
 
 public default tuple[Ident, set[Message]] bindId(Ident x, NEnv nenv, set[Message] errs) {
+  if (isVisible(nenv, x)) {
+    return <x[@decl=getDef(nenv, x)], errs>;  
+  }
   if (x.name in {"TRUE", "FALSE"}) {
-    x@decl=trueOrFalse(x.name == "TRUE");
-    return <x, errs>; // no errors.
+    return <x[@decl=trueOrFalse(x.name == "TRUE")], errs>;
   }
-  if (!isVisible(nenv, x)) {
-    return <x, errs + { undefIdErr(x@location) }>;
-  }
-  d = getDef(nenv, x);
-  return <x[@decl=d], errs>;
+  return <x, errs + { undefIdErr(x@location) }>;
 }
 
 // Expressions (note the default :-(
@@ -162,9 +159,8 @@ public tuple[Expression, set[Message]] bindOperator(Expression e, NEnv nenv, set
   return <e, errs>;
 }
 
-// partially evaluate a type.
-public Type evalType(t:user(x), NEnv nenv) = 
-  ( t | xt | isVisible(nenv, x), \type(_, xt) := getDef(nenv, x) ); 
-
-public default Type evalType(Type t, NEnv nenv)  = t;
+//// partially evaluate a type.
+//public Type evalType(t:user(x), NEnv nenv) = ( t | xt | isVisible(nenv, x), \type(_, xt) := getDef(nenv, x) ); 
+//
+//public default Type evalType(Type t, NEnv nenv)  = t;
 

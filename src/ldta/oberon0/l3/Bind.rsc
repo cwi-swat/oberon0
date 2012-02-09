@@ -22,6 +22,11 @@ public NEnv GLOBALS() = nest((), scope((
 )));
 
 public Message undefProcErr(loc l) = error("Undefined procedure", l);
+public Message notAProcErr(loc l) = error("Not a procedure", l);
+
+public bool isCallable(Decl::proc(_, _)) = true;
+public default bool isCallable(Decl _) = false;
+
 
 public bool isReadable(param(_, _, _)) = true;
 public bool isWritable(param(_, _, _)) = true;
@@ -89,7 +94,7 @@ public tuple[list[Formal], NEnv, set[Message]] bindFormals(list[Formal] fs, NEnv
         errs += { dupErr(n@location) };
       }
       else {
-        ann = param(n@location, evalType(f.\type, nenv), f.hasVar);
+        ann = param(n@location, f.\type, f.hasVar);
         nenv = define(nenv, n, ann);
         n@decl = ann;
       }
@@ -100,19 +105,21 @@ public tuple[list[Formal], NEnv, set[Message]] bindFormals(list[Formal] fs, NEnv
   return <fs, nenv, errs>;
 }
 
-// overriding from L1
-public tuple[Ident, set[Message]] bindVar(Ident x, NEnv nenv, set[Message] errs) {
-  if (isVisible(nenv, x) && !(isDefined(nenv, x) || isDefined(globalScope(nenv), x))) {
-    return <x, errs + { undefVarErr(x@location) }>;
-  }
-  // TODO: factor out, it's the same in L1
-  d = getDef(nenv, x);
-  if (!isWritable(d)) {
-    return <x, errs + { notAVarErr(x@location) }>;
-  }
-  return <x[@decl=d], errs>;
-}
 
+// overriding from L1
+public tuple[Ident, set[Message]] bindId(Ident x, NEnv nenv, set[Message] errs) {
+  if (isVisible(nenv, x)) {
+    d = getDef(nenv, x);
+    if (d is var && !(isDefined(nenv, x) || isDefined(globalScope(nenv), x))) {
+      return <x, errs + { undefVarErr(x@location) }>;
+    }
+    return <x[@decl=getDef(nenv, x)], errs>;
+  }
+  if (x.name in {"TRUE", "FALSE"}) {
+    return <x[@decl=trueOrFalse(x.name == "TRUE")], errs>;
+  }
+  return <x, errs + { undefIdErr(x@location) }>;
+}
 
 public tuple[Statement, set[Message]] bindStat(s:call(f, as), NEnv nenv, set[Message] errs) {
   s.args = for (a <- as) {
@@ -122,11 +129,11 @@ public tuple[Statement, set[Message]] bindStat(s:call(f, as), NEnv nenv, set[Mes
   if (!isVisible(nenv, f)) {
     return <s, errs + { undefProcErr(f@location) }>;
   }
-  if (!(getDef(nenv, f) is proc)) {
-    return <s, errs + { notAProcErr(f@location) }>;
-  }
   if (isDefined(nenv, f) || isDefined(globalScope(nenv), f) || isDefined(builtinScope(nenv), f)) {
     d = getDef(nenv, f);
+    if (!isCallable(d)) {
+      return <s, errs + { notAProcErr(f@location) }>;
+    }
     s.proc = f[@decl=d];
     return <s, errs>;
   }
