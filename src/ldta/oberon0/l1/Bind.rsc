@@ -80,9 +80,6 @@ public tuple[VarDecl, NEnv, set[Message]] bindVarDecl(vd:varDecl(ns, t), NEnv ne
 public Type evalType(user(x)) = evalType(x@decl.\type) 
   when x@decl?, x@decl is \type;
   
-//public Type evalType(t:user(x)) = t 
-//  when !(x@decl?), x.name in {"INTEGER", "BOOLEAN"};
-  
 public default Type evalType(Type t) = t;
 
 
@@ -91,7 +88,11 @@ public default Type evalType(Type t) = t;
 
 public default tuple[Type, set[Message]] bindType(t:user(x), NEnv nenv, set[Message] errs) {
   if (isVisible(nenv, x)) {
-    t.name = x[@decl=getDef(nenv, x)];
+    d = getDef(nenv, x);
+    if (!(d is \type)) {
+      return <t, errs + { undefTypeErr(x@location) }>;
+    }
+    t.name = x[@decl=d];
     return <t, errs>;
   }
   if (x.name in {"INTEGER", "BOOLEAN"}) {

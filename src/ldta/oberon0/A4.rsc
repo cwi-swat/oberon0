@@ -26,7 +26,7 @@ public set[Message] checkL4(loc l) = check(m)
   when
     <m, {}> := bindModule(implode(parse(l)), GLOBALS()); 
 
-public str compileL4(loc l) = compileL4toC(lift(m), GLOBALS(), bindOnly)
+public str compileL4(loc l) = compileL4toC(lift(m))
   when
     <m, _> := bindModule(desugar(implode(parse(l))), GLOBALS());
 

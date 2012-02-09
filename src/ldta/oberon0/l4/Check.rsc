@@ -21,10 +21,20 @@ public bool isComplex(Type t) = (t is array) || (t is record);
 public bool typeEq(Type t1, Type t2) = (t1@location) == (t2@location) 
    when (t1 is record && t2 is record) || (t1 is array && t2 is array);
 
+public set[Message] check(array(b, t)) = check(t) + { intErr(b@location) | !isInt(typeOf(b)) };
+
+public set[Message] check(record(fs)) = ( {} | it + check(t) | field(_, t) <- fs ); 
+   
+
 // Override
 public set[Message] checkFormals(list[Formal] fs) = 
   { missingVarKeyword(f@location)  | f <- fs, !f.hasVar, n <- f.names, isComplex((n@decl).\type) };   
 
+// Override default of L1
+public set[Message] check(a:assign(v, e)) =
+  check(e) + { assignErr(v@location) | isWritable(v@decl), !typeEq((v@decl).\type, typeOf(e)) }
+    + { notAVarErr(v@location) | !isWritable(v@decl) }
+    + { invalidAssignErr(a@location) | isComplex(lookup(v)) };
 
 public set[Message] check(a:assign(x, ss, e)) = check(e) + check(lookup(x,ss)) +
   { assignErr(a@location) |  isWritable(x@decl), 
@@ -47,7 +57,7 @@ public set[Message] check(Type t, list[Selector] ss) {
 public set[Message] check(record(fs), s:Selector::field(x)) =
   { undefFieldErr(s@location) | !any(f <- fs, x in f.names) };
 
-public set[Message] check(array(b, _), s:subscript(e)) = 
+public set[Message] check(array(b, _), s:subscript(e)) =
     { err | neg(nat(_)) := e  } +
     { err | nat(n) := e, nat(n2) := b, n >= n2  } +
     //{ err | lookup(x, []) := e, x@decl is const, nat(n) := x@decl.exp, nat(n2) := b, n >= n2 } +

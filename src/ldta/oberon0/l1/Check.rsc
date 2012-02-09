@@ -46,15 +46,23 @@ public default bool typeEq(Type t1, Type t2) = false;
 public set[Message] check(Module::\mod(n, ds, b, n1)) = check(ds) + checkBody(b);
 
 // Declarations
-public set[Message] check(decls(cds, _, _)) = ( {} | it + check(cd) | cd <- cds );
+public set[Message] check(decls(cds, tds, vds)) = 
+   ( {} | it + check(cd) | cd <- cds ) 
+   + ( {} | it + check(td) | td <- tds )
+   + ( {} | it + check(vd) | vd <- vds );
+   
   
 public set[Message] check(cd:constDecl(n, e)) = 
   { intErr(cd@location) | !isInt(typeOf(e)) } + evalConst(e); 
 
+public set[Message] check(td:typeDecl(n, t)) = check(t); 
+public set[Message] check(td:varDecl(ns, t)) = check(t); 
+
+public default set[Message] check(Type _) = {};
+
 // Statements
-public set[Message] check(assign(v, e)) =
+public default set[Message] check(assign(v, e)) =
   check(e) + { assignErr(v@location) | isWritable(v@decl), !typeEq((v@decl).\type, typeOf(e)) }
-//    + { invalidExpErr(e@location) | isBoolExp(e) }
     + { notAVarErr(v@location) | !isWritable(v@decl) };
      
 public default bool isBoolExp(Expression e) = false;
@@ -161,6 +169,7 @@ public set[Message] evalConst(Expression e) {
       return { divZeroErr(l) };
     }
   }
+  println("V = <v>");
   return { cannotEvalConstErr(e@location) | !(v is nat) };  
 }
 
