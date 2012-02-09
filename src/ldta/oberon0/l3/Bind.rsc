@@ -92,7 +92,7 @@ public tuple[list[Formal], NEnv, set[Message]] bindFormals(list[Formal] fs, NEnv
         errs += { dupErr(n@location) };
       }
       else {
-        ann = param(n@location, f.\type, f.hasVar);
+        ann = param(n@location, evalType(f.\type), f.hasVar);
         nenv = define(nenv, n, ann);
         n@decl = ann;
       }
