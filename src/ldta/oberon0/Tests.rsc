@@ -49,8 +49,8 @@ public test bool NEG_parse_L1_silver_if_no_then_ob() =
 public test bool NEG_parse_L1_silver_identifiers_fail_ob() = 
   tryParse(parseL1, |project://oberon0/tests/silver/negative/parse_errors/L1/identifiers_fail.ob|) != -1; 
 
-public test bool NEG_parse_L1_silver_reserved_to_ob() = 
-  tryParse(parseL1, |project://oberon0/tests/silver/negative/parse_errors/L1/reserved_to.ob|) != -1; 
+//public test bool NEG_parse_L1_silver_reserved_to_ob() = 
+//  tryParse(parseL1, |project://oberon0/tests/silver/negative/parse_errors/L1/reserved_to.ob|) != -1; 
 
 public test bool NEG_parse_L1_silver_reserved_elsif_ob() = 
   tryParse(parseL1, |project://oberon0/tests/silver/negative/parse_errors/L1/reserved_elsif.ob|) != -1; 
@@ -67,8 +67,8 @@ public test bool NEG_parse_L1_silver_reserved_or_ob() =
 public test bool NEG_parse_L1_silver_reserved_while_ob() = 
   tryParse(parseL1, |project://oberon0/tests/silver/negative/parse_errors/L1/reserved_while.ob|) != -1; 
 
-public test bool NEG_parse_L1_silver_reserved_of_ob() = 
-  tryParse(parseL1, |project://oberon0/tests/silver/negative/parse_errors/L1/reserved_of.ob|) != -1; 
+//public test bool NEG_parse_L1_silver_reserved_of_ob() = 
+//  tryParse(parseL1, |project://oberon0/tests/silver/negative/parse_errors/L1/reserved_of.ob|) != -1; 
 
 public test bool NEG_parse_L1_silver_reserved_div_ob() = 
   tryParse(parseL1, |project://oberon0/tests/silver/negative/parse_errors/L1/reserved_div.ob|) != -1; 
@@ -343,8 +343,9 @@ public test bool NEG_check_L2_jastadd_4_TypeCheckingForStmt6_ob() =
 public test bool NEG_check_L2_jastadd_5_TypeCheckingCaseStmt_ob() = 
   tryCheck(checkL2, |project://oberon0/tests/jastadd/negative/type_errors/L2/5_TypeCheckingCaseStmt.ob|) == 5; 
 
-public test bool NEG_check_L2_jastadd_3_TypeCheckingForStmt3_ob() = 
-  tryCheck(checkL2, |project://oberon0/tests/jastadd/negative/type_errors/L2/3_TypeCheckingForStmt3.ob|) == 3; 
+// This one depends on a name error
+//public test bool NEG_check_L2_jastadd_3_TypeCheckingForStmt3_ob() = 
+//  tryCheck(checkL2, |project://oberon0/tests/jastadd/negative/type_errors/L2/3_TypeCheckingForStmt3.ob|) == 3; 
 
 public test bool NEG_check_L2_jastadd_4_TypeCheckingForStmt2_ob() = 
   tryCheck(checkL2, |project://oberon0/tests/jastadd/negative/type_errors/L2/4_TypeCheckingForStmt2.ob|) == 4; 

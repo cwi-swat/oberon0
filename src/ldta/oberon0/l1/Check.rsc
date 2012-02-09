@@ -3,6 +3,7 @@ module ldta::oberon0::l1::Check
 import ldta::oberon0::l1::AST;
 import ldta::oberon0::l1::Bind;
 import ldta::oberon0::l1::Scope;
+import ldta::oberon0::l1::ConstEval;
 import Message;
 
 // presupposes name binding to have occurred.
@@ -149,21 +150,18 @@ public Type typeOf(lookup(x)) = intType() when x@decl is const;
 public Type typeOf(lookup(x)) = boolType() when x@decl is trueOrFalse;
 public Type typeOf(lookup(x)) = x@decl.\type when x@decl is var;
 
+
+
 public set[Message] evalConst(Expression e) {
-  solve (e) {
-    e = visit (e) {
-      case pos(nat(a)) => nat(a)
-      case neg(nat(a)) => nat(- a)
-      case add(nat(a), nat(b)) => nat(a + b)
-      case sub(nat(a), nat(b)) => nat(a - b)
-      case mul(nat(a), nat(b)) => nat(a * b)
-      case div(nat(a), nat(0)): return {divZeroErr(e@location)};
-      case div(nat(a), nat(b)) => nat(a / b)
-      case \mod(nat(a), nat(0)): return {divZeroErr(e@location)};
-      case \mod(nat(a), nat(b)) => nat(a mod b)
-      case a:lookup(x) => xe when const(_, xe) := x@decl
+  v = e;
+  solve (v) {
+    try {
+      v = eval(v);
+    }
+    catch divByZero(l): {
+      return { divZeroErr(l) };
     }
   }
-  return { cannotEvalConstErr(e@location) | !(e is nat) };
+  return { cannotEvalConstErr(e@location) | !(v is nat) };  
 }
 

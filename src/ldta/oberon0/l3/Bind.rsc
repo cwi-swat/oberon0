@@ -21,8 +21,6 @@ public NEnv GLOBALS() = nest((), scope((
   id("WriteLn"): proc(|file://-|,[])
 )));
 
-public Message undefProcErr(loc l) = error("Undefined procedure", l);
-public Message notAProcErr(loc l) = error("Not a procedure", l);
 
 public bool isCallable(Decl::proc(_, _)) = true;
 public default bool isCallable(Decl _) = false;
@@ -105,12 +103,15 @@ public tuple[list[Formal], NEnv, set[Message]] bindFormals(list[Formal] fs, NEnv
   return <fs, nenv, errs>;
 }
 
+public bool globalOrLocal(Ident x, NEnv nenv) =
+  isDefined(nenv, x) || isDefined(globalScope(nenv), x) || isDefined(builtinScope(nenv), x); 
+
 // overriding from L1
 public tuple[Ident, set[Message]] bindId(Ident x, NEnv nenv, set[Message] errs) {
   if (isVisible(nenv, x)) {
     d = getDef(nenv, x);
-    if (d is var && !(isDefined(nenv, x) || isDefined(globalScope(nenv), x))) {
-      return <x, errs + { undefVarErr(x@location) }>;
+    if ((d is var || d is proc) && !globalOrLocal(x, nenv)) {
+      return <x, errs + { undefIdErr(x@location) }>;
     }
     return <x[@decl=getDef(nenv, x)], errs>;
   }
@@ -121,21 +122,11 @@ public tuple[Ident, set[Message]] bindId(Ident x, NEnv nenv, set[Message] errs) 
 }
 
 public tuple[Statement, set[Message]] bindStat(s:call(f, as), NEnv nenv, set[Message] errs) {
+  <s.proc, errs> = bindId(f, nenv, errs);
   s.args = for (a <- as) {
     <a, errs> = bindExp(a, nenv, errs);
     append a;
   }
-  if (!isVisible(nenv, f)) {
-    return <s, errs + { undefProcErr(f@location) }>;
-  }
-  if (isDefined(nenv, f) || isDefined(globalScope(nenv), f) || isDefined(builtinScope(nenv), f)) {
-    d = getDef(nenv, f);
-    if (!isCallable(d)) {
-      return <s, errs + { notAProcErr(f@location) }>;
-    }
-    s.proc = f[@decl=d];
-    return <s, errs>;
-  }
-  return <s, errs + { notAProcErr(f@location) }>;
+  return <s, errs>;
 }
 

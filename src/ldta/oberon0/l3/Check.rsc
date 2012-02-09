@@ -8,6 +8,7 @@ import List;
 
 public Message lvalueErr(loc l) = error("Not an lvalue", l);
 public Message argNumErr(loc l) = error("Wrong number of arguments", l);
+public Message notAProcErr(loc l) = error("Not a procedure", l);
 
 // TODO: what with record fields and array derefs?
 public bool isLValue(lookup(x)) = isWritable(x@decl);
@@ -25,9 +26,9 @@ public set[Message] check(Procedure::proc(_, fs, ds, b, _)) =
 public default set[Message] checkFormals(list[Formal] fs) = {};     
 
 public set[Message] check(s:call(f, as)) {
-  //if (!isCallable(f@decl)) {
-  //  return { notAProcErr(f@location) };
-  //}
+  if (!(f@decl is proc)) {
+    return { notAProcErr(f@location) };
+  }
   fs = (f@decl).formals;
   arity = ( 0 | it + size(ns) | formal(_, ns, _) <- fs );
   errs =  {};

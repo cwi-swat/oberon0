@@ -3,14 +3,12 @@ module ldta::oberon0::l2::Bind
 import ldta::oberon0::l2::AST;
 extend ldta::oberon0::l1::Bind;
 
-// page 29 of Wirth's book shows an example where i is a declared variable used by For.
-// We deduce from this that for-variables should be declared.
 public tuple[Statement, set[Message]] bindStat(s:forDo(i, f, t, b, ss), NEnv nenv, set[Message] errs) {
   <s.name, errs> = bindId(i, nenv, errs);
   <s.from, errs> = bindExp(f, nenv, errs);
   <s.to, errs> = bindExp(t, nenv, errs);
   if (e <- b) {
-    <e, errs> = bindExp(e, nenv, errs); // TODO: bindConst?
+    <e, errs> = bindExp(e, nenv, errs);
     s.by = [e];
   }
   <s.body, errs> = bindStats(ss, nenv, errs);

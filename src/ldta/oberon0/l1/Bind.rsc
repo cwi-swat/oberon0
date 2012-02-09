@@ -2,7 +2,6 @@ module ldta::oberon0::l1::Bind
 
 import ldta::oberon0::l1::AST;
 import ldta::oberon0::l1::Scope;
-import IO;
 import Message;
 
 public Message dupErr(loc l) = error("Redeclared identifier", l);
@@ -66,25 +65,36 @@ public tuple[ConstDecl, NEnv, set[Message]] bindConstDecl(cd:constDecl(n, e), NE
 
 public tuple[TypeDecl, NEnv, set[Message]] bindTypeDecl(td:typeDecl(n, t), NEnv nenv, set[Message] errs) {
   <td.\type, errs> = bindType(t, nenv, errs);
-  <nenv, errs> = declare(n, \type(td@location, td.\type), nenv, errs);
+  <nenv, errs> = declare(n, \type(td@location, evalType(td.\type)), nenv, errs);
   return <td, nenv, errs>;
 }
 
 public tuple[VarDecl, NEnv, set[Message]] bindVarDecl(vd:varDecl(ns, t), NEnv nenv, set[Message] errs) {
   <vd.\type, errs> = bindType(t, nenv, errs);
   for (n <- vd.names) {
-    <nenv, errs> = declare(n, var(vd@location, vd.\type), nenv, errs);
+    <nenv, errs> = declare(n, var(vd@location, evalType(vd.\type)), nenv, errs);
   }
   return <vd, nenv, errs>;
 }
 
+public Type evalType(user(x)) = evalType(x@decl.\type) 
+  when x@decl?, x@decl is \type;
+  
+//public Type evalType(t:user(x)) = t 
+//  when !(x@decl?), x.name in {"INTEGER", "BOOLEAN"};
+  
+public default Type evalType(Type t) = t;
+
+
+
 // Types
 
-public tuple[Type, set[Message]] bindType(t:user(id("INTEGER")), NEnv nenv, set[Message] errs) = <t, errs>;
-public tuple[Type, set[Message]] bindType(t:user(id("BOOLEAN")), NEnv nenv, set[Message] errs) = <t, errs>;
 public default tuple[Type, set[Message]] bindType(t:user(x), NEnv nenv, set[Message] errs) {
   if (isVisible(nenv, x)) {
     t.name = x[@decl=getDef(nenv, x)];
+    return <t, errs>;
+  }
+  if (x.name in {"INTEGER", "BOOLEAN"}) {
     return <t, errs>;
   }
   return <t, errs + { undefTypeErr(t@location) }>;
@@ -158,9 +168,4 @@ public tuple[Expression, set[Message]] bindOperator(Expression e, NEnv nenv, set
   }
   return <e, errs>;
 }
-
-//// partially evaluate a type.
-//public Type evalType(t:user(x), NEnv nenv) = ( t | xt | isVisible(nenv, x), \type(_, xt) := getDef(nenv, x) ); 
-//
-//public default Type evalType(Type t, NEnv nenv)  = t;
 

@@ -4,8 +4,11 @@ extend ldta::oberon0::l1::Check;
 import ldta::oberon0::l2::AST;
 import ldta::oberon0::l2::Bind;
 
-public set[Message] check(forDo(n, f, t, by, b)) = check(f) + check(t) + checkBody(b) + checkBy(by) + 
-  { intErr(n@location) | !isInt((n@decl).\type) } +
+import IO;
+
+public set[Message] check(forDo(n, f, t, by, b)) = 
+  check(f) + check(t) + checkBody(b) + checkBy(by) + 
+  { intErr(n@location) |  isReadable(n@decl), !isInt(typeOf(lookup(n))) } +
   { notAVarErr(n@location) | !isWritable(n@decl) } +
   { intErr(f@location) | !isInt(typeOf(f)) } + 
   { intErr(t@location) | !isInt(typeOf(t)) };
