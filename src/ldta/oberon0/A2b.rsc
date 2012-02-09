@@ -19,10 +19,10 @@ public set[Message] checkL1(loc l) = ldta::oberon0::l1::Check::check(m2)
   when
      pt := ldta::oberon0::l1::Parse::parse(l),
      m1 := ldta::oberon0::l1::Implode::implode(pt),
-     <m2, errs> := ldta::oberon0::l1::Bind::bindModule(m1, scope(())); 
+     <m2, {}> := ldta::oberon0::l1::Bind::bindModule(m1, scope(())); 
 
 public set[Message] checkL2(loc l) = ldta::oberon0::l2::Check::check(m2)
   when
      pt := ldta::oberon0::l2::Parse::parse(l),
      m1 := ldta::oberon0::l2::Implode::implode(pt),
-     <m2, errs> := ldta::oberon0::l2::Bind::bindModule(m1, scope(())); 
+     <m2, {}> := ldta::oberon0::l2::Bind::bindModule(m1, scope(())); 

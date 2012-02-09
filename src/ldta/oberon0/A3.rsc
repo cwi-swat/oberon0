@@ -14,5 +14,5 @@ public str formatL3(loc l) = format(mod2box(implode(parse(l))));
 
 public set[Message] checkL3(loc l) = check(m)
   when
-    <m, errs> := bindModule(implode(parse(l)), GLOBALS());
+    <m, {}> := bindModule(implode(parse(l)), GLOBALS());
 
