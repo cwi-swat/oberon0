@@ -5,8 +5,7 @@ import ldta::oberon0::l1::Bind;
 import ldta::oberon0::l1::Scope;
 import ldta::oberon0::l1::ConstEval;
 import Message;
-
-// presupposes name binding to have occurred.
+import IO;
 
 public Message notATypeErr(loc l) = error("Not a type", l);
 public Message notAVarOrConstErr(loc l) = error("Not a variable/constant", l);
