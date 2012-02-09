@@ -106,11 +106,13 @@ public tuple[list[Formal], NEnv, set[Message]] bindFormals(list[Formal] fs, NEnv
 public bool globalOrLocal(Ident x, NEnv nenv) =
   isDefined(nenv, x) || isDefined(globalScope(nenv), x) || isDefined(builtinScope(nenv), x); 
 
+public bool isNonShadowing(Decl d) = d is var || d is proc || d is param; 
+
 // overriding from L1
 public tuple[Ident, set[Message]] bindId(Ident x, NEnv nenv, set[Message] errs) {
   if (isVisible(nenv, x)) {
     d = getDef(nenv, x);
-    if ((d is var || d is proc) && !globalOrLocal(x, nenv)) {
+    if (isNonShadowing(d) && !globalOrLocal(x, nenv)) {
       return <x, errs + { undefIdErr(x@location) }>;
     }
     return <x[@decl=getDef(nenv, x)], errs>;
