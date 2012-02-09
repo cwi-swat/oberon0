@@ -19,14 +19,8 @@ public bool isComplex(Expression e) = isComplex(typeOf(e));
 
 public bool isComplex(Type t) = (t is array) || (t is record);
 
-//// ignoring selectors here...
-//public tuple[Expression, set[Message]] extendEvalConst(e:lookup(x, _), NEnv nenv, set[Message] errs) 
-//  = <xe, errs> when isVisible(nenv, x), const(_, xe) := getDef(nenv, x);
-
-
 public bool typeEq(Type t1, Type t2) = (t1@location) == (t2@location) 
    when (t1 is record && t2 is record) || (t1 is array && t2 is array);
-
 
 // Override
 public set[Message] checkFormals(list[Formal] fs) = 
@@ -69,7 +63,7 @@ public set[Message] check(s:subscript(e)) = check(e) + { intErr(e@location) | !i
 public Type typeOf(lookup(x, ss)) = ( typeOf(lookup(x)) | typeOf(it, s) | s <- ss );
 
 public Type typeOf(record(fs), s:Selector::field(x)) = f.\type
-   when f <- fs, x in f.name;
+   when f <- fs, x in f.names;
 
 public Type typeOf(array(e, t), subscript(_)) = t;
 

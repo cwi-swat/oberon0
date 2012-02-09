@@ -105,7 +105,6 @@ public tuple[list[Formal], NEnv, set[Message]] bindFormals(list[Formal] fs, NEnv
   return <fs, nenv, errs>;
 }
 
-
 // overriding from L1
 public tuple[Ident, set[Message]] bindId(Ident x, NEnv nenv, set[Message] errs) {
   if (isVisible(nenv, x)) {
