@@ -20,9 +20,6 @@ public Message incompErr(loc l) = error("Incompatible types", l);
 public Message assignErr(loc l) = error("Invalid type for assignment", l);
 public Message invalidExpErr(loc l) = error("Invalid expression", l);
 
-public bool isWritable(Decl::var(_, _)) = true;
-public default bool isWritable(Decl _) = false;
-
 public bool isReadable(Decl::var(_, _)) = true;
 public bool isReadable(Decl::const(_, _)) = true;
 public default bool isReadable(Decl _) = false;

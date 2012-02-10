@@ -12,6 +12,13 @@ public Message undefVarOrConstErr(loc l) = error("Undefined variable/constant", 
 public Message undefConstErr(loc l) = error("Undefined constant", l);
 public Message idMismatchErr(loc l) = error("Identifier mismatch", l);
 
+// duplicated from check
+public Message notAVarErr(loc l) = error("Not a variable", l);
+public bool isWritable(Decl::var(_, _)) = true;
+public default bool isWritable(Decl _) = false;
+
+
+
 public tuple[Module, set[Message]] bindModule(m:Module::\mod(n1, ds, list[Statement] b, n2), NEnv nenv) {
   <m.decls, nenv, errs> = bindDecls(ds, nenv, {});
   <m.body, errs> = bindStats(b, nenv, errs);
@@ -115,6 +122,9 @@ public default tuple[list[Statement], set[Message]] bindStats(list[Statement] ss
 public default tuple[Statement, set[Message]] bindStat(s:assign(x, e), NEnv nenv, set[Message] errs) {
   <s.exp, errs> = bindExp(e, nenv, errs);
   <s.var, errs> = bindId(x, nenv, errs);
+  if (!isWritable(s.var@decl)) {
+    return <s, errs + { notAVarErr(x@location) }>;
+  }
   return <s, errs>;
 }
 
