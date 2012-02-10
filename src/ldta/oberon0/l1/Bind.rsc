@@ -122,7 +122,7 @@ public default tuple[list[Statement], set[Message]] bindStats(list[Statement] ss
 public default tuple[Statement, set[Message]] bindStat(s:assign(x, e), NEnv nenv, set[Message] errs) {
   <s.exp, errs> = bindExp(e, nenv, errs);
   <s.var, errs> = bindId(x, nenv, errs);
-  if (!isWritable(s.var@decl)) {
+  if (s.var@decl?, !isWritable(s.var@decl)) {
     return <s, errs + { notAVarErr(x@location) }>;
   }
   return <s, errs>;
