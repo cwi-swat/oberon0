@@ -28,7 +28,7 @@ public Expression eval(x:Expression::\mod(e1, e2)) = Expression::\mod(eval(e1), 
   when !(e1 is nat) || !(e2 is nat);
 
 public Expression eval(lookup(x)) = eval((x@decl).exp) 
-  when bprintln(x@decl), x@decl is const;
+  when x@decl?, x@decl is const;
   
 public Expression eval(neg(nat(n))) = nat(-n);
 public Expression eval(pos(nat(n))) = nat(n);
