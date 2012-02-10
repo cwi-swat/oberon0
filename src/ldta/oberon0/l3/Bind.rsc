@@ -29,6 +29,10 @@ public default bool isCallable(Decl _) = false;
 public bool isReadable(param(_, _, _)) = true;
 public bool isWritable(param(_, _, _)) = true;
 
+// duplicated from checking...
+public Message notAProcErr(loc l) = error("Not a procedure", l);
+
+
 public tuple[Declarations, NEnv, set[Message]] bindDecls(ds:decls(list[ConstDecl] cds, list[TypeDecl] tds, list[VarDecl] vds, list[Procedure] pds), NEnv nenv, set[Message] errs) {
   <ds.consts, nenv, errs> = bindConsts(cds, nenv, errs);
   <ds.types, nenv, errs> = bindTypes(tds, nenv, errs);
@@ -128,6 +132,9 @@ public tuple[Statement, set[Message]] bindStat(s:call(f, as), NEnv nenv, set[Mes
   s.args = for (a <- as) {
     <a, errs> = bindExp(a, nenv, errs);
     append a;
+  }
+  if (s.proc@decl?, !isCallable(s.proc@decl)) {
+     return <s, errs + { notAProcErr(f@location) }>;
   }
   return <s, errs>;
 }
