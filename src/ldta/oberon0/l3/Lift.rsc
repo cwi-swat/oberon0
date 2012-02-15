@@ -20,25 +20,22 @@ public Module normalizeDecls(Module m) = visit (m) {
   };
 
 
-public Module liftDecls(Module \mod) {
+public Module liftDecls(Module m) {
   gcs = [];
   gts = [];
   gps = [];
-  \mod = visit (\mod) {
+  m = visit (m) {
     case Declarations decls: {
-	      gcs += decls.consts;
-	      gts += decls.types;
-	      gps = ( gps | it + liftProc(p) | p <- decls.procs );
-	      decls.consts = [];
-	      decls.types = [];
-	      decls.procs = [];
-	      insert decls;
+      gcs += decls.consts;
+      gts += decls.types;
+      gps = ( gps | it + liftProc(p) | p <- decls.procs );
+      insert decls[const=[]][types=[]][procs=[]];
     }
   }
-  \mod.decls.consts = gcs;
-  \mod.decls.types = gts;
-  \mod.decls.procs = gps;
-  return \mod;
+  m.decls.consts = gcs;
+  m.decls.types = gts;
+  m.decls.procs = gps;
+  return m;
 }
 
 public list[Procedure] liftProc(Procedure proc) {
@@ -50,15 +47,18 @@ public list[Procedure] liftProc(Procedure proc) {
 public str suffix(loc l) = "_<abs(l.offset)>";
 
 public Module rename(Module m, NEnv global) {
+  // todo: check that @decl is there
+  Ident prime(Ident x) = id("<x.name><(x@decl).location.offset>")
+                          [@decl=x@decl][@location=x@location];
   return visit (m) {
-    case c:call(x:id(s), as) => call(id("<s><(x@decl).location.offset>")[@decl=x@decl][@location=x@location], as)
+    case c:call(x, as) => call(prime(x))
        when !isDefined(global, x)
-    case p:proc(x:id(s), fs, ds, b, f2) => proc(id("<s>_<(x@location).offset>")[@location=x@location], fs, ds, b, f2)[@scope=p@scope]
-    case constDecl(x:id(s), e) => constDecl(id("<s>_<(x@location).offset>")[@location=x@location], e)
-    case typeDecl(x:id(s), t) => typeDecl(id("<s>_<(x@location).offset>")[@location=x@location], t)
-    case user(x:id(s)) => user(id("<s>_<l.offset>")[@decl=x@decl])
+    case p:proc(x, fs, ds, b, f2) => proc(prime(x), fs, ds, b, f2)[@scope=p@scope]
+    case constDecl(x, e) => constDecl(prime(x), e)
+    case typeDecl(x, t) => typeDecl(prime(x), t)
+    case user(x) => user(prime(x))
       when (x@decl)?, \type(l, _) := x@decl
-    case lookup(x:id(s)) => lookup(id("<s>_<l.offset>")[@decl=x@decl])
+    case lookup(x) => Lookup(prime(x))
       when const(l, _) := x@decl
   };
 }

@@ -26,15 +26,13 @@ public set[Message] check(Procedure::proc(_, fs, ds, b, _)) =
 public default set[Message] checkFormals(list[Formal] fs) = {};     
 
 public set[Message] check(s:call(f, as)) {
-  if (!(f@decl is proc)) {
+  if (!(f@decl is proc)) 
     return { notAProcErr(f@location) };
-  }
   fs = (f@decl).formals;
   arity = ( 0 | it + size(ns) | formal(_, ns, _) <- fs );
   errs =  {};
-  if (size(as) < arity || size(as) > arity) {
+  if (size(as) != arity) 
     errs += { argNumErr(s@location) };
-  }
   else {
     i = 0;
     for (frm <- fs, n <- frm.names) {
@@ -42,7 +40,7 @@ public set[Message] check(s:call(f, as)) {
       i += 1;
     }
   }
-  return  ( errs | it + check(a) | a <- as);
+  return ( errs | it + check(a) | a <- as);
 }
 
 public Type typeOf(lookup(x)) = x@decl.\type when x@decl is param;
