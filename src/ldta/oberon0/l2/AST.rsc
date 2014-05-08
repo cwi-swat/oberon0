@@ -12,7 +12,7 @@ data Case
 	  ;
 	  
 	  
-	data Label
+data Label
 	  = expression(Expression exp)
 	  | range(Expression from, Expression to)
 	  ;

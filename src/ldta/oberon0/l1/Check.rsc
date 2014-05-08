@@ -108,11 +108,11 @@ public set[Message] check(amp(e1, e2)) = check(e1) + check(e2) +
 public set[Message] check(or(e1, e2)) = check(e1) + check(e2) + 
     {boolErr(e1@location) | !isBool(typeOf(e1)) } + {boolErr(e2@location) | !isBool(typeOf(e2)) };
  
-public set[Message] check(o:eq(e1, e2)) = check(e1) + check(e2) + 
-    {incompErr(o@location) | !(isInt(typeOf(e1)) && isInt(typeOf(e2))) };
+public set[Message] check(\o:eq(e1, e2)) = check(e1) + check(e2) + 
+    {incompErr(\o@location) | !(isInt(typeOf(e1)) && isInt(typeOf(e2))) };
  
-public set[Message] check(o:neq(e1, e2)) = check(e1) + check(e2) + 
-    {incompErr(o@location) | !(isInt(typeOf(e1)) && isInt(typeOf(e2))) };
+public set[Message] check(\o:neq(e1, e2)) = check(e1) + check(e2) + 
+    {incompErr(\o@location) | !(isInt(typeOf(e1)) && isInt(typeOf(e2))) };
 
 public set[Message] check(gt(e1, e2)) = check(e1) + check(e2) + 
     {intErr(e1@location) | !isInt(typeOf(e1)) } + {intErr(e2@location) | !isInt(typeOf(e2)) };

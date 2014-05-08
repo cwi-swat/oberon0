@@ -5,7 +5,7 @@ import ldta::oberon0::l3::Scope;
 
 import List;
 import Set;
-import Graph;
+import analysis::graphs::Graph;
 import Relation;
 import util::Math;
 

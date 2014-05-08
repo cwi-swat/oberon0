@@ -18,7 +18,11 @@ public NEnv GLOBALS() = nest((), scope((
         @decl=param(|file://-|, user(id("INTEGER")), true)
      ]], user(id("INTEGER")))
   ]),
-  id("WriteLn"): proc(|file://-|,[])
+  id("WriteLn"): proc(|file://-|,[
+     formal(false, [id("x")[
+        @decl=param(|file://-|, user(id("INTEGER")), false)
+     ]], user(id("INTEGER")))
+  ])
 )));
 
 

@@ -19,7 +19,7 @@ private set[Message] checkBy([e])  =
 private set[Message] checkBy([]) = {};
 
 // assume case only on ints
-public set[Message] check(caseOf(e, cs, o)) = check(e) + checkBody(o) +
+public set[Message] check(caseOf(e, cs, \o)) = check(e) + checkBody(\o) +
   ( {} | it + check(ls) + checkBody(gb) | guard(ls, gb) <- cs ) +
   { intErr(e@location) | !isInt(typeOf(e)) } +
   { intErr(l@location) | guard(ls, _) <- cs, l <- ls,  !isInt(typeOf(l)) };

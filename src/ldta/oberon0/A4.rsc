@@ -15,6 +15,7 @@ import ParseTree;
 import lang::box::util::Box2Text;
 
 public Tree parseL4(loc l) = parse(l);
+public Tree parseL4(str src, loc l) = parse(src, l);
 
 public str formatL4(loc l) = format(mod2box(implode(parse(l))));
 
