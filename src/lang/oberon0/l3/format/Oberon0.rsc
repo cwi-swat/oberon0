@@ -5,8 +5,6 @@ import lang::oberon0::l3::ast::Oberon0;
 
 extend lang::oberon0::l2::format::Oberon0;
 
-
-
 public Box decls2box(decls(consts, types, vars, procs)) =
 	V([consts2boxes(consts) + types2boxes(types) + vars2boxes(vars) + [proc2box(x) | x <- procs]]);
 

@@ -1,6 +1,6 @@
-module ldta::oberon0::l2::desugar::Desugar
+module lang::oberon0::l2::desugar::Desugar
 
-import ldta::oberon0::l2::ast::Oberon0;
+import lang::oberon0::l2::ast::Oberon0;
 import IO;
 
 import List;
@@ -11,9 +11,9 @@ data Statement
 
 alias DeclsBody = tuple[Declarations decls, list[Statement] body];
 
-public Module desugar(Module mod) {
-	mod.body = (for2while o case2ifs o flattenBegin)(mod.body);
-	return mod;
+public Module desugar(Module \mod) {
+	\mod.body = (for2while o case2ifs o flattenBegin)(\mod.body);
+	return \mod;
 }
 
 public list[Statement] case2ifs(list[Statement] stats) {

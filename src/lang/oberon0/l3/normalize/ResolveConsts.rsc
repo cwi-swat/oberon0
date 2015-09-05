@@ -5,10 +5,10 @@ import lang::oberon0::l3::normalize::Utils;
 
 import IO;
 
-public Module resolveConsts(Module mod) {
+public Module resolveConsts(Module \mod) {
 	env = ();
-	mod.decls = resolveConstsInDecls(mod.decls, TOPLEVEL_SCOPE, env);
-	return mod;
+	\mod.decls = resolveConstsInDecls(\mod.decls, TOPLEVEL_SCOPE, env);
+	return \mod;
 }
 
 Declarations resolveConstsInDecls(Declarations decls, Ident scope, Env env) {

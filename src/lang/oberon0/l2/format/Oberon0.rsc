@@ -1,7 +1,7 @@
-module ldta::oberon0::l2::format::Oberon0
+module lang::oberon0::l2::format::Oberon0
 
-extend ldta::oberon0::l1::format::Oberon0;
-import ldta::oberon0::l2::ast::Oberon0;
+extend lang::oberon0::l1::format::Oberon0;
+import lang::oberon0::l2::ast::Oberon0;
 
 import List;
 

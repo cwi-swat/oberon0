@@ -1,7 +1,7 @@
 module lang::oberon0::l3::ide::Check
 
 import lang::oberon0::l3::utils::Implode;
-import lang::oberon0::l1::syntax::Modules;
+import lang::oberon0::l1::\syntax::Modules;
 
 import lang::oberon0::l3::check::Oberon0;
 import lang::oberon0::l3::resolve::Resolver;

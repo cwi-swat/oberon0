@@ -4,10 +4,10 @@ import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l3::normalize::Utils;
 
 
-public Module resolveTypes(Module mod) {
+public Module resolveTypes(Module \mod) {
 	env = initEnv({"INTEGER", "BOOLEAN"});
-	mod.decls = resolveTypesInDecls(mod.decls, TOPLEVEL_SCOPE, env);
-	return mod;
+	\mod.decls = resolveTypesInDecls(\mod.decls, TOPLEVEL_SCOPE, env);
+	return \mod;
 }
 
 Declarations resolveTypesInDecls(Declarations decls, Ident scope, Env env) {

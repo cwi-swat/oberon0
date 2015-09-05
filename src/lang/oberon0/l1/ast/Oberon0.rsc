@@ -1,7 +1,7 @@
 module lang::oberon0::l1::ast::Oberon0
 
 data Module = 
-	mod(Ident name, Declarations decls, list[Statement] body, Ident endName)
+	\mod(Ident name, Declarations decls, list[Statement] body, Ident endName)
 	;
 
 data Declarations 
@@ -24,7 +24,6 @@ data Type
 	= user(Ident name)
 	;
 
-
 	
 data Statement 
 	= assign(Ident var, Expression exp)
@@ -42,7 +41,7 @@ data Expression
 	| not(Expression exp)
 	| mul(Expression lhs, Expression rhs)
 	| div(Expression lhs, Expression rhs)
-	| mod(Expression lhs, Expression rhs)
+	| \mod(Expression lhs, Expression rhs)
 	| amp(Expression lhs, Expression rhs)
 	| add(Expression lhs, Expression rhs)
 	| sub(Expression lhs, Expression rhs)

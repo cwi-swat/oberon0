@@ -1,6 +1,6 @@
 module lang::oberon0::l1::ide::Run
 
-import lang::oberon0::l1::syntax::Modules;
+import lang::oberon0::l1::\syntax::Modules;
 import lang::oberon0::l1::utils::Implode;
 import lang::oberon0::l1::eval::Oberon0;
 

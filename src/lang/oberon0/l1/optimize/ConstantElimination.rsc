@@ -58,14 +58,14 @@ Expression evaluate(ConstantMap constants, Expression exp){
 		case sub(nat(0),rhs)        => neg(rhs)
 		case mul(nat(lhs),nat(rhs)) => nat(lhs * rhs)
 		case div(nat(lhs),nat(rhs)) => nat(lhs / rhs)
-		case mod(nat(lhs),nat(rhs)) => nat(lhs % rhs)
+		case \mod(nat(lhs),nat(rhs)) => nat(lhs % rhs)
 		case add(nat(lhs),nat(rhs)) => nat(lhs + rhs)
 		case sub(nat(lhs),nat(rhs)) => nat(lhs - rhs)
 		
 		// no side effects in exps, so must be true
 		case eq(x,x)  				=> \true()
 		
-		case neq(nat(lhs),nat(rhs)) => lhs == rhs ? \true() : \false()
+		case neq(nat(lhs),nat(rhs)) => lhs != rhs ? \true() : \false()
 		case lt(nat(lhs),nat(rhs)) => lhs < rhs ? \true() : \false()
 		case gt(nat(lhs),nat(rhs)) => lhs > rhs ? \true() : \false()
 		case leq(nat(lhs),nat(rhs)) => lhs <= rhs ? \true() : \false()

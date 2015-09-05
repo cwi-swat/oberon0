@@ -1,6 +1,6 @@
-module ldta::oberon0::l1::format::Oberon0
+module lang::oberon0::l1::format::Oberon0
 
-import ldta::oberon0::l1::ast::Oberon0;
+import lang::oberon0::l1::ast::Oberon0;
 import lang::box::util::Box;
 import List;
 
@@ -101,7 +101,7 @@ public Box exp2box(pos(arg)) = H([L("("),L("+"), exp2box(arg),L(")")])[@hs=0];
 public Box exp2box(not(arg)) = H([L("("),L("~"), exp2box(arg),L(")")])[@hs=0];
 public Box exp2box(mul(lhs, rhs)) = H([L("("), H([exp2box(lhs), L("*"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
 public Box exp2box(div(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("DIV"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
-public Box exp2box(Expression::mod(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("MOD"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
+public Box exp2box(Expression::\mod(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("MOD"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
 public Box exp2box(amp(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("&"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
 public Box exp2box(add(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("+"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];
 public Box exp2box(sub(lhs, rhs)) = H([L("("),H([exp2box(lhs), L("-"), exp2box(rhs)])[@hs=1],L(")")])[@hs=0];

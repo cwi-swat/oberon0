@@ -18,7 +18,7 @@ anno OType Expression@otype;
 // must be global, otherwise the local functions are not available for extension.
 private set[Message] errors = {} ;
 
-public tuple[Module mod, set[Message] errors] checkTypes(Module ast, SymbolTable st) {
+public tuple[Module \mod, set[Message] errors] checkTypes(Module ast, SymbolTable st) {
 	// reset global
 	errors = {};
 	
@@ -52,7 +52,7 @@ OType getTypeFor(Ident v, loc l, SymbolTable st) = getTypeFor(v@item, l, st);
 public OType getTypeFor(item:Variable(_, ot, _), loc l, SymbolTable st) = getTypeFor(ot, l, item, st);
 public OType getTypeFor(Constant(_, _, _), loc l, SymbolTable st) = Integer();
 
-public OType default getTypeFor(Item x, loc l, SymbolTable st) = Invalid();
+public default OType getTypeFor(Item x, loc l, SymbolTable st) = Invalid();
 //
 // Given the type, resolve any type declarations used inside.
 //
@@ -60,7 +60,7 @@ public OType default getTypeFor(Item x, loc l, SymbolTable st) = Invalid();
 //public OType getTypeFor(Boolean(), loc l, Item ctx, SymbolTable st) = Boolean();
 //public OType getTypeFor(Invalid(), loc l, Item ctx, SymbolTable st) = Invalid();
 
-public OType default getTypeFor(OType t, _, _, _) = t;
+public default OType getTypeFor(OType t, _, _, _) = t;
 
 public OType getTypeFor(User(tid), loc l, Item ctx, SymbolTable st) {
 	OType unwound = unwind(ot, ctx, st);
@@ -85,7 +85,7 @@ OType unwind(User(n), Item ctx, SymbolTable st) {
 	return Invalid();
 }
 
-OType default unwind(OType t, Item ctx, SymbolTable st) = t;
+default OType unwind(OType t, Item ctx, SymbolTable st) = t;
 
 //
 // Check lists of expected types against lists of given types, returning
@@ -155,7 +155,7 @@ OType bII2B(OType left, OType right, loc l) {
 bool expIsWritable(lookup(v)) = isWritableKind(v@item);
 
 bool isWritableKind(Variable(_, _, _)) = true;
-bool default isWritableKind(_) = false;
+default bool isWritableKind(_) = false;
 //
 // Actually check the various forms of expression
 //
@@ -168,7 +168,7 @@ public Expression checkExp(e:pos(uop), SymbolTable st) 		= e[@otype = uI2I(uop@o
 public Expression checkExp(e:not(uop), SymbolTable st) 		= e[@otype = uB2B(uop@otype,e@location)];
 public Expression checkExp(e:mul(lop,rop), SymbolTable st) 	= e[@otype = bII2I(lop@otype,rop@otype,e@location)];
 public Expression checkExp(e:div(lop,rop), SymbolTable st) 	= e[@otype = bII2I(lop@otype,rop@otype,e@location)];
-public Expression checkExp(e:Expression::mod(lop,rop), SymbolTable st) 	= e[@otype = bII2I(lop@otype,rop@otype,e@location)];
+public Expression checkExp(e:Expression::\mod(lop,rop), SymbolTable st) 	= e[@otype = bII2I(lop@otype,rop@otype,e@location)];
 public Expression checkExp(e:amp(lop,rop), SymbolTable st) 	= e[@otype = bBB2B(lop@otype,rop@otype,e@location)];
 public Expression checkExp(e:add(lop,rop), SymbolTable st) 	= e[@otype = bII2I(lop@otype,rop@otype,e@location)];
 public Expression checkExp(e:sub(lop,rop), SymbolTable st) 	= e[@otype = bII2I(lop@otype,rop@otype,e@location)];

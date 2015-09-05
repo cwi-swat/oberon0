@@ -1,6 +1,6 @@
 module lang::oberon0::l4::normalize::SingleWordAssign
 
-import lang::oberon0::l1::syntax::Statements;
+import lang::oberon0::l1::\syntax::Statements;
 import lang::oberon0::l4::ast::Oberon0;
 import lang::oberon0::l4::compile::AnnotateByRefs;
 import lang::oberon0::l4::normalize::Normalize;

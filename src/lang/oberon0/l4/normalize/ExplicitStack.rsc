@@ -23,19 +23,19 @@ Ident stack = id("stack");
 Ident sp = id("sp");
 int stackSize = 100000;
 
-public Module toExplicitStack(Module mod){
+public Module toExplicitStack(Module \mod){
 
 	Envir globalEnvironment() {
-		return envOfDecls(mod.decls,true,envir(0,())); 
+		return envOfDecls(\mod.decls,true,envir(0,())); 
 	}
 
-	mod = annotateByRefs(mod);
+	\mod = annotateByRefs(\mod);
 	Envir envir = globalEnvironment();
-	mod.decls.vars = [varDecl([sp],user(id("INTEGER"))),
+	\mod.decls.vars = [varDecl([sp],user(id("INTEGER"))),
 					  varDecl([stack],array(nat(stackSize),user(id("INTEGER"))))];
-	mod.decls.procs = [ explicitStackInProcedure(p,envir) | p <- mod.decls.procs ];
-	mod.body = explicitStackInStatements(mod.body,envir);
-	return flattenBegins(liftLets(mod));
+	\mod.decls.procs = [ explicitStackInProcedure(p,envir) | p <- \mod.decls.procs ];
+	\mod.body = explicitStackInStatements(\mod.body,envir);
+	return flattenBegins(liftLets(\mod));
 }
 
 

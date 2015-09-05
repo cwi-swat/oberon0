@@ -1,4 +1,4 @@
-module lang::oberon0::l1::syntax::Layout
+module lang::oberon0::l1::\syntax::Layout
 
 lexical Layout 
 	= whitespace: [\t-\n\r\ ] 

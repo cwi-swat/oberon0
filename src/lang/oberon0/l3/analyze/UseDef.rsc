@@ -54,7 +54,7 @@ public tuple[rel[CFNode,Def] IN, rel[CFNode,Def] OUT] reachingDefinitions(Item c
 	// that formal parameters that aren't actually used in the procedure are not added
 	// to IN.
 	set[Item] inItems = { i@item | /lookup(i) <- cfg.graph, (i@item)?, (Variable(_,_,_) := i@item && i@item notin st[current]) || FormalParameter(_,_,_,_) := i@item };
-	rel[CFNode, Def] INEntry = { <cfg.start, <i,cfg.start>> | i <- inItems };
+	rel[CFNode, Def] INEntry = { <cfg.\start, <i,cfg.\start>> | i <- inItems };
 	
 	// Perform the fixpoint computation to calculate IN and OUT. This calculation is based on the
 	// equations given on page 355 of Appel's Modern Compiler Implementation in Java, 2nd ed.,
@@ -106,8 +106,8 @@ public Module useDefAnalysis(Module m, SymbolTable st) {
 	m = visit(m) {
 		case Ident i => i[@useDefs = udChains[i,i@location]]
 		case Statement s => s[@defUses = duChains[statement(s@location,s)]]
-		case Procedure p => p[@defUses = duChains[start(p@location,p)]]
-		case Module mp => mp[@defUses = duChains[start(mp@location,mp)]]
+		case Procedure p => p[@defUses = duChains[\start(p@location,p)]]
+		case Module mp => mp[@defUses = duChains[\start(mp@location,mp)]]
 	}
 	
 	return m;

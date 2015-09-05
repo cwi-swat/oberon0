@@ -7,7 +7,7 @@ import vis::Figure;
 import lang::box::util::Box2Text;
 import Relation;
 
-public Figure default proc2figure(Item i) = 
+default Figure proc2figure(Item i) = 
 	box(text(i.name.name,center()), vis::Figure::id(i.name.name), fillColor("white"), size(0), gap(4));
 
 public Figure cg2figure(CallGraph cg) {

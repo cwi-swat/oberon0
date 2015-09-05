@@ -17,7 +17,7 @@ public tuple[SymbolTableBuilder st, bool cres, OType ot] otype(SymbolTableBuilde
 public tuple[SymbolTableBuilder st, bool cres, OType ot] otype(SymbolTableBuilder stBuilder, user(id("BOOLEAN"))) = <stBuilder, true, Boolean()>;
 
 // NB: default, otherwise it could match INTEGER.
-public tuple[SymbolTableBuilder st, bool cres, OType ot] default otype(SymbolTableBuilder stBuilder, user(name)) {
+default tuple[SymbolTableBuilder st, bool cres, OType ot] otype(SymbolTableBuilder stBuilder, user(name)) {
 	set[Item] types = getTypes(stBuilder, name);
 	if (size(types) == 1) {
 		stBuilder.itemUses = stBuilder.itemUses + < getOneFrom(types), name@location >;

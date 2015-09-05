@@ -1,7 +1,7 @@
-module lang::oberon0::l1::syntax::Expressions
+module lang::oberon0::l1::\syntax::Expressions
 
-import lang::oberon0::l1::syntax::Layout;
-import lang::oberon0::l1::syntax::Lexical;
+import lang::oberon0::l1::\syntax::Layout;
+import lang::oberon0::l1::\syntax::Lexical;
 
 syntax Expression 
 	= nat: Natural value
@@ -14,7 +14,7 @@ syntax Expression
 	left (
 		mul: Expression lhs "*" Expression rhs
 		| div: Expression lhs "DIV" Expression rhs
-		| mod: Expression lhs "MOD" Expression rhs
+		| \mod: Expression lhs "MOD" Expression rhs
 		| amp: Expression lhs "&" Expression rhs
 	) 
 	>

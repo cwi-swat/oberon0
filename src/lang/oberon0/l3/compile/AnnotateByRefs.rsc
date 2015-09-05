@@ -38,7 +38,7 @@ public Expression annotateExp(lookup(n), set[Ident] byRefs) {
 	return lookup(n);
 }
 
-public Expression default annotateExp(Expression exp, set[Ident] byRefs) = exp;
+default  Expression annotateExp(Expression exp, set[Ident] byRefs) = exp;
 
 public Statement annotateStat(assign(n, exp), Env env, set[Ident] byRefs) {
 	n@receivedByRef = (n in byRefs);
@@ -55,5 +55,5 @@ public Statement annotateStat(call(n, args), Env env, set[Ident] byRefs) {
 	return call(n, args);
 }
 
-public Statement default annotateStat(Statement stat, Env env, set[Ident] byRefs) = stat;
+default Statement annotateStat(Statement stat, Env env, set[Ident] byRefs) = stat;
 

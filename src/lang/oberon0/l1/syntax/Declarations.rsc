@@ -1,10 +1,10 @@
-module lang::oberon0::l1::syntax::Declarations
+module lang::oberon0::l1::\syntax::Declarations
 
-import lang::oberon0::l1::syntax::Layout;
-import lang::oberon0::l1::syntax::Statements;
-import lang::oberon0::l1::syntax::Types;
-import lang::oberon0::l1::syntax::Lexical;
-import lang::oberon0::l1::syntax::Expressions;
+import lang::oberon0::l1::\syntax::Layout;
+import lang::oberon0::l1::\syntax::Statements;
+import lang::oberon0::l1::\syntax::Types;
+import lang::oberon0::l1::\syntax::Lexical;
+import lang::oberon0::l1::\syntax::Expressions;
 
 syntax Declarations 
 	= decls: ConstSect? consts TypeSect? types VarSect? vars

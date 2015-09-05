@@ -43,7 +43,7 @@ public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, p
 public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, not(e)) = resolveExpressionNames(stBuilder,e);
 public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, mul(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
 public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, div(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
-public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, Expression::mod(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
+public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, Expression::\mod(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
 public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, amp(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
 public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, add(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
 public SymbolTableBuilder resolveExpressionNames(SymbolTableBuilder stBuilder, sub(l,r)) = resolveExpressionNames(resolveExpressionNames(stBuilder,l),r);
@@ -206,7 +206,7 @@ public SymbolTableBuilder resolveVarDeclNames(SymbolTableBuilder stBuilder, list
 //
 // Resolve names for Oberon-0 Modules
 //
-public SymbolTableBuilder resolveModuleNames(SymbolTableBuilder stBuilder, m:Module::mod(mn, ds, bs, en)) {
+public SymbolTableBuilder resolveModuleNames(SymbolTableBuilder stBuilder, m:Module::\mod(mn, ds, bs, en)) {
 	// First step -- add the new module into scope. This keeps open the possibility for
 	// having multiple modules, but, as of the current version, this is a redundant check,
 	// since we will never have more than one module at this point in time.

@@ -1,6 +1,7 @@
 module lang::oberon0::l4::eval::Memory
 
 import lang::oberon0::l1::eval::Memory;
+import lang::oberon0::l1::eval::Env;
 import lang::oberon0::l1::ast::Oberon0; // For Type
 import lang::oberon0::l4::ast::Oberon0;
 
@@ -12,20 +13,20 @@ public tuple[int, Type] offset(list[Selector] sels, Type t) {
   	h = head(sels);
   
   	if (field(Ident id) := h, record(fs) := t) {
-    	o = 0;
+    	\o = 0;
     	for (f <- fs, n <- f.names) {
       		if (n == id.name) {
         		<o2, t2> = offset(tail(sels), f.\type);
-        		return <o + o2, t2>;
+        		return <\o + (o2), t2>;
       		}
-      		o += sizeOf(f.\type);
+      		\o += sizeOf(f.\type);
     	}
     	throw "No such field: <id.name>";
   	}
 
   	if (subscript(nat(int i)) := h, a:array(nat(int b), Type et) := t) {
     	<o2, t2> = offset(tail(sels), et);
-     	return <i * sizeOf(et) + o2, t2>; 
+     	return <i * sizeOf(et) + (o2), t2>; 
   	}
   
   	throw "Invalid selector <h> for <t>";
@@ -46,8 +47,8 @@ public tuple[Value,Type] deref(Address base, list[Selector] sels, Type t, Memory
 }
 
 public Bindable lvalueOf(Address base, list[Selector] sels, Type t, Memory mem) {
-  	<o, t> = offset(sels, t);
-  	return lvalue(base + o, t);
+  	<\o, t> = offset(sels, t);
+  	return lvalue(base + \o, t);
 }
 
 public Address addressOf(Address base, list[Selector] sels, Type t, Memory mem) {

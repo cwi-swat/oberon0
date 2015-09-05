@@ -4,20 +4,20 @@ import lang::oberon0::l1::ast::Oberon0;
 
 import Relation;
 import String;
-import Graph;
+import analysis::graphs::Graph;
 import List;
 import IO;
 
 public data CFNode
-	= start(loc location, Module mod)
+	= \start(loc location, Module \mod)
 	| end()
 	| choice(loc location, Expression exp)
 	| statement(loc location, Statement stat);
 
-public data ControlFlowGraph = cfg(Graph[CFNode] graph, CFNode start);
+public data ControlFlowGraph = cfg(Graph[CFNode] graph, CFNode \start);
 
 public ControlFlowGraph getControlFlow(Module m) {
-	return getControlFlow(m.body, start(m@location, m));
+	return getControlFlow(m.body, \start(m@location, m));
 }
 
 data CFlow = cflow(Graph[loc] entry, Graph[loc] exit, Graph[loc] succ, map[loc, CFNode] nodes);
@@ -104,7 +104,7 @@ public CFlow statementCFlow(w:whileDo(cond, body), CFlow cfl) {
 }
 
 
-public CFlow default statementCFlow(Statement _, CFlow cfl) {
+default CFlow statementCFlow(Statement _, CFlow cfl) {
 	return cfl;
 }
 

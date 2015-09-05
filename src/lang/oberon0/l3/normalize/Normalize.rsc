@@ -8,7 +8,7 @@ import lang::oberon0::l3::normalize::ResolveTypes;
 import lang::oberon0::l3::normalize::ResolveProcs;
 import lang::oberon0::l3::ast::Oberon0;
 
-public Module normalize(Module mod) {
+public Module normalize(Module \mod) {
 	return (normalizeDecls 
 			o resolveConsts 
 			o resolveTypes 
@@ -16,11 +16,11 @@ public Module normalize(Module mod) {
 			o extendSignatures 
 			o liftConsts 
 			o liftTypes 
-			o liftProcs)(mod);
+			o liftProcs)(\mod);
 }
 
-Module normalizeDecls(Module mod) {
-	return visit (mod) {
+Module normalizeDecls(Module \mod) {
+	return visit (\mod) {
 		case decls(c, t, v) => decls(c, t, v, [])
 	}
 }

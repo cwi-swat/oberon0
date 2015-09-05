@@ -114,7 +114,7 @@ public Class compile2JavaBytecode(Module m) {
 	    case pos(exp): 			return exp2JavaBytecode(exp);
 	    case mul(lhs, rhs): 	return exp2JavaBytecode(lhs) + exp2JavaBytecode(rhs) + [instruction(IMUL)];
 	    case div(lhs, rhs): 	return exp2JavaBytecode(lhs) + exp2JavaBytecode(rhs) + [instruction(IDIV)];
-	    case mod(lhs, rhs): 	return exp2JavaBytecode(lhs) + exp2JavaBytecode(rhs) + [instruction(IREM)];
+	    case \mod(lhs, rhs): 	return exp2JavaBytecode(lhs) + exp2JavaBytecode(rhs) + [instruction(IREM)];
 	    case add(lhs, rhs): 	return exp2JavaBytecode(lhs) + exp2JavaBytecode(rhs) + [instruction(IADD)];
 	    case sub(lhs, rhs): 	return exp2JavaBytecode(lhs) + exp2JavaBytecode(rhs) + [instruction(ISUB)];
 	    default: throw "Not a exp: <e>";

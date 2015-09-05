@@ -1,6 +1,6 @@
 module lang::oberon0::l4::ide::JavCompile
 
-import lang::oberon0::l1::syntax::Modules;
+import lang::oberon0::l1::\syntax::Modules;
 import lang::oberon0::l2::desugar::Desugar;
 import lang::oberon0::l4::utils::Implode;
 import lang::oberon0::l4::normalize::ToMinimalOberon0;

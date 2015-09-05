@@ -3,7 +3,7 @@ module lang::oberon0::l3::extract::CallGraph
 import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l3::resolve::SymbolTable;
 import lang::oberon0::l1::resolve::NameAnnotator;
-import Graph;
+import analysis::graphs::Graph;
 
 alias CallGraph = Graph[Item];
 

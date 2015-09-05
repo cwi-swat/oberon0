@@ -5,7 +5,6 @@ import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l1::eval::Statements;
 import lang::oberon0::l3::eval::Statements;
 import lang::oberon0::l1::eval::Expressions;
-import lang::oberon0::l2::eval::Expressions;
 import lang::oberon0::l1::eval::Env;
 import lang::oberon0::l1::eval::Memory;
 

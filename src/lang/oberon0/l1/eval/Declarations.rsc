@@ -25,7 +25,7 @@ public Env declareTypes(list[TypeDecl] ts, Env env) {
 public Type evalType(t:user(id("INTEGER")), Env env, Memory mem) = t;
 public Type evalType(t:user(id("BOOLEAN")), Env env, Memory mem) = t;
 
-public Type default evalType(t:user(i), Env env, Memory mem) {
+default Type evalType(t:user(i), Env env, Memory mem) {
 	if (typeDef(Type ut) := env[id]) {
  		return evalType(ut, env, mem);
 	}

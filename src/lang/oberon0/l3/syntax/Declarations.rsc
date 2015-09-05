@@ -1,6 +1,6 @@
-module lang::oberon0::l3::syntax::Declarations
+module lang::oberon0::l3::\syntax::Declarations
 
-extend lang::oberon0::l1::syntax::Declarations;
+extend lang::oberon0::l1::\syntax::Declarations;
 
 syntax Declarations 
        // NB: procs is + so as not to be ambiguous with earlier decls.
@@ -21,7 +21,7 @@ syntax Formals
 	;
 
 
-keywords Keywords
+keyword Keywords
        = "PROCEDURE" 
        ;
 

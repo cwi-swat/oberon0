@@ -1,11 +1,11 @@
 module lang::oberon0::l3::ide::Outline
 
-import lang::oberon0::l1::syntax::Modules;
+import lang::oberon0::l1::\syntax::Modules;
 import lang::oberon0::l1::ide::Outline;
-import lang::oberon0::l1::syntax::Modules;
-import lang::oberon0::l1::syntax::Declarations;
-import lang::oberon0::l3::syntax::Declarations;
-import lang::oberon0::l3::syntax::Statements;
+import lang::oberon0::l1::\syntax::Modules;
+import lang::oberon0::l1::\syntax::Declarations;
+import lang::oberon0::l3::\syntax::Declarations;
+import lang::oberon0::l3::\syntax::Statements;
 import ParseTree;
 
 

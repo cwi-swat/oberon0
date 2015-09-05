@@ -4,10 +4,10 @@ import lang::oberon0::l3::ast::Oberon0;
 import lang::oberon0::l3::normalize::Utils;
 
 
-public Module resolveProcs(Module mod) {
+public Module resolveProcs(Module \mod) {
 	env = initEnv({"Write", "WriteLn", "Read"});
-	<_, mod.decls> = resolveProcsInDecls(mod.decls, TOPLEVEL_SCOPE, env);
-	return mod;
+	<_, \mod.decls> = resolveProcsInDecls(\mod.decls, TOPLEVEL_SCOPE, env);
+	return \mod;
 }
 
 tuple[Env, Declarations] resolveProcsInDecls(Declarations decls, Ident scope, Env env) {

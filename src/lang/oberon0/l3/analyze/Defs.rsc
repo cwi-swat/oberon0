@@ -23,5 +23,5 @@ public set[Def] IDef(nd:statement(_,s:call(v,as))) {
 	return { }; 
 }
 public set[Def] IDef(nd:statement(_,s:forDo(v,_,_,_))) = { < v@item, nd > };
-public set[Def] default IDef(_) = { };
+default set[Def]  IDef(_) = { };
 

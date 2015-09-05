@@ -51,7 +51,7 @@ public str formals2c(Procedure p) {
 
 
 // Default, because extended later...
-public str default varType2C(str v, Type t) = "<type2c(t)> <v>";
+default str varType2C(str v, Type t) = "<type2c(t)> <v>";
 
 
 public str stat2c(call(Ident id, args)) {

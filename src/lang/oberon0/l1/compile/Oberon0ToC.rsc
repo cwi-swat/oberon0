@@ -1,6 +1,6 @@
-module ldta::oberon0::l1::compile::Oberon0ToC
+module lang::oberon0::l1::compile::Oberon0ToC
 
-import ldta::oberon0::l1::ast::Oberon0;
+import lang::oberon0::l1::ast::Oberon0;
 import String;
 import List;
 
@@ -59,7 +59,7 @@ public str exp2c(neg(exp)) = "(-<exp2c(exp)>)";
 public str exp2c(pos(exp)) = exp2c(exp);
 public str exp2c(mul(lhs, rhs)) = "(<exp2c(lhs)>*<exp2c(rhs)>)";
 public str exp2c(div(lhs, rhs)) = "(<exp2c(lhs)>/<exp2c(rhs)>)";
-public str exp2c(Expression::mod(lhs, rhs)) = "(<exp2c(lhs)>%<exp2c(rhs)>)";
+public str exp2c(Expression::\mod(lhs, rhs)) = "(<exp2c(lhs)>%<exp2c(rhs)>)";
 public str exp2c(add(lhs, rhs)) = "(<exp2c(lhs)>+<exp2c(rhs)>)";
 public str exp2c(sub(lhs, rhs)) = "(<exp2c(lhs)>-<exp2c(rhs)>)";
 public str exp2c(not(exp)) = "(!<exp2c(exp)>)";

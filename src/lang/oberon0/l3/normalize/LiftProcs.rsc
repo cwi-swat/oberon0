@@ -13,9 +13,9 @@ alias FreeVarsMap = map[Ident, Variables];
 
 alias SortedFreeVarsMap = map[Ident, SortedVariables];
 
-public Module liftProcs(Module mod) {
-	mod.decls.procs = ( [] | it + liftProc(p) | p <- mod.decls.procs );
-	return mod;
+public Module liftProcs(Module \mod) {
+	\mod.decls.procs = ( [] | it + liftProc(p) | p <- \mod.decls.procs );
+	return \mod;
 }
 
 public list[Procedure] liftProc(Procedure proc) {
@@ -25,8 +25,8 @@ public list[Procedure] liftProc(Procedure proc) {
 }
 
 
-public Module extendSignatures(Module mod) {
-	fvsm = sortFreeVarsMap(freeVarsMap(mod));
+public Module extendSignatures(Module \mod) {
+	fvsm = sortFreeVarsMap(freeVarsMap(\mod));
 
 	Procedure extendSig(Procedure p) {
 		p.formals += [ formal(true, [fn], t) | <fn, t> <- fvsm[p.name] ];
@@ -38,7 +38,7 @@ public Module extendSignatures(Module mod) {
 		return call;
 	}
 	
-	return visit (mod) {
+	return visit (\mod) {
 		case Procedure p => extendSig(p)
 		case c:call(_, _) => extendCall(c)
 	} 
@@ -59,10 +59,10 @@ public FreeVarsMap builtins() {
  	return (id("Write"): empty, id("WriteLn"): empty, id("Read"): empty);
 }
 
-public FreeVarsMap freeVarsMap(Module mod) {
+public FreeVarsMap freeVarsMap(Module \mod) {
 	// assume: constants have been eliminated/resolved
 	// and procs have been resolved
-	globals = declaredVars(mod.decls);
+	globals = declaredVars(\mod.decls);
 		
 	FreeVarsMap freeVarsMapOfProcedures(list[Procedure] procs, Variables env) {
 		return ( () | it + freeVarsMapOfProcedure(p, env) | p <- procs );
@@ -81,7 +81,7 @@ public FreeVarsMap freeVarsMap(Module mod) {
 		return usedVars(p, env) - locals - globals;
 	}
 	
-	return builtins() + freeVarsMapOfProcedures(mod.decls.procs, ());
+	return builtins() + freeVarsMapOfProcedures(\mod.decls.procs, ());
 }
 
 

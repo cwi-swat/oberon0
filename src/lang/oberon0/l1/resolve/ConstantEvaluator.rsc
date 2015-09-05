@@ -70,7 +70,7 @@ public tuple[SymbolTableBuilder st, bool res, int val] evaluateConstantExp(Symbo
 		
 		case div(l,r) : return evaluateBinaryOp(stBuilder,l,r,int(int x, int y) { return x / y; });
 
-		case mod(l,r) : return evaluateBinaryOp(stBuilder,l,r,int(int x, int y) { return x % y; });
+		case \mod(l,r) : return evaluateBinaryOp(stBuilder,l,r,int(int x, int y) { return x % y; });
 
 		case add(l,r) : return evaluateBinaryOp(stBuilder,l,r,int(int x, int y) { return x + y; });
 		

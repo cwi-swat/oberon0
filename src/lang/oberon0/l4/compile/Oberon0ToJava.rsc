@@ -80,7 +80,7 @@ str intExp2Java(Expression e) {
     case pos(exp): 			return intExp2Java(exp);
     case mul(lhs, rhs): 	return "(<intExp2Java(lhs)>*<intExp2Java(rhs)>)";
     case div(lhs, rhs): 	return "(<intExp2Java(lhs)>/<intExp2Java(rhs)>)";
-    case mod(lhs, rhs): 	return "(<intExp2Java(lhs)>%<intExp2Java(rhs)>)";
+    case \mod(lhs, rhs): 	return "(<intExp2Java(lhs)>%<intExp2Java(rhs)>)";
     case add(lhs, rhs): 	return "(<intExp2Java(lhs)>+<intExp2Java(rhs)>)";
     case sub(lhs, rhs): 	return "(<intExp2Java(lhs)>-<intExp2Java(rhs)>)";
     default: throw "Not a Integer exp: <e>";

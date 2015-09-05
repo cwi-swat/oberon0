@@ -25,7 +25,7 @@ public Value eval(neg(exp), Env env, Memory mem) 		= integer(- asInt(eval(exp, e
 public Value eval(pos(exp), Env env, Memory mem) 		= eval(exp, env, mem);
 public Value eval(mul(lhs, rhs), Env env, Memory mem) 	= integer(asInt(eval(lhs, env, mem)) * asInt(eval(rhs, env, mem)));
 public Value eval(div(lhs, rhs), Env env, Memory mem) 	= integer(asInt(eval(lhs, env, mem)) / asInt(eval(rhs, env, mem)));
-public Value eval(Expression::mod(lhs, rhs), Env env, Memory mem) 	= integer(asInt(eval(lhs, env, mem)) % asInt(eval(rhs, env, mem)));
+public Value eval(Expression::\mod(lhs, rhs), Env env, Memory mem) 	= integer(asInt(eval(lhs, env, mem)) % asInt(eval(rhs, env, mem)));
 public Value eval(add(lhs, rhs), Env env, Memory mem) 	= integer(asInt(eval(lhs, env, mem)) + asInt(eval(rhs, env, mem)));
 public Value eval(sub(lhs, rhs), Env env, Memory mem) 	= integer(asInt(eval(lhs, env, mem)) - asInt(eval(rhs, env, mem)));
 

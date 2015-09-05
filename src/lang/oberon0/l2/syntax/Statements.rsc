@@ -1,8 +1,6 @@
-module ldta::oberon0::l2::syntax::Statements
+module lang::oberon0::l2::\syntax::Statements
 
-extend ldta::oberon0::l1::syntax::Statements;
-
-// TODO: BY clause in For loops
+extend lang::oberon0::l1::\syntax::Statements;
 
 syntax Statement 
 	= forDo: "FOR" Ident name ":=" Expression from "TO" Expression to

@@ -11,5 +11,5 @@ import lang::oberon0::l1::resolve::NameAnnotator;
 //
 public set[Def] IKill(nd:statement(_,assign(v,_)), defs) = { k | k:<i,_> <- defs, i := v@item } - {<v@item,nd>};
 public set[Def] IKill(nd:statement(_,forDo(v,_,_,_)), defs) = { k | k:<i,_> <- defs, i := v@item } - {<v@item,nd>};
-public set[Def] default IKill(_,_) = { };
+default set[Def]  IKill(_,_) = { };
 

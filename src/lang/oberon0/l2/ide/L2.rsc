@@ -1,14 +1,14 @@
 module lang::oberon0::l2::ide::L2
 
-import lang::oberon0::l1::syntax::Modules;
-import lang::oberon0::l1::syntax::Declarations;
-import lang::oberon0::l1::syntax::Expressions;
-import lang::oberon0::l1::syntax::Statements;
-import lang::oberon0::l1::syntax::Types;
-import lang::oberon0::l1::syntax::Lexical;
-import lang::oberon0::l1::syntax::Layout;
+import lang::oberon0::l1::\syntax::Modules;
+import lang::oberon0::l1::\syntax::Declarations;
+import lang::oberon0::l1::\syntax::Expressions;
+import lang::oberon0::l1::\syntax::Statements;
+import lang::oberon0::l1::\syntax::Types;
+import lang::oberon0::l1::\syntax::Lexical;
+import lang::oberon0::l1::\syntax::Layout;
 
-import lang::oberon0::l2::syntax::Statements;
+import lang::oberon0::l2::\syntax::Statements;
 import lang::oberon0::l2::ide::Run;
 import lang::oberon0::l2::ide::Desugar;
 import lang::oberon0::l2::ide::Compile;
@@ -45,6 +45,6 @@ public void registerL2() {
 }   
 
 Tree parser(str x, loc l) {
-    return parse(#lang::oberon0::l1::syntax::Modules::Module, x, l);
+    return parse(#lang::oberon0::l1::\syntax::Modules::Module, x, l);
 }
 

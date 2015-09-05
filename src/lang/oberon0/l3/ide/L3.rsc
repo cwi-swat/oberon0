@@ -1,6 +1,6 @@
 module lang::oberon0::l3::ide::L3
 
-import lang::oberon0::l1::syntax::Modules;
+import lang::oberon0::l1::\syntax::Modules;
 import lang::oberon0::l3::ide::Compile;
 import lang::oberon0::l3::ide::Format;
 import lang::oberon0::l3::ide::Check;
