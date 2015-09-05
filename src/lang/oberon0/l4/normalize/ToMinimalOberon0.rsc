@@ -7,7 +7,7 @@ import lang::oberon0::l4::normalize::ExplicitStack;
 import lang::oberon0::l3::optimize::ConstantElimination;
 import lang::oberon0::l4::normalize::SingleWordAssign;
 
-public Module toMinimalOberon0(Module m){
+public Module toMinimalOberon0(Module m) {
 	return 
 	(normalizeL4 o
 	 normalizeBooleans o 

@@ -80,7 +80,6 @@ public Box stat2box(whileDo(Expression condition, list[Statement] body)) = V([
             KW(L("END"))
         ]);   
 
-// Annoying: it puts parens everywhere.
 public Box exp2box(nat(int val)) = L("<val>");
 public Box exp2box(lookup(Ident var)) = id2box(var);
 public Box exp2box(neg(arg)) = H([L("-"), exp2box(arg)])[@hs=0];

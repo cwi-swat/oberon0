@@ -1,21 +1,15 @@
 module lang::oberon0::l1::\syntax::Layout
 
-lexical Layout 
-	= whitespace: [\t-\n\r\ ] 
-	| Comment 
-	;
+lexical Layout = whitespace: [\t-\n\r\ ] | @category="Comment" Comment ;
 
-layout Layouts = Layout* 
-	!>> [\t-\n \r \ ] 
-	!>> "(*" 
-	;
+layout Layouts = Layout* !>> [\t-\n \r \ ] !>> "(*" ;
 
-lexical Comment 
-	= @category="Comment"  "(*" CommentChar* "*)" 
-	;
-
+lexical Comment = "(*" CommentElt* "*)" ;
+lexical CommentElt = CommentChar+ !>> ![*(] | Comment ;
 lexical CommentChar 
-	= ![*] 
-	| [*] !>> [)] 
-	;
+    = ![*(] 
+    | [*] !>> [)]
+    | [(] !>> [*] 
+    ;
+
 

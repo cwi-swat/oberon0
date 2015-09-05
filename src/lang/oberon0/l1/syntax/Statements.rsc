@@ -17,6 +17,7 @@ syntax Statement
 	| whileDo: "WHILE" Expression condition "DO" 
 					{Statement ";"}+ body 
 	           "END"
+	| skip: 
 	;
 
 

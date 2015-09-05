@@ -1,8 +1,8 @@
-module lang::oberon0::l4::normalize::Normalize
+module ldta::oberon0::l4::normalize::NormalizeL4
 
-import lang::oberon0::l4::ast::Oberon0;
-extend lang::oberon0::l3::normalize::Normalize;
-import lang::oberon0::l2::desugar::Desugar;
+import ldta::oberon0::l4::AST;
+extend ldta::oberon0::l4::normalize::NormalizeL3;
+import ldta::oberon0::l2::Desugar;
 
 import List;
 import Set;

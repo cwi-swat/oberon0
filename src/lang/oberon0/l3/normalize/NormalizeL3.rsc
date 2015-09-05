@@ -1,4 +1,4 @@
-module lang::oberon0::l3::normalize::Normalize
+module lang::oberon0::l3::normalize::NormalizeL3
 
 import lang::oberon0::l3::normalize::LiftConsts;
 import lang::oberon0::l3::normalize::LiftTypes;

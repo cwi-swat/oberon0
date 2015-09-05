@@ -1,6 +1,6 @@
 module lang::oberon0::l4::ide::L4
 
-import lang::oberon0::l1::syntax::Modules;
+import lang::oberon0::l1::\syntax::Modules;
 import lang::oberon0::l4::ide::Compile;
 import lang::oberon0::l4::ide::JavCompile;
 import lang::oberon0::l4::ide::Format;
